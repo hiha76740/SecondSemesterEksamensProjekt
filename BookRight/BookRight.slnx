@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Docs/" />
+  <Folder Name="/Docs/Decisions/">
+    <File Path="ADR-001.md" />
+  </Folder>
+  <Folder Name="/Src/">
+    <Project Path="BookRight.ApplicationLib/BookRight.ApplicationLib.csproj" />
+    <Project Path="BookRight.DomainLib/BookRight.DomainLib.csproj" />
+    <Project Path="BookRight.FacadeLib/BookRight.FacadeLib.csproj" />
+    <Project Path="BookRight.InfrastructureLib/BookRight.InfrastructureLib.csproj" />
+    <Project Path="BookRight.Web/BookRight.Web.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="BookRight.ApplicationLib.Tests/BookRight.ApplicationLib.Tests.csproj" />
+    <Project Path="BookRight.DomainLib.Tests/BookRight.DomainLib.Tests.csproj" />
+  </Folder>
+</Solution>
