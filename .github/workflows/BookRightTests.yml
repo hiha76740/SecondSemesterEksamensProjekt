@@ -1,0 +1,37 @@
+name: BookRight Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  SOLUTION_PATH: "BookRight.slnx"
+  DOMAIN_PROJECT_PATH: "BookRight.DomainLib.Tests/BookRight.DomainLib.Tests.csproj"
+  APPLICATION_PROJECT_PATH: "BookRight.ApplicationLib.Tests/BookRight.ApplicationLib.Tests.csproj"
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION_PATH }} --no-restore
+
+      - name: Test
+        run: dotnet test --solution ${{ env.SOLUTION_PATH }} --no-restore --no-build --verbosity normal
+  
