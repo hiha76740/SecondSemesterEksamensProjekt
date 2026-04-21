@@ -1,0 +1,65 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram name="Side-1" id="_5sNCGKI9f6z_tLTCvPy">
+    <mxGraphModel dx="1426" dy="1009" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;BookRight Bookingsystem&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;C4 model: Level 3 Component&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="495" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" value="" vertex="1">
+          <mxGeometry height="406" width="1020" x="75" y="211" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-5" edge="1" parent="1" source="NVHZ4y8oheMomNV-KfC2-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" target="NVHZ4y8oheMomNV-KfC2-4" value="Sender Request">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-15" edge="1" parent="1" source="NVHZ4y8oheMomNV-KfC2-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" target="NVHZ4y8oheMomNV-KfC2-14" value="Sender Query">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00A1FF;" value="Facade" vertex="1">
+          <mxGeometry height="90" width="210" x="102" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-7" edge="1" parent="1" source="NVHZ4y8oheMomNV-KfC2-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" target="NVHZ4y8oheMomNV-KfC2-6" value="Persists">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-10" edge="1" parent="1" source="NVHZ4y8oheMomNV-KfC2-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" target="NVHZ4y8oheMomNV-KfC2-8" value="Beregner / Validere">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00A1FF;" value="Use Case Handler" vertex="1">
+          <mxGeometry height="90" width="210" x="480" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-13" edge="1" parent="1" source="NVHZ4y8oheMomNV-KfC2-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" target="NVHZ4y8oheMomNV-KfC2-12" value="Skriver">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1005" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00A1FF;" value="Repository" vertex="1">
+          <mxGeometry height="90" width="210" x="862" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00A1FF;" value="Domain Logic" vertex="1">
+          <mxGeometry height="90" width="210" x="480" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-12" parent="1" style="shape=datastore;whiteSpace=wrap;html=1;" value="Database&lt;div&gt;[SSMS]&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="80" x="927" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-17" edge="1" parent="1" source="NVHZ4y8oheMomNV-KfC2-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="NVHZ4y8oheMomNV-KfC2-12" value="Læser">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="205" y="580" />
+              <mxPoint x="205" y="725" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NVHZ4y8oheMomNV-KfC2-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00A1FF;" value="Query Handler" vertex="1">
+          <mxGeometry height="90" width="210" x="102" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="Z7Y98NGkX3h-FRzag4GE-2" edge="1" parent="1" source="Z7Y98NGkX3h-FRzag4GE-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" target="NVHZ4y8oheMomNV-KfC2-3" value="Sender DTO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z7Y98NGkX3h-FRzag4GE-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#828f97, #0892e3);" value="UI" vertex="1">
+          <mxGeometry height="90" width="210" x="102" y="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
