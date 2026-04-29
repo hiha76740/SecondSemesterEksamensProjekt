@@ -64,4 +64,16 @@ public class Customer : AggregateRoot
         var customer = new Customer(firstName, lastName, birthdate, note, address, email, phoneNumber);
         return customer;
     }
+
+
+    public void ChangeFirstName(string firstName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new DomainException("Customer must have a firstname");
+
+        string normalisedFirstName = firstName.Trim();
+
+        if (FirstName != normalisedFirstName)
+            FirstName = normalisedFirstName;
+    }
 }
