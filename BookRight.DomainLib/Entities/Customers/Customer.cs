@@ -43,7 +43,7 @@ public class Customer : AggregateRoot
 
 
         Id = Guid.NewGuid();
-        FirstName = normalisedFirstName
+        FirstName = normalisedFirstName;
         LastName = normalisedLastName;
         Birthdate = normalisedBirthDate;
         Note = note;
@@ -107,5 +107,15 @@ public class Customer : AggregateRoot
 
         if (Email != email)
             Email = email;
+    }
+
+
+    public void ChangePhoneNumber(PhoneNumber phoneNumber)
+    {
+        if (PhoneNumber == null)
+            throw new DomainException("Customer must have a phonenumber");
+
+        if (PhoneNumber != phoneNumber)
+            PhoneNumber = phoneNumber;
     }
 }
