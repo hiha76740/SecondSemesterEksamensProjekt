@@ -98,4 +98,14 @@ public class Customer : AggregateRoot
         if (Address != address)
             Address = address;
     }
+
+
+    public void ChangeEmail(Email email)
+    {
+        if (Address == null)
+            throw new DomainException("Customer must have an email");
+
+        if (Email != email)
+            Email = email;
+    }
 }
