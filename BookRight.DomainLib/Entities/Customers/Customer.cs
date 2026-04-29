@@ -76,4 +76,16 @@ public class Customer : AggregateRoot
         if (FirstName != normalisedFirstName)
             FirstName = normalisedFirstName;
     }
+
+
+    public void ChangeLastName(string lastName)
+    {
+        if (string.IsNullOrWhiteSpace(lastName))
+            throw new DomainException("Customer must have a lastname");
+
+        string normalisedLastName = lastName.Trim();
+
+        if (LastName != normalisedLastName)
+            LastName = normalisedLastName;
+    }
 }
