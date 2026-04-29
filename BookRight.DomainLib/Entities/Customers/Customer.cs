@@ -88,4 +88,14 @@ public class Customer : AggregateRoot
         if (LastName != normalisedLastName)
             LastName = normalisedLastName;
     }
+
+
+    public void ChangeAddress(Address address)
+    {
+        if (address == null)
+            throw new DomainException("Customer must have an address");
+
+        if (Address != address)
+            Address = address;
+    }
 }
