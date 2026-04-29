@@ -16,6 +16,24 @@ public class CustomerTests
     private static Email Email => new Email("PoulP@testmail.k");
     private static PhoneNumber PhoneNumber => new PhoneNumber("87654321");
 
+    private static Customer CreateCustomerWithValidData(
+        string? firstName = null,
+        string? lastName = null,
+        DateTime? birthDate = null,
+        string? note = null,
+        Address? address = null,
+        Email? email = null,
+        PhoneNumber? phoneNumber = null)
+        => Customer.Create(
+            firstName ?? FirstName,
+            lastName ?? LastName,
+            birthDate ?? Birthdate,
+            note ?? Note,
+            address ?? Address,
+            email ?? Email,
+            phoneNumber ?? PhoneNumber
+            );
+
 
     //Arrange
 
