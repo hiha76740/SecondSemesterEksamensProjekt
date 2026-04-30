@@ -10,8 +10,8 @@ public record OpeningHours
 
     public OpeningHours(DateTime open, DateTime close)
     {
-        if (open > close)
-            throw new DomainException("Closing time can not be after opening hour");
+        if (open >= close)
+            throw new DomainException("Closing time can not be same or before opening hour");
 
         if (open.Day != close.Day)
             throw new DomainException("Open and close time must be on the same day");
