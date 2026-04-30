@@ -12,6 +12,8 @@ public class Customer : AggregateRoot
     public Address Address { get; private set; }
     public Email Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
+    public Guid TherapistId { get; private set; }
+    //TODO: Add the functionality to assign an optional preferred Therapist to a Customer
 
 
     private Customer(
