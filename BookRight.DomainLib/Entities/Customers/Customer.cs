@@ -25,29 +25,20 @@ public class Customer : AggregateRoot
             PhoneNumber phoneNumber,
             string note)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new DomainException("Customer must have a firstname");
+        EnsureValidFirstname(firstName);
+        EnsureValidLastname(lastName);
 
         string normalisedFirstName = firstName.Trim();
-
-
-        if (string.IsNullOrWhiteSpace(lastName))
-            throw new DomainException("Customer must have a lastname");
-
         string normalisedLastName = lastName.Trim();
 
-
-        DateTime normalisedBirthDate = birthDate.Date;
-        if (normalisedBirthDate > DateTime.Today)
+        if (birthDate.Date > DateTime.Today)
             throw new DomainException("Birthdate cannot be in future");
-        if (normalisedBirthDate < new DateTime(1900, 1, 1))
-            throw new DomainException("Birthdate cannot be this far back");
 
 
         Id = Guid.NewGuid();
         Firstname = normalisedFirstName;
         Lastname = normalisedLastName;
-        Birthdate = normalisedBirthDate;
+        Birthdate = birthDate.Date;
         Note = note;
         Address = address ?? throw new DomainException("Customer must have an address");
         Email = email ?? throw new DomainException("Customer must have an email");
@@ -68,27 +59,28 @@ public class Customer : AggregateRoot
     }
 
 
-    public void ChangeFirstName(string firstName)
+    public void ChangeFirstname(string newFirstname)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new DomainException("Customer must have a firstname");
+        EnsureValidFirstname(newFirstname);
 
-        string normalisedFirstName = firstName.Trim();
+        string normalisedNewFirstname = newFirstname.Trim();
 
-        if (Firstname != normalisedFirstName)
-            Firstname = normalisedFirstName;
+        if (Firstname == normalisedNewFirstname)
+            throw new DomainException("New firstname is the same as current firstname");
+
+        Firstname = normalisedNewFirstname;
     }
 
-
-    public void ChangeLastName(string lastName)
+    public void ChangeLastname(string newLastname)
     {
-        if (string.IsNullOrWhiteSpace(lastName))
-            throw new DomainException("Customer must have a lastname");
+        EnsureValidLastname(newLastname);
 
-        string normalisedLastName = lastName.Trim();
+        string normalisedNewLastname = newLastname.Trim();
 
-        if (Lastname != normalisedLastName)
-            Lastname = normalisedLastName;
+        if (Lastname == normalisedNewLastname)
+            throw new DomainException("New lastname is the same as current lastname");
+
+        Lastname = normalisedNewLastname;
     }
 
 
@@ -120,4 +112,17 @@ public class Customer : AggregateRoot
         if (PhoneNumber != phoneNumber)
             PhoneNumber = phoneNumber;
     }
+
+    private void EnsureValidFirstname(string firstName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new DomainException("Customer must have a firstname");
+    }
+
+    private void EnsureValidLastname(string lastName)
+    {
+        if (string.IsNullOrWhiteSpace(lastName))
+            throw new DomainException("Customer must have a lastname");
+    }
+
 }
