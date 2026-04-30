@@ -4,62 +4,29 @@ using BookRight.DomainLib.ValueObjects;
 
 namespace BookRight.DomainLib.Entities
 {
+    /// <summary>
+    /// Aggregate Root for Booking.
+    /// Handles booking creation, updates, status changes and overlap validation.
+    /// </summary>
     public class Booking : AggregateRoot
     {
-        public TimeSlot TimeSlot { get; private set; } = null!;
-
-        // Andre Aggregate Roots refereres via ID - ikke via objektreferencer. 
-        public Guid CustomerId { get; private set; }
+        // Other Aggregate Roots are referenced by ID - not object references.
+        public Guid CustomerId { get; init; }
         public Guid TreatmentId { get; private set; }
         public Guid TherapistId { get; private set; }
         public Guid ClinicId { get; private set; }
 
-        // Bookingens egne oplysninger og tilstand.
-        public bool IsActive { get; private set; }
-        public decimal Price { get; private set; }
         public BookingStatus Status { get; private set; }
+        public TimeSlot TimeSlot { get; private set; }
+        public decimal Price { get; init; }
 
-        // Parameterløs constructor til EF Core
-        private Booking() { }
+        public bool IsActive => Status != BookingStatus.Cancelled;
 
-        // Privat constructor - tvinger brug af factory-metoden Opret()
-        private Booking(
-            Guid customerId,
-            Guid treatmentId,
-            Guid therapistId,
-            Guid clinicId,
-            TimeSlot timeSlot,
-            decimal price)
-        {
-            if (price < 0)
-            {
-                throw new DomainException("Prisen må ikke være negativ.");
-            }
-
-            Id = Guid.NewGuid();
-
-            CustomerId = customerId != Guid.Empty
-                ? customerId : throw new DomainException("KundeId må ikke være tomt.");
-
-            TreatmentId = treatmentId != Guid.Empty
-                ? treatmentId : throw new DomainException("BehandlingsId må ikke være tomt.");
-
-            TherapistId = therapistId != Guid.Empty
-                ? therapistId : throw new DomainException("BehandlerId må ikke være tomt.");
-
-            ClinicId = clinicId != Guid.Empty
-                ? clinicId : throw new DomainException("KlinikId må ikke være tomt.");
-
-            TimeSlot = timeSlot
-                ?? throw new DomainException("Tidsinterval er påkrævet.");
-
-            Price = price;
-            IsActive = true;
-            Status = BookingStatus.Created;
-        }
-
-        // Factory-metode til oprettelse af booking
-        public static Booking Opret(
+        /// <summary>
+        /// Creates a new booking and validates that it does not overlap
+        /// with existing bookings for the therapist or clinic.
+        /// </summary>
+        public static Booking Create(
             TimeSlot timeSlot,
             Guid customerId,
             Guid treatmentId,
@@ -70,190 +37,277 @@ namespace BookRight.DomainLib.Entities
             IEnumerable<Booking> existingClinicBookings)
         {
             var booking = new Booking(
+                timeSlot,
                 customerId,
                 treatmentId,
                 therapistId,
                 clinicId,
-                timeSlot,
                 price);
 
-            booking.ValidateNoOverlap(
-                timeSlot,
-                therapistId,
-                clinicId,
+            ValidateNoOverlap(
+                booking,
                 existingTherapistBookings,
                 existingClinicBookings);
 
             return booking;
         }
 
-        // Opdateringslogik
+        /// <summary>
+        /// Changes the time of the booking and validates that the new time does not overlap.
+        /// </summary>
         public void ChangeTime(
             TimeSlot newTimeSlot,
             IEnumerable<Booking> therapistBookings,
             IEnumerable<Booking> clinicBookings)
         {
-            EnsureNotCompleted();
+            EnsureCanBeChanged();
 
-            newTimeSlot = newTimeSlot
-                ?? throw new DomainException("Tidsinterval er påkrævet.");
+            if (newTimeSlot == null)
+                throw new DomainException("TimeSlot is required.");
 
-            ValidateNoOverlap(
+            var bookingToValidate = CreateValidationBooking(
                 newTimeSlot,
                 TherapistId,
-                ClinicId,
+                ClinicId);
+
+            ValidateNoOverlap(
+                bookingToValidate,
                 therapistBookings,
                 clinicBookings);
 
             TimeSlot = newTimeSlot;
         }
 
+        /// <summary>
+        /// Changes the treatment connected to the booking.
+        /// </summary>
         public void ChangeTreatment(Guid treatmentId)
         {
-            EnsureNotCompleted();
+            EnsureCanBeChanged();
 
-            TreatmentId = treatmentId != Guid.Empty
-                ? treatmentId : throw new DomainException("BehandlingsId må ikke være tomt.");
+            if (treatmentId == Guid.Empty)
+                throw new DomainException("Treatment Id cannot be empty.");
+
+            TreatmentId = treatmentId;
         }
 
+        /// <summary>
+        /// Changes the therapist and validates that the booking does not overlap.
+        /// </summary>
         public void ChangeTherapist(
             Guid therapistId,
             IEnumerable<Booking> therapistBookings)
         {
-            EnsureNotCompleted();
+            EnsureCanBeChanged();
 
-            therapistId = therapistId != Guid.Empty
-                ? therapistId : throw new DomainException("BehandlerId må ikke være tomt.");
+            if (therapistId == Guid.Empty)
+                throw new DomainException("Therapist Id cannot be empty.");
 
-            ValidateNoOverlap(
+            var bookingToValidate = CreateValidationBooking(
                 TimeSlot,
                 therapistId,
-                ClinicId,
+                ClinicId);
+
+            ValidateNoOverlap(
+                bookingToValidate,
                 therapistBookings,
-                Enumerable.Empty<Booking>());
+                true);
 
             TherapistId = therapistId;
         }
 
+        /// <summary>
+        /// Changes the clinic and validates that the booking does not overlap.
+        /// </summary>
         public void ChangeClinic(
             Guid clinicId,
             IEnumerable<Booking> clinicBookings)
         {
-            EnsureNotCompleted();
+            EnsureCanBeChanged();
 
-            clinicId = clinicId != Guid.Empty
-                ? clinicId : throw new DomainException("KlinikId må ikke være tomt.");
+            if (clinicId == Guid.Empty)
+                throw new DomainException("Clinic Id cannot be empty.");
 
-            ValidateNoOverlap(
+            var bookingToValidate = CreateValidationBooking(
                 TimeSlot,
                 TherapistId,
-                clinicId,
-                Enumerable.Empty<Booking>(),
-                clinicBookings);
+                clinicId);
+
+            ValidateNoOverlap(
+                bookingToValidate,
+                clinicBookings,
+                false);
 
             ClinicId = clinicId;
         }
 
-        // Tilstandsændringer
+        /// <summary>
+        /// Cancels the booking.
+        /// </summary>
         public void Cancel()
         {
-            EnsureNotCompleted();
+            EnsureCanBeChanged();
 
             Status = BookingStatus.Cancelled;
-            IsActive = false;
         }
 
+        /// <summary>
+        /// Completes the booking.
+        /// </summary>
         public void Complete()
         {
-            if (Status == BookingStatus.Cancelled)
-            {
-                throw new DomainException("En aflyst booking kan ikke afsluttes.");
-            }
-
-            if (Status == BookingStatus.NoShow)
-            {
-                throw new DomainException("En no-show booking kan ikke afsluttes.");
-            }
+            EnsureCanBeChanged();
 
             Status = BookingStatus.Completed;
-            IsActive = false;
         }
 
+        /// <summary>
+        /// Marks the booking as no-show.
+        /// </summary>
         public void NoShow()
         {
-            EnsureNotCompleted();
-
-            if (Status == BookingStatus.Cancelled)
-            {
-                throw new DomainException("En aflyst booking kan ikke markeres som no-show.");
-            }
+            EnsureCanBeChanged();
 
             Status = BookingStatus.NoShow;
-            IsActive = false;
         }
 
+        /// <summary>
+        /// Marks the customer as arrived.
+        /// </summary>
         public void Arrived()
         {
-            EnsureNotCompleted();
-
-            if (Status == BookingStatus.Cancelled)
-            {
-                throw new DomainException("En aflyst booking kan ikke markeres som ankommet.");
-            }
+            EnsureCanBeChanged();
 
             Status = BookingStatus.Arrived;
         }
 
-        // Privat status-validering
-        private void EnsureNotCompleted()
-        {
-            if (Status == BookingStatus.Completed)
-            {
-                throw new DomainException("En afsluttet booking kan ikke ændres.");
-            }
-        }
-
-        // Privat overlap-validering
-        private void ValidateNoOverlap(
+        /// <summary>
+        /// Private constructor used by the factory method to ensure valid creation.
+        /// </summary>
+        private Booking(
             TimeSlot timeSlot,
+            Guid customerId,
+            Guid treatmentId,
             Guid therapistId,
             Guid clinicId,
-            IEnumerable<Booking> therapistBookings,
-            IEnumerable<Booking> clinicBookings)
+            decimal price)
         {
-            if (therapistBookings != null)
-            {
-                var therapistOverlap = therapistBookings
-                    .Where(booking => booking.Id != Id)
-                    .Where(booking => booking.IsActive)
-                    .Where(booking => booking.TherapistId == therapistId)
-                    .FirstOrDefault(booking => timeSlot.OverlapsWith(booking.TimeSlot));
+            if (timeSlot == null)
+                throw new DomainException("TimeSlot is required.");
 
-                if (therapistOverlap is not null)
-                {
-                    throw new DomainException(
-                        $"Behandleren har allerede en booking " +
-                        $"({therapistOverlap.TimeSlot.From:HH:mm}-{therapistOverlap.TimeSlot.To:HH:mm}) " +
-                        $"der overlapper med det ønskede tidsinterval.");
-                }
+            if (customerId == Guid.Empty)
+                throw new DomainException("Customer Id cannot be empty.");
+
+            if (treatmentId == Guid.Empty)
+                throw new DomainException("Treatment Id cannot be empty.");
+
+            if (therapistId == Guid.Empty)
+                throw new DomainException("Therapist Id cannot be empty.");
+
+            if (clinicId == Guid.Empty)
+                throw new DomainException("Clinic Id cannot be empty.");
+
+            if (price < 0)
+                throw new DomainException("Price cannot be negative.");
+
+            Id = Guid.NewGuid();
+            TimeSlot = timeSlot;
+            CustomerId = customerId;
+            TreatmentId = treatmentId;
+            TherapistId = therapistId;
+            ClinicId = clinicId;
+            Price = price;
+            Status = BookingStatus.Created;
+        }
+
+        /// <summary>
+        /// Creates a temporary booking used only for validation.
+        /// </summary>
+        private Booking CreateValidationBooking(
+            TimeSlot timeSlot,
+            Guid therapistId,
+            Guid clinicId)
+        {
+            var booking = new Booking(
+                timeSlot,
+                CustomerId,
+                TreatmentId,
+                therapistId,
+                clinicId,
+                Price);
+
+            booking.Id = Id;
+
+            return booking;
+        }
+
+        /// <summary>
+        /// Ensures that cancelled or completed bookings cannot be changed.
+        /// </summary>
+        private void EnsureCanBeChanged()
+        {
+            if (Status == BookingStatus.Cancelled)
+                throw new DomainException("Cancelled booking cannot be changed.");
+
+            if (Status == BookingStatus.Completed)
+                throw new DomainException("Completed booking cannot be changed.");
+        }
+
+        /// <summary>
+        /// Validates that the booking does not overlap with existing active bookings
+        /// for the same therapist or clinic.
+        /// </summary>
+        private static void ValidateNoOverlap(
+            Booking booking,
+            IEnumerable<Booking> existingTherapistBookings,
+            IEnumerable<Booking> existingClinicBookings)
+        {
+            ValidateNoOverlap(
+                booking,
+                existingTherapistBookings,
+                true);
+
+            ValidateNoOverlap(
+                booking,
+                existingClinicBookings,
+                false);
+        }
+
+        /// <summary>
+        /// Validates that the booking does not overlap with existing active bookings
+        /// for either the therapist or the clinic.
+        /// </summary>
+        private static void ValidateNoOverlap(
+            Booking booking,
+            IEnumerable<Booking> existingBookings,
+            bool validateTherapist)
+        {
+            if (validateTherapist == true)
+            {
+                bool therapistOverlap = existingBookings.Any(existingBooking =>
+                    existingBooking.Id != booking.Id &&
+                    existingBooking.IsActive == true &&
+                    existingBooking.TherapistId == booking.TherapistId &&
+                    existingBooking.TimeSlot.OverlapsWith(booking.TimeSlot));
+
+                if (therapistOverlap == true)
+                    throw new DomainException("Therapist already has a booking in this time slot.");
             }
 
-            if (clinicBookings != null)
+            if (validateTherapist == false)
             {
-                var clinicOverlap = clinicBookings
-                    .Where(booking => booking.Id != Id)
-                    .Where(booking => booking.IsActive)
-                    .Where(booking => booking.ClinicId == clinicId)
-                    .FirstOrDefault(booking => timeSlot.OverlapsWith(booking.TimeSlot));
+                bool clinicOverlap = existingBookings.Any(existingBooking =>
+                    existingBooking.Id != booking.Id &&
+                    existingBooking.IsActive == true &&
+                    existingBooking.ClinicId == booking.ClinicId &&
+                    existingBooking.TimeSlot.OverlapsWith(booking.TimeSlot));
 
-                if (clinicOverlap is not null)
-                {
-                    throw new DomainException(
-                        $"Klinikken har allerede en booking " +
-                        $"({clinicOverlap.TimeSlot.From:HH:mm}-{clinicOverlap.TimeSlot.To:HH:mm}) " +
-                        $"der overlapper med det ønskede tidsinterval.");
-                }
+                if (clinicOverlap == true)
+                    throw new DomainException("Clinic already has a booking in this time slot.");
             }
         }
+
+        // Parameterless constructor for EF Core
+        private Booking() { }
     }
 }

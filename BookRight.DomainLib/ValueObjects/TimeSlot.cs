@@ -2,22 +2,18 @@
 
 namespace BookRight.DomainLib.ValueObjects
 {
+    /// <summary>
+    /// Value Object representing a time interval.
+    /// </summary>
     public record TimeSlot
     {
         public DateTime From { get; init; }
         public DateTime To { get; init; }
 
-        private TimeSlot()
-        {
-            // Required by EF Core
-        }
-
         public TimeSlot(DateTime from, DateTime to)
         {
             if (to <= from)
-            {
-                throw new DomainException("Sluttidspunkt skal være efter starttidspunkt.");
-            }
+                throw new DomainException("End time must be after start time.");
 
             From = from;
             To = to;
@@ -25,14 +21,10 @@ namespace BookRight.DomainLib.ValueObjects
 
         public TimeSpan Duration => To - From;
 
-        public bool OverlapsWith(TimeSlot other)
-        {
-            if (other == null)
-            {
-                throw new DomainException("Tidsinterval er påkrævet.");
-            }
+        internal bool OverlapsWith(TimeSlot other)
+            => From < other.To && other.From < To;
 
-            return From < other.To && other.From < To;
-        }
+        // Parameterless constructor for EF Core
+        private TimeSlot() { }
     }
 }
