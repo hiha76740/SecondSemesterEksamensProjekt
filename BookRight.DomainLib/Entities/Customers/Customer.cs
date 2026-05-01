@@ -28,21 +28,27 @@ public class Customer : AggregateRoot
         EnsureValidFirstname(firstName);
         EnsureValidLastname(lastName);
 
-        string normalisedFirstName = firstName.Trim();
-        string normalisedLastName = lastName.Trim();
-
         if (birthDate.Date > DateTime.Today)
             throw new DomainException("Birthdate cannot be in future");
 
+        if (address == null)
+            throw new DomainException("Customer must have an address");
+
+        if (email == null)
+            throw new DomainException("Customer must have an email");
+
+        if (phoneNumber == null)
+            throw new DomainException("Customer must have a phonenumber");
+
 
         Id = Guid.NewGuid();
-        Firstname = normalisedFirstName;
-        Lastname = normalisedLastName;
+        Firstname = firstName;
+        Lastname = lastName;
         Birthdate = birthDate.Date;
         Note = note;
-        Address = address ?? throw new DomainException("Customer must have an address");
-        Email = email ?? throw new DomainException("Customer must have an email");
-        PhoneNumber = phoneNumber ?? throw new DomainException("Customer must have a phonenumber");
+        Address = address;
+        Email = email;
+        PhoneNumber = phoneNumber;
     }
 
     public static Customer Create(
@@ -63,24 +69,20 @@ public class Customer : AggregateRoot
     {
         EnsureValidFirstname(newFirstname);
 
-        string normalisedNewFirstname = newFirstname.Trim();
-
-        if (Firstname == normalisedNewFirstname)
+        if (Firstname == newFirstname)
             throw new DomainException("New firstname is the same as current firstname");
 
-        Firstname = normalisedNewFirstname;
+        Firstname = newFirstname;
     }
 
     public void ChangeLastname(string newLastname)
     {
         EnsureValidLastname(newLastname);
 
-        string normalisedNewLastname = newLastname.Trim();
-
-        if (Lastname == normalisedNewLastname)
+        if (Lastname == newLastname)
             throw new DomainException("New lastname is the same as current lastname");
 
-        Lastname = normalisedNewLastname;
+        Lastname = newLastname;
     }
 
 
