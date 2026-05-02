@@ -86,13 +86,12 @@ public class Customer : AggregateRoot
     }
 
 
-    public void ChangeAddress(Address address)
+    public void ChangeAddress(Address newAddress)
     {
-        if (address == null)
-            throw new DomainException("Customer must have an address");
-
-        if (Address != address)
-            Address = address;
+        if (Address == newAddress)
+            throw new DomainException("New address is the same as the current address");
+        
+        Address = newAddress;
     }
 
 
