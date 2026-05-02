@@ -95,13 +95,12 @@ public class Customer : AggregateRoot
     }
 
 
-    public void ChangeEmail(Email email)
+    public void ChangeEmail(Email newEmail)
     {
-        if (Address == null)
-            throw new DomainException("Customer must have an email");
+        if (Email == newEmail)
+            throw new DomainException("New email is the same as the current email");
 
-        if (Email != email)
-            Email = email;
+        Email = newEmail;
     }
 
 
