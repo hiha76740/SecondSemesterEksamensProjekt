@@ -12,8 +12,7 @@ public class Customer : AggregateRoot
     public Address Address { get; private set; }
     public Email Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
-    public Guid TherapistId { get; private set; }
-    //TODO: Add the functionality to assign an optional preferred Therapist to a Customer
+    public Guid? TherapistId { get; private set; }
 
 
     private Customer(
@@ -23,7 +22,8 @@ public class Customer : AggregateRoot
             Address address,
             Email email,
             PhoneNumber phoneNumber,
-            string note)
+            string note,
+            Guid? therapistId)
     {
         EnsureValidFirstname(firstName);
         EnsureValidLastname(lastName);
@@ -40,6 +40,9 @@ public class Customer : AggregateRoot
         if (phoneNumber == null)
             throw new DomainException("Customer must have a phonenumber");
 
+        if (therapistId == Guid.Empty)
+            throw new DomainException("TherapistId cannot be empty");
+
 
         Id = Guid.NewGuid();
         Firstname = firstName;
@@ -49,6 +52,7 @@ public class Customer : AggregateRoot
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
+        TherapistId = therapistId;
     }
 
     public static Customer Create(
@@ -58,9 +62,10 @@ public class Customer : AggregateRoot
             Address address,
             Email email,
             PhoneNumber phoneNumber,
-            string note = "")
+            string note = "",
+            Guid? therapistId = null)
     {
-        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note);
+        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, therapistId);
         return customer;
     }
 
