@@ -2,7 +2,7 @@
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
-namespace BookRight.DomainLib.Entities.Booking;
+namespace BookRight.DomainLib.Entities.Bookings;
 
 /// <summary>
 /// Represents a scheduled treatment booking for a customer at a clinic, including details such as time slot, treatment,
