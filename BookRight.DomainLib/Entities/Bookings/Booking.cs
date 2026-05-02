@@ -89,10 +89,10 @@ public class Booking : AggregateRoot
     }
 
     /// <summary>
-    /// Changes the associated treatment to the specified treatment identifier.
+    /// Changes the current treatment to the specified treatment identifier.
     /// </summary>
-    /// <param name="treatmentId">The unique identifier of the treatment to associate. Cannot be <see cref="Guid.Empty"/>.</param>
-    /// <exception cref="DomainException">Thrown if <paramref name="treatmentId"/> is <see cref="Guid.Empty"/>.</exception>
+    /// <param name="newTreatmentId">The unique identifier of the new treatment to assign. Must not be equal to the current treatment identifier.</param>
+    /// <exception cref="DomainException">Thrown if the specified treatment identifier is the same as the current treatment identifier.</exception>
     public void ChangeTreatment(Guid newTreatmentId)
     {
         EnsureCanBeChanged();
