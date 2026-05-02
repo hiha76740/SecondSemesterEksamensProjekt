@@ -108,18 +108,18 @@ public class Booking : AggregateRoot
     /// </summary>
     /// <param name="newTherapistId">The unique identifier of the new therapist to assign to this booking. Must not be the same as the current
     /// therapist.</param>
-    /// <param name="existsForTherapist">A collection of existing bookings for the new therapist. Used to ensure there are no scheduling conflicts with
+    /// <param name="existsForNewTherapist">A collection of existing bookings for the new therapist. Used to ensure there are no scheduling conflicts with
     /// the new assignment.</param>
     /// <exception cref="DomainException">Thrown if the new therapist is the same as the current therapist, or if the change would result in overlapping
     /// bookings.</exception>
-    public void ChangeTherapist(Guid newTherapistId, IEnumerable<Booking> existsForTherapist)
+    public void ChangeTherapist(Guid newTherapistId, IEnumerable<Booking> existsForNewTherapist)
     {
         EnsureCanBeChanged();
 
         if (newTherapistId == TherapistId)
             throw new DomainException("New and old therapist can't be the same");
 
-        ValidateNoOverlap(this, existsForTherapist);
+        ValidateNoOverlap(this, existsForNewTherapist);
 
         TherapistId = newTherapistId;
     }
