@@ -1,38 +1,26 @@
 ﻿using BookRight.DomainLib.Exceptions;
 
-namespace BookRight.DomainLib.ValueObjects
+namespace BookRight.DomainLib.ValueObjects;
+
+//
+public record TimeSlot
 {
-    public record TimeSlot
+    public DateTime From { get; init; }
+    public DateTime To { get; init; }
+
+    public TimeSlot(DateTime from, DateTime to)
     {
-        public DateTime From { get; init; }
-        public DateTime To { get; init; }
+        if (to <= from)
+            throw new DomainException("End time must be after start time.");
 
-        private TimeSlot()
-        {
-            // Required by EF Core
-        }
-
-        public TimeSlot(DateTime from, DateTime to)
-        {
-            if (to <= from)
-            {
-                throw new DomainException("Sluttidspunkt skal være efter starttidspunkt.");
-            }
-
-            From = from;
-            To = to;
-        }
-
-        public TimeSpan Duration => To - From;
-
-        public bool OverlapsWith(TimeSlot other)
-        {
-            if (other == null)
-            {
-                throw new DomainException("Tidsinterval er påkrævet.");
-            }
-
-            return From < other.To && other.From < To;
-        }
+        From = from;
+        To = to;
     }
+
+    public TimeSpan Duration => To - From;
+
+    internal bool OverlapsWith(TimeSlot other) => From < other.To && other.From < To;
+
+    // Parameterløs constructor til EF Core
+    private TimeSlot() { }
 }
