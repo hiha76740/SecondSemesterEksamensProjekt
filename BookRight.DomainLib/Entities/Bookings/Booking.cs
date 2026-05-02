@@ -93,14 +93,14 @@ public class Booking : AggregateRoot
     /// </summary>
     /// <param name="treatmentId">The unique identifier of the treatment to associate. Cannot be <see cref="Guid.Empty"/>.</param>
     /// <exception cref="DomainException">Thrown if <paramref name="treatmentId"/> is <see cref="Guid.Empty"/>.</exception>
-    public void ChangeTreatment(Guid treatmentId)
+    public void ChangeTreatment(Guid newTreatmentId)
     {
         EnsureCanBeChanged();
 
-        if (treatmentId == Guid.Empty)
-            throw new DomainException("Treatment Id cannot be empty.");
+        if (TreatmentId == newTreatmentId)
+            throw new DomainException("new and old treatment can't be the same");
 
-        TreatmentId = treatmentId;
+        TreatmentId = newTreatmentId;
     }
 
     /// <summary>
