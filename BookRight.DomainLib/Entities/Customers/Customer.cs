@@ -104,13 +104,12 @@ public class Customer : AggregateRoot
     }
 
 
-    public void ChangePhoneNumber(PhoneNumber phoneNumber)
+    public void ChangePhoneNumber(PhoneNumber newPhoneNumber)
     {
-        if (PhoneNumber == null)
-            throw new DomainException("Customer must have a phonenumber");
+        if (PhoneNumber == newPhoneNumber)
+            throw new DomainException("New phonenumber is the same as the current phonenumber");
 
-        if (PhoneNumber != phoneNumber)
-            PhoneNumber = phoneNumber;
+        PhoneNumber = newPhoneNumber;
     }
 
     private void EnsureValidFirstname(string firstName)
