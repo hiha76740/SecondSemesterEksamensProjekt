@@ -18,7 +18,6 @@ public class BookingTests
     private static Guid NewClinicId => Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b123c80d");
 
     private static decimal Price => 550m;
-    private static decimal NegativePrice => -100m;
 
     private static IEnumerable<Booking> ExistingCustomerBookings => Array.Empty<Booking>();
     private static IEnumerable<Booking> ExistingTherapistBookings => Array.Empty<Booking>();
@@ -69,9 +68,12 @@ public class BookingTests
     [Fact]
     public void Create_GivenNegativePrice_CastDomainException()
     {
+        // Arrange
+        decimal price = -100m;
+
         // Act & Assert
         Assert.Throws<DomainException>(() =>
-            CreateWithoutOverlap(price: NegativePrice));
+            CreateWithoutOverlap(price: price));
     }
 
     [Fact]
