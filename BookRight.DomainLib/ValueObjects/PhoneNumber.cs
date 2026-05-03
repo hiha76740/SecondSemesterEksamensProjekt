@@ -12,21 +12,13 @@ public record PhoneNumber
         if (string.IsNullOrWhiteSpace(number))
             throw new DomainException("Phonenumber is required");
 
-        string normalisedNumber = number
-            .Trim()
-            .Replace(" ", "");
+        if (number.Any(char.IsDigit) == false)
+            throw new DomainException("Phonenumber must contain only digits.");
 
-        if (normalisedNumber.StartsWith("+45"))
-            normalisedNumber = normalisedNumber[3..];
-
-        if (normalisedNumber.StartsWith("0045"))
-            normalisedNumber = normalisedNumber[4..];
-
-        if (normalisedNumber.Length != 8)
+        if (number.Length != 8)
             throw new DomainException("Phonenumber must contain 8 digits");
 
-
-        Number = normalisedNumber;
+        Number = number;
     }
 
 }
