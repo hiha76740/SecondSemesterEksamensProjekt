@@ -36,7 +36,7 @@ public class CustomerTests
 
 
     // ---------------------------------------------------------
-    // 1. Create tests (Creating a Costumer)
+    // 1. Create tests (Creating a Customer)
     // ---------------------------------------------------------
 
     [Fact]
@@ -71,7 +71,7 @@ public class CustomerTests
 
 
     // ---------------------------------------------------------
-    // 2. ChangeFirstName tests (Change Costumer Firstname)
+    // 2. ChangeFirstname tests (Change Customer Firstname)
     // ---------------------------------------------------------
 
     [Fact]
@@ -97,6 +97,25 @@ public class CustomerTests
 
         // Act & Assert
         Assert.Throws<DomainException>(() => c.ChangeFirstname(newFirstname));
+    }
+
+
+    // ---------------------------------------------------------
+    // 3. ChangeLastname tests (Change Customer Lastname)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangeLastname_GivenValidData_ShouldSucceed()
+    {
+        // Arrange
+        var c = CreateCustomerWithValidData();
+        string newLastname = "Johnson";
+
+        // Act
+        c.ChangeLastname(newLastname);
+
+        // Assert
+        Assert.Equal(newLastname, c.Lastname);
     }
 
     //Arrange
