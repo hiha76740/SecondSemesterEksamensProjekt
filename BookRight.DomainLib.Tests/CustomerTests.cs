@@ -160,6 +160,25 @@ public class CustomerTests
     }
 
 
+    // ---------------------------------------------------------
+    // 5. ChangeEmail tests (Change Customer Email)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangeEmail_GivenValidData_ShouldSucceed()
+    {
+        //Arrange
+        var c = CreateCustomerWithValidData();
+        var expected = new Email("mytestmail@testcloud.com");
+
+        //Act
+        c.ChangeEmail(expected);
+
+        //Assert
+        Assert.Equal(expected, c.Email);
+    }
+
+
     //Arrange
 
     //Act
