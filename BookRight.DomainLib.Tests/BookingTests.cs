@@ -2,7 +2,6 @@
 using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
-using Xunit;
 
 namespace BookRight.DomainLib.Tests;
 
