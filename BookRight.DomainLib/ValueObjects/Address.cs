@@ -19,12 +19,9 @@ public record Address
 
         if (string.IsNullOrWhiteSpace(city))
             throw new DomainException("City is required");
-        
-        string normalisedCity = city.Trim();
-
 
         Street = street;
         PostalCode = postalCode;
-        City = normalisedCity;
+        City = city;
     }
 }
