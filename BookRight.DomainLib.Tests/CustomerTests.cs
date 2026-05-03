@@ -197,15 +197,26 @@ public class CustomerTests
     [Fact]
     public void ChangePhoneNumber_GivenValidData_ShouldSucceed()
     {
-        // Arrange
+        //Arrange
         var c = CreateCustomerWithValidData();
         var expected = new PhoneNumber("43218765");
 
-        // Act
+        //Act
         c.ChangePhoneNumber(expected);
 
-        // Assert
+        //Assert
         Assert.Equal(expected, c.PhoneNumber);
+    }
+
+    [Fact]
+    public void ChangePhoneNumber_GivenSamePhoneNumber_ThrowDomainException()
+    {
+        //Arrange
+        var c = CreateCustomerWithValidData();
+        var phoneNumber = new PhoneNumber("87654321");
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => c.ChangePhoneNumber(phoneNumber));
     }
 
 
