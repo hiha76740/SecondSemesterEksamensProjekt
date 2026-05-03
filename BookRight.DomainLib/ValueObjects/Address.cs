@@ -14,9 +14,6 @@ public record Address
         if (string.IsNullOrWhiteSpace(street))
             throw new DomainException("Streetname is required");
 
-        string normalisedStreet = street.Trim();
-
-
         if (string.IsNullOrWhiteSpace(postalCode))
             throw new DomainException("Postalcode is required");
 
@@ -29,7 +26,7 @@ public record Address
         string normalisedCity = city.Trim();
 
 
-        Street = normalisedStreet;
+        Street = street;
         PostalCode = normalisedPostalCode;
         City = normalisedCity;
     }
