@@ -70,6 +70,25 @@ public class CustomerTests
     }
 
 
+    // ---------------------------------------------------------
+    // 2. ChangeFirstName tests (Change Costumer Firstname)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangeFirstname_GivenValidData_ShouldSucceed()
+    {
+        //Arrange
+        var c = CreateCustomerWithValidData();
+        string newFirstname = "Ian";
+
+        //Act
+        c.ChangeFirstname(newFirstname);
+
+        //Assert
+        Assert.Equal(newFirstname, c.Firstname);
+    }
+
+
     //Arrange
 
     //Act
