@@ -18,5 +18,17 @@ public class AddressTests
             postalCode ?? PostalCode,
             city ?? City);
 
+    // ---------------------------------------------------------
+    // 1. Create tests (Creating an Address)
+    // ---------------------------------------------------------
 
+    [Fact]
+    public void Create_WithEmptyStreet_ThrowDomainException()
+    {
+        // Arrange
+        string street = "";
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => CreateAddressWithValidData(street: street));
+    }
 }
