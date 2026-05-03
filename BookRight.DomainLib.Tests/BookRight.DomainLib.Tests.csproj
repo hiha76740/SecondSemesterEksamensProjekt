@@ -24,8 +24,4 @@
     <ProjectReference Include="..\BookRight.DomainLib\BookRight.DomainLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Value Object\" />
-  </ItemGroup>
-
 </Project>
