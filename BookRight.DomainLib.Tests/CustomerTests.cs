@@ -190,6 +190,24 @@ public class CustomerTests
     }
 
 
+    // ---------------------------------------------------------
+    // 6. ChangePhoneNumber tests (Change Customer PhoneNumber)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangePhoneNumber_GivenValidData_ShouldSucceed()
+    {
+        // Arrange
+        var c = CreateCustomerWithValidData();
+        var expected = new PhoneNumber("43218765");
+
+        // Act
+        c.ChangePhoneNumber(expected);
+
+        // Assert
+        Assert.Equal(expected, c.PhoneNumber);
+    }
+
 
     //Arrange
 
