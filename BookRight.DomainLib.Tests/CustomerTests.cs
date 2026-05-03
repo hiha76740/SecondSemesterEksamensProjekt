@@ -118,6 +118,17 @@ public class CustomerTests
         Assert.Equal(newLastname, c.Lastname);
     }
 
+    [Fact]
+    public void ChangeLastname_GivenEmptyLastname_ThrowDomainException()
+    {
+        // Arrange
+        var c = CreateCustomerWithValidData();
+        string newLastname = "";
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => c.ChangeLastname(newLastname));
+    }
+
     //Arrange
 
     //Act
