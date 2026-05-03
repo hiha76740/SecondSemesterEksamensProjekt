@@ -4,7 +4,7 @@ using BookRight.DomainLib.ValueObjects;
 using System.Net;
 using Xunit;
 
-namespace BookRight.DomainLib.Tests;
+namespace BookRight.DomainLib.Tests.Entities;
 
 public class CustomerTests
 {
