@@ -1,4 +1,4 @@
-using BookRight.DomainLib.Entities;
+using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;

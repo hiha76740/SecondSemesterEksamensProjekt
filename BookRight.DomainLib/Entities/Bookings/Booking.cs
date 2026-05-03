@@ -2,7 +2,7 @@
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
-namespace BookRight.DomainLib.Entities
+namespace BookRight.DomainLib.Entities.Bookings
 {
     /// <summary>
     /// Aggregate Root for Booking.
