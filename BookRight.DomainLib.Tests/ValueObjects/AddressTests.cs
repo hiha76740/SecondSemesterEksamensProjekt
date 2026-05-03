@@ -25,10 +25,20 @@ public class AddressTests
     [Fact]
     public void Create_WithEmptyStreet_ThrowDomainException()
     {
-        // Arrange
+        //Arrange
         string street = "";
 
-        // Act & Assert
+        //Act & Assert
         Assert.Throws<DomainException>(() => CreateAddressWithValidData(street: street));
+    }
+
+    [Fact]
+    public void Create_WithEmptyPostalCode_ThrowDomainException()
+    {
+        //Arrange
+        string postalCode = "";
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => CreateAddressWithValidData(postalCode: postalCode));
     }
 }
