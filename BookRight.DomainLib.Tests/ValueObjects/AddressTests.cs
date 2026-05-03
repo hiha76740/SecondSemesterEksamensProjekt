@@ -41,4 +41,14 @@ public class AddressTests
         //Act & Assert
         Assert.Throws<DomainException>(() => CreateAddressWithValidData(postalCode: postalCode));
     }
+
+    [Fact]
+    public void Create_WithEmptyCity_ThrowDomainException()
+    {
+        //Arrange
+        string city = "";
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => CreateAddressWithValidData(city: city));
+    }
 }
