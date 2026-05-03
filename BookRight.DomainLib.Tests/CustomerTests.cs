@@ -59,6 +59,15 @@ public class CustomerTests
         Assert.Throws<DomainException>(() => CreateCustomerWithValidData(lastName: lastName));
     }
 
+    [Fact]
+    public void Create_WithInvalidBirthdate_ThrowDomainException()
+    {
+        //Arrange
+        DateTime birthdate = new DateTime(2028, 08, 14);
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => CreateCustomerWithValidData(birthDate: birthdate));
+    }
 
 
     //Arrange
