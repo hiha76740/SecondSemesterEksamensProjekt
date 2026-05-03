@@ -178,6 +178,18 @@ public class CustomerTests
         Assert.Equal(expected, c.Email);
     }
 
+    [Fact]
+    public void ChangeEmail_GivenSameEmail_ThrowDomainException()
+    {
+        //Arrange
+        var c = CreateCustomerWithValidData();
+        var email = new Email("PoulP@testmail.com");
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => c.ChangeEmail(email));
+    }
+
+
 
     //Arrange
 
