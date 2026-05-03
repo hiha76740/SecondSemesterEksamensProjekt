@@ -49,6 +49,16 @@ public class CustomerTests
         Assert.Throws<DomainException>(() => CreateCustomerWithValidData(firstName: firstName));
     }
 
+    [Fact]
+    public void Create_WithInvalidLastName_ThrowDomainException()
+    {
+        //Arrange
+        string lastName = "";
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => CreateCustomerWithValidData(lastName: lastName));
+    }
+
 
 
     //Arrange
