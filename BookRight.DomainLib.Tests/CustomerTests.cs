@@ -148,6 +148,18 @@ public class CustomerTests
         Assert.Equal(expected, c.Address);
     }
 
+    [Fact]
+    public void ChangeAddress_GivenSameAddress_ThrowDomainException()
+    {
+        //Arrange
+        var c = CreateCustomerWithValidData();
+        var address = new Address("Test Avenue 21", "1234", "Testville");
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => c.ChangeAddress(address));
+    }
+
+
     //Arrange
 
     //Act
