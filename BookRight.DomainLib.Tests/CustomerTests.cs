@@ -91,11 +91,11 @@ public class CustomerTests
     [Fact]
     public void ChangeFirstname_GivenEmptyFirstname_ThrowDomainException()
     {
-        // Arrange
+        //Arrange
         var c = CreateCustomerWithValidData();
         string newFirstname = "";
 
-        // Act & Assert
+        //Act & Assert
         Assert.Throws<DomainException>(() => c.ChangeFirstname(newFirstname));
     }
 
@@ -107,26 +107,45 @@ public class CustomerTests
     [Fact]
     public void ChangeLastname_GivenValidData_ShouldSucceed()
     {
-        // Arrange
+        //Arrange
         var c = CreateCustomerWithValidData();
         string newLastname = "Johnson";
 
-        // Act
+        //Act
         c.ChangeLastname(newLastname);
 
-        // Assert
+        //Assert
         Assert.Equal(newLastname, c.Lastname);
     }
 
     [Fact]
     public void ChangeLastname_GivenEmptyLastname_ThrowDomainException()
     {
-        // Arrange
+        //Arrange
         var c = CreateCustomerWithValidData();
         string newLastname = "";
 
-        // Act & Assert
+        //Act & Assert
         Assert.Throws<DomainException>(() => c.ChangeLastname(newLastname));
+    }
+
+
+    // ---------------------------------------------------------
+    // 4. ChangeAddress tests (Change Customer Address)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangeAddress_GivenValidData_ShouldSucceed()
+    {
+        //Arrange
+        var c = CreateCustomerWithValidData();
+        var expected = new Address("Testgade 8", "8765", "Testrup");
+
+        //Act
+        c.ChangeAddress(expected);
+
+        //Assert
+        Assert.Equal(expected, c.Address);
     }
 
     //Arrange
