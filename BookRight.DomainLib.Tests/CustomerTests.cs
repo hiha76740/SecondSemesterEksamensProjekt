@@ -35,6 +35,22 @@ public class CustomerTests
             therapistId);
 
 
+    // ---------------------------------------------------------
+    // 1. Create tests (Creating a Costumer)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void Create_WithInvalidFirstName_ThrowDomainException()
+    {
+        //Arrange
+        string firstName = "";
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => CreateCustomerWithValidData(firstName: firstName));
+    }
+
+
+
     //Arrange
 
     //Act
