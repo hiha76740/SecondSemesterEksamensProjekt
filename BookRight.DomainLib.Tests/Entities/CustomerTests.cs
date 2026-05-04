@@ -218,4 +218,24 @@ public class CustomerTests
         //Act & Assert
         Assert.Throws<DomainException>(() => c.ChangePhoneNumber(phoneNumber));
     }
+
+
+    // ---------------------------------------------------------
+    // 7. ChangeNote tests (Change Customer Note)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangeNote_GivenValidData_ShallSucceed()
+    {
+        //Arrange
+        var c = CreateCustomerWithValidData();
+        var expected = "This is a new note";
+
+        //Act
+        c.ChangeNote(expected);
+
+        //Assert
+        Assert.Equal(expected, c.Note);
+    }
+
 }
