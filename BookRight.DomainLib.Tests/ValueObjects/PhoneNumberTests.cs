@@ -17,14 +17,14 @@ public class PhoneNumberTests
     [Theory]
     [InlineData("923759023")]
     [InlineData("9450375")]
-    public void Create_WithInvalidNoOfDigits_ThrowDomainException(string phoneNumber)
+    public void Create_WithInvalidNoOfDigits_CastDomainException(string phoneNumber)
     {
         //Act & Assert
         Assert.Throws<DomainException>(() => CreatePhoneNumberWithValidData(phoneNumber));
     }
 
     [Fact]
-    public void Create_WithNonDigits_ThrowDomainException()
+    public void Create_WithNonDigits_CastDomainException()
     {
         //Arrange:
         string phoneNumber = "1234567#";

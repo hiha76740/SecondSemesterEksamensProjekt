@@ -23,7 +23,7 @@ public class AddressTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void Create_WithEmptyStreet_ThrowDomainException()
+    public void Create_WithEmptyStreet_CastDomainException()
     {
         //Arrange
         string street = "";
@@ -33,7 +33,7 @@ public class AddressTests
     }
 
     [Fact]
-    public void Create_WithEmptyPostalCode_ThrowDomainException()
+    public void Create_WithEmptyPostalCode_CastDomainException()
     {
         //Arrange
         string postalCode = "";
@@ -43,7 +43,7 @@ public class AddressTests
     }
 
     [Fact]
-    public void Create_WithEmptyCity_ThrowDomainException()
+    public void Create_WithEmptyCity_CastDomainException()
     {
         //Arrange
         string city = "";

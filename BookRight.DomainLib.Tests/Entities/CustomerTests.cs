@@ -40,7 +40,7 @@ public class CustomerTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void Create_WithInvalidFirstName_ThrowDomainException()
+    public void Create_WithInvalidFirstName_CastDomainException()
     {
         //Arrange
         string firstName = "";
@@ -50,7 +50,7 @@ public class CustomerTests
     }
 
     [Fact]
-    public void Create_WithInvalidLastName_ThrowDomainException()
+    public void Create_WithInvalidLastName_CastDomainException()
     {
         //Arrange
         string lastName = "";
@@ -75,7 +75,7 @@ public class CustomerTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void ChangeFirstname_GivenValidData_ShouldSucceed()
+    public void ChangeFirstname_GivenValidData_ShallSucceed()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -89,7 +89,7 @@ public class CustomerTests
     }
 
     [Fact]
-    public void ChangeFirstname_GivenEmptyFirstname_ThrowDomainException()
+    public void ChangeFirstname_GivenEmptyFirstname_CastDomainException()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -119,7 +119,7 @@ public class CustomerTests
     }
 
     [Fact]
-    public void ChangeLastname_GivenEmptyLastname_ThrowDomainException()
+    public void ChangeLastname_GivenEmptyLastname_CastDomainException()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -135,7 +135,7 @@ public class CustomerTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void ChangeAddress_GivenValidData_ShouldSucceed()
+    public void ChangeAddress_GivenValidData_ShallSucceed()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -149,7 +149,7 @@ public class CustomerTests
     }
 
     [Fact]
-    public void ChangeAddress_GivenSameAddress_ThrowDomainException()
+    public void ChangeAddress_GivenSameAddress_CastDomainException()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -165,7 +165,7 @@ public class CustomerTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void ChangeEmail_GivenValidData_ShouldSucceed()
+    public void ChangeEmail_GivenValidData_ShallSucceed()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -179,7 +179,7 @@ public class CustomerTests
     }
 
     [Fact]
-    public void ChangeEmail_GivenSameEmail_ThrowDomainException()
+    public void ChangeEmail_GivenSameEmail_CastDomainException()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -195,7 +195,7 @@ public class CustomerTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void ChangePhoneNumber_GivenValidData_ShouldSucceed()
+    public void ChangePhoneNumber_GivenValidData_ShallSucceed()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -209,7 +209,7 @@ public class CustomerTests
     }
 
     [Fact]
-    public void ChangePhoneNumber_GivenSamePhoneNumber_ThrowDomainException()
+    public void ChangePhoneNumber_GivenSamePhoneNumber_CastDomainException()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
@@ -218,11 +218,4 @@ public class CustomerTests
         //Act & Assert
         Assert.Throws<DomainException>(() => c.ChangePhoneNumber(phoneNumber));
     }
-
-
-    //Arrange
-
-    //Act
-
-    //Assert
 }
