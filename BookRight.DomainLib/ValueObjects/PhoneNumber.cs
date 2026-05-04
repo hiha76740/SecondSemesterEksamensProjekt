@@ -12,7 +12,7 @@ public record PhoneNumber
         if (string.IsNullOrWhiteSpace(number))
             throw new DomainException("Phonenumber is required");
 
-        if (number.Any(char.IsDigit) == false)
+        if (number.All(char.IsDigit) == false)
             throw new DomainException("Phonenumber must contain only digits.");
 
         if (number.Length != 8)
