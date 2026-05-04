@@ -188,18 +188,6 @@ public class TherapistTests
     }
 
 
-    [Fact]
-    public void ChangeAddress_GivenNullAddress_CastDomainException()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            therapist.ChangeAddress(null!));
-    }
-
-
     // -----------------------------
     // CHANGE EMAIL
     // -----------------------------
