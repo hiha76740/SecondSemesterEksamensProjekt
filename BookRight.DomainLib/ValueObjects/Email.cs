@@ -12,12 +12,11 @@ public record Email
         if (string.IsNullOrWhiteSpace(emailAddress))
             throw new DomainException("Email is required");
         
-        string normalisedEmailAddress = emailAddress.Trim();
 
-        if (normalisedEmailAddress.Contains('@') == false || normalisedEmailAddress[^2].Equals('.') == false)
+        if (emailAddress.Contains('@') == false)
             throw new DomainException("Email must have a domain");
 
 
-        EmailAddress = normalisedEmailAddress;
+        EmailAddress = emailAddress;
     }
 }
