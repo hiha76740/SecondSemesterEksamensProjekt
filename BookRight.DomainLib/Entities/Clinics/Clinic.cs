@@ -47,6 +47,9 @@ public class Clinic
 
     public void ChangeAddress(Address newAddress)
     {
+        if (Address == newAddress)
+            throw new DomainException("New and old address can't be the same");
+
         Address = newAddress;
     }
 
