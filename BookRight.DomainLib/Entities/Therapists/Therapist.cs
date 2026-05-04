@@ -163,6 +163,6 @@ public class Therapist : AggregateRoot
     private void EnsureValidHourlyRate(decimal hourlyRate)
     {
         if (hourlyRate <= 0)
-            throw new DomainException("Hourly rate cannot be negative");
+            throw new DomainException("Hourly rate cannot be negative or 0");
     }
 }
