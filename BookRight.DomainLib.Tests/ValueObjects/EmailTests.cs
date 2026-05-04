@@ -13,5 +13,15 @@ namespace BookRight.DomainLib.Tests.ValueObjects
         // ---------------------------------------------------------
         // 1. Create tests (Creating an Email)
         // ---------------------------------------------------------
+
+        [Fact]
+        public void Create_WithInvalidEmail_CastDomainException()
+        {
+            // Arrange
+            string email = "test@@mail.com";
+
+            // Act & Assert
+            Assert.Throws<DomainException>(() => CreateEmailWithValidData(email));
+        }
     }
 }
