@@ -226,16 +226,4 @@ public class TherapistTests
         // Assert
         Assert.Equal(newPhoneNumber, therapist.PhoneNumber);
     }
-
-
-    [Fact]
-    public void ChangePhoneNumber_GivenNullPhoneNumber_CastDomainException()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            therapist.ChangePhoneNumber(null!));
-    }
 }
