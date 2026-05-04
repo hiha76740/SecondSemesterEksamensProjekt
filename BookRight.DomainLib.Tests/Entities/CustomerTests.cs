@@ -238,4 +238,23 @@ public class CustomerTests
         Assert.Equal(expected, c.Note);
     }
 
+
+    // ---------------------------------------------------------
+    // 8. ChangePrefferedTherapist tests (Change Customer Preffered Therapist)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangePreferredTherapist_GivenValidData_ShallSucceed()
+    {
+        //Arrange
+        var therapistId = Guid.NewGuid();
+        var c = CreateCustomerWithValidData(therapistId: therapistId);
+        var expected = Guid.NewGuid();
+
+        //Act
+        c.ChangePreferredTherapist(expected);
+
+        //Assert
+        Assert.Equal(expected, c.TherapistId);
+    }
 }
