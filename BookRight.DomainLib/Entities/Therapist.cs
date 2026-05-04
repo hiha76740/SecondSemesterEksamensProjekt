@@ -91,9 +91,6 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
 
-        if (newAddress == null)
-            throw new DomainException("Therapist must have an address");
-
         if (Address == newAddress)
             throw new DomainException("New address cannot be the same as current address");
 
