@@ -119,9 +119,6 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
 
-        if (newPhoneNumber == null)
-            throw new DomainException("Therapist must have a phonenumber");
-
         if (PhoneNumber == newPhoneNumber)
             throw new DomainException("New phonenumber cannot be the same as current phonenumber");
 
