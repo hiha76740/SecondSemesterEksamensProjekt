@@ -78,4 +78,18 @@ public class ClinicTests
         // Assert
         Assert.Equal(expected, c.OpeningHours);
     }
+
+    // ---------------------------------------------------------
+    // 3. ChangeOpeningHours tests (Changing a Clinic Address)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public void ChangeAddress_GivenSameAddress_CastDomainException()
+    {
+        // Arrange
+        var c = CreateWithValidData();
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => c.ChangeAddress(Address));
+    }
 }
