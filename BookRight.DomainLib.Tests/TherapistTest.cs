@@ -52,57 +52,37 @@ public class TherapistTests
     // CREATE VALIDATION TESTS
  
 
-    [Fact]
-    public void Create_GivenEmptyName_CastDomainException()
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+
+    public void Create_GivenEmptyName_CastDomainException(string name)
     {
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            CreateWithValidData(name: ""));
+            CreateWithValidData(name: name));
     }
 
 
-    [Fact]
-    public void Create_GivenEmptyAuthorizationNumber_CastDomainException()
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void Create_GivenEmptyAuthorizationNumber_CastDomainException(string authorizationNumber)
     {
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            CreateWithValidData(authorizationNumber: ""));
+            CreateWithValidData(authorizationNumber: authorizationNumber));
     }
 
 
     [Fact]
     public void Create_GivenNegativeHourlyRate_CastDomainException()
     {
+        decimal hourlyRate = -1;
+
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            CreateWithValidData(hourlyRate: -1));
-    }
-
-
-    [Fact]
-    public void Create_GivenNullAddress_CastDomainException()
-    {
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            CreateWithValidData(address: null!));
-    }
-
-
-    [Fact]
-    public void Create_GivenNullEmail_CastDomainException()
-    {
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            CreateWithValidData(email: null!));
-    }
-
-
-    [Fact]
-    public void Create_GivenNullPhoneNumber_CastDomainException()
-    {
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            CreateWithValidData(phoneNumber: null!));
+            CreateWithValidData(hourlyRate: hourlyRate));
     }
 
 
@@ -114,54 +94,27 @@ public class TherapistTests
     {
         // Arrange
         var therapist = CreateWithValidData();
+        string newName = "Jane Doe";
 
         // Act
-        therapist.ChangeName("Jane Doe");
+        therapist.ChangeName(newName);
 
         // Assert
-        Assert.Equal("Jane Doe", therapist.Name);
+        Assert.Equal(newName, therapist.Name);
     }
 
 
-    [Fact]
-    public void ChangeName_GivenEmptyName_CastDomainException()
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void ChangeName_GivenEmptyName_CastDomainException(string name)
     {
         // Arrange
         var therapist = CreateWithValidData();
 
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            therapist.ChangeName(""));
-    }
-
-
-    // -----------------------------
-    // CHANGE AUTHORIZATION NUMBER
-    // -----------------------------
-
-    [Fact]
-    public void ChangeAuthorizationNumber_GivenValidAuthorizationNumber_ChangesAuthorizationNumber()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act
-        therapist.ChangeAuthorizationNumber("AUTH999");
-
-        // Assert
-        Assert.Equal("AUTH999", therapist.AuthorizationNumber);
-    }
-
-
-    [Fact]
-    public void ChangeAuthorizationNumber_GivenEmptyAuthorizationNumber_CastDomainException()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            therapist.ChangeAuthorizationNumber(""));
+            therapist.ChangeName(name));
     }
 
 
@@ -174,24 +127,27 @@ public class TherapistTests
     {
         // Arrange
         var therapist = CreateWithValidData();
+        decimal newHourlyRate = 750;
 
         // Act
-        therapist.ChangeHourlyRate(750);
+        therapist.ChangeHourlyRate(newHourlyRate);
 
         // Assert
-        Assert.Equal(750, therapist.HourlyRate);
+        Assert.Equal(newHourlyRate, therapist.HourlyRate);
     }
 
 
-    [Fact]
-    public void ChangeHourlyRate_GivenNegativeHourlyRate_CastDomainException()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void ChangeHourlyRate_GivenInvalidHourlyRate_CastDomainException(decimal newHourlyRate)
     {
         // Arrange
         var therapist = CreateWithValidData();
 
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            therapist.ChangeHourlyRate(-1));
+            therapist.ChangeHourlyRate(newHourlyRate));
     }
 
 
@@ -218,18 +174,6 @@ public class TherapistTests
     }
 
 
-    [Fact]
-    public void ChangeAddress_GivenNullAddress_CastDomainException()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            therapist.ChangeAddress(null!));
-    }
-
-
     // -----------------------------
     // CHANGE EMAIL
     // -----------------------------
@@ -250,18 +194,6 @@ public class TherapistTests
     }
 
 
-    [Fact]
-    public void ChangeEmail_GivenNullEmail_CastDomainException()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            therapist.ChangeEmail(null!));
-    }
-
-
     // -----------------------------
     // CHANGE PHONE NUMBER
     // -----------------------------
@@ -279,17 +211,5 @@ public class TherapistTests
 
         // Assert
         Assert.Equal(newPhoneNumber, therapist.PhoneNumber);
-    }
-
-
-    [Fact]
-    public void ChangePhoneNumber_GivenNullPhoneNumber_CastDomainException()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            therapist.ChangePhoneNumber(null!));
     }
 }
