@@ -122,6 +122,14 @@ public class Customer : AggregateRoot
         Note = note;
     }
 
+    public void ChangePreferredTherapist(Guid newTherapistId)
+    {
+        if (TherapistId == newTherapistId)
+            throw new DomainException("New preferred therapist is the same as current therapist");
+
+        TherapistId = newTherapistId;
+    }
+
     private void EnsureValidFirstname(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
