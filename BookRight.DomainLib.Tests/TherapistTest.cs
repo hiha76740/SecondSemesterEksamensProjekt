@@ -78,9 +78,11 @@ public class TherapistTests
     [Fact]
     public void Create_GivenNegativeHourlyRate_CastDomainException()
     {
+        decimal hourlyRate = -1;
+
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            CreateWithValidData(hourlyRate: -1));
+            CreateWithValidData(hourlyRate: hourlyRate));
     }
 
 
