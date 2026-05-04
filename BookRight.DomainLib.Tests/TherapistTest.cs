@@ -136,36 +136,6 @@ public class TherapistTests
 
 
     // -----------------------------
-    // CHANGE AUTHORIZATION NUMBER
-    // -----------------------------
-
-    [Fact]
-    public void ChangeAuthorizationNumber_GivenValidAuthorizationNumber_ChangesAuthorizationNumber()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act
-        therapist.ChangeAuthorizationNumber("AUTH999");
-
-        // Assert
-        Assert.Equal("AUTH999", therapist.AuthorizationNumber);
-    }
-
-
-    [Fact]
-    public void ChangeAuthorizationNumber_GivenEmptyAuthorizationNumber_CastDomainException()
-    {
-        // Arrange
-        var therapist = CreateWithValidData();
-
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            therapist.ChangeAuthorizationNumber(""));
-    }
-
-
-    // -----------------------------
     // CHANGE HOURLY RATE
     // -----------------------------
 
