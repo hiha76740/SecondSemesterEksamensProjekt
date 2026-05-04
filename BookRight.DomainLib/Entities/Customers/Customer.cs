@@ -117,6 +117,11 @@ public class Customer : AggregateRoot
         PhoneNumber = newPhoneNumber;
     }
 
+    public void ChangeNote(string note)
+    {
+        Note = note;
+    }
+
     private void EnsureValidFirstname(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
