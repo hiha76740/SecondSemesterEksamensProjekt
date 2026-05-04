@@ -72,7 +72,7 @@ public class Clinic
     /// </summary>
     /// <param name="openingTime">The date and time to validate. Must represent a future point in time.</param>
     /// <exception cref="DomainException">Thrown if openingTime is earlier than the current date and time.</exception>
-    private void EnsureValidTime(DateTime openingTime)
+    private static void EnsureValidTime(DateTime openingTime)
     {
         if (openingTime < DateTime.Now)
             throw new DomainException("Opening time must be in the future");
