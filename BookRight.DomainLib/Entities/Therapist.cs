@@ -24,8 +24,7 @@ public class Therapist : AggregateRoot
         if (string.IsNullOrWhiteSpace(authorizationNumber))
             throw new DomainException("Therapist must have an authorization number");
 
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Therapist must have a name");
+        EnsureValidName(name);
 
         if (hourlyRate < 0)
             throw new DomainException("Hourly rate cannot be negative");
@@ -58,9 +57,8 @@ public class Therapist : AggregateRoot
     public void ChangeName(string newName)
     {
         // Pre-condition
-
-        if (string.IsNullOrWhiteSpace(newName))
-            throw new DomainException("Therapist must have a name");
+        EnsureValidName(newName);
+        
 
         if (Name == newName)
             throw new DomainException("New name cannot be the same as current name");
@@ -165,5 +163,11 @@ public class Therapist : AggregateRoot
         // Action
 
         _certificationTypes.Remove(certificationType);
+    }
+
+    private void EnsureValidName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException("Therapist must have a name");
     }
 }
