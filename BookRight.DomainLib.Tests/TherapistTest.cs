@@ -2,7 +2,7 @@
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
-namespace BookRight.DomainLib.Tests.Entities.Therapists;
+namespace BookRight.DomainLib.Tests;
 
 public class TherapistTests
 {
