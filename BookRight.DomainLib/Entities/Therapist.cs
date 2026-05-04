@@ -1,4 +1,5 @@
-﻿using BookRight.DomainLib.Exceptions;
+﻿using BookRight.DomainLib.Enums;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
 namespace BookRight.DomainLib.Entities.Therapists;
@@ -13,9 +14,8 @@ public class Therapist : AggregateRoot
     public Email Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
 
-    private readonly List<CertificationType> _certificationTypes = [];
-    public IReadOnlyCollection<CertificationType> CertificationTypes => _certificationTypes.AsReadOnly();
-
+    private readonly List<CertificationTypes> _certificationTypes = new();
+    public IReadOnlyCollection<CertificationTypes> CertificationTypes => _certificationTypes.AsReadOnly();
 
     private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber)
     {
@@ -24,20 +24,9 @@ public class Therapist : AggregateRoot
         if (string.IsNullOrWhiteSpace(authorizationNumber))
             throw new DomainException("Therapist must have an authorization number");
 
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Therapist must have a name");
+        EnsureValidName(name);
 
-        if (hourlyRate < 0)
-            throw new DomainException("Hourly rate cannot be negative");
-
-        if (address == null)
-            throw new DomainException("Therapist must have an address");
-
-        if (email == null)
-            throw new DomainException("Therapist must have an email");
-
-        if (phoneNumber == null)
-            throw new DomainException("Therapist must have a phonenumber");
+        EnsureValidHourlyRate(hourlyRate);
 
 
         // Action
@@ -67,9 +56,8 @@ public class Therapist : AggregateRoot
     public void ChangeName(string newName)
     {
         // Pre-condition
-
-        if (string.IsNullOrWhiteSpace(newName))
-            throw new DomainException("Therapist must have a name");
+        EnsureValidName(newName);
+        
 
         if (Name == newName)
             throw new DomainException("New name cannot be the same as current name");
@@ -85,8 +73,7 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
 
-        if (newHourlyRate < 0)
-            throw new DomainException("Hourly rate cannot be negative");
+        EnsureValidHourlyRate(newHourlyRate);
 
         if (HourlyRate == newHourlyRate)
             throw new DomainException("New hourly rate cannot be the same as current hourly rate");
@@ -102,9 +89,6 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
 
-        if (newAddress == null)
-            throw new DomainException("Therapist must have an address");
-
         if (Address == newAddress)
             throw new DomainException("New address cannot be the same as current address");
 
@@ -118,9 +102,6 @@ public class Therapist : AggregateRoot
     public void ChangeEmail(Email newEmail)
     {
         // Pre-condition
-
-        if (newEmail == null)
-            throw new DomainException("Therapist must have an email");
 
         if (Email == newEmail)
             throw new DomainException("New email cannot be the same as current email");
@@ -136,9 +117,6 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
 
-        if (newPhoneNumber == null)
-            throw new DomainException("Therapist must have a phonenumber");
-
         if (PhoneNumber == newPhoneNumber)
             throw new DomainException("New phonenumber cannot be the same as current phonenumber");
 
@@ -149,14 +127,11 @@ public class Therapist : AggregateRoot
     }
 
 
-    public void AddCertificationType(CertificationType certificationType)
+    public void AddCertificationType(CertificationTypes certificationType)
     {
         // Pre-condition
 
-        if (certificationType == null)
-            throw new DomainException("Certification type cannot be null");
-
-        if (_certificationTypes.Contains(certificationType))
+        if (_certificationTypes.Contains(certificationType) == true)
             throw new DomainException("Therapist already has this certification type");
 
 
@@ -166,19 +141,28 @@ public class Therapist : AggregateRoot
     }
 
 
-    public void RemoveCertificationType(CertificationType certificationType)
+    public void RemoveCertificationType(CertificationTypes certificationType)
     {
         // Pre-condition
 
-        if (certificationType == null)
-            throw new DomainException("Certification type cannot be null");
-
-        if (!_certificationTypes.Contains(certificationType))
+        if (_certificationTypes.Contains(certificationType) == false)
             throw new DomainException("Therapist does not have this certification type");
 
 
         // Action
 
         _certificationTypes.Remove(certificationType);
+    }
+
+    private void EnsureValidName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException("Therapist must have a name");
+    }
+
+    private void EnsureValidHourlyRate(decimal hourlyRate)
+    {
+        if (hourlyRate < 0)
+            throw new DomainException("Hourly rate cannot be negative");
     }
 }
