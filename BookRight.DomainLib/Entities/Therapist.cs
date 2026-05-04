@@ -105,9 +105,6 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
 
-        if (newEmail == null)
-            throw new DomainException("Therapist must have an email");
-
         if (Email == newEmail)
             throw new DomainException("New email cannot be the same as current email");
 
