@@ -127,12 +127,13 @@ public class TherapistTests
     {
         // Arrange
         var therapist = CreateWithValidData();
+        decimal newHourlyRate = 750;
 
         // Act
-        therapist.ChangeHourlyRate(750);
+        therapist.ChangeHourlyRate(newHourlyRate);
 
         // Assert
-        Assert.Equal(750, therapist.HourlyRate);
+        Assert.Equal(newHourlyRate, therapist.HourlyRate);
     }
 
 
