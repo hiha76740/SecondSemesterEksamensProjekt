@@ -19,7 +19,17 @@ public class PhoneNumberTests
     [InlineData("9450375")]
     public void Create_WithInvalidNoOfDigits_ThrowDomainException(string phoneNumber)
     {
-        // Act & Assert
+        //Act & Assert
+        Assert.Throws<DomainException>(() => CreatePhoneNumberWithValidData(phoneNumber));
+    }
+
+    [Fact]
+    public void Create_WithNonDigits_ThrowDomainException()
+    {
+        //Arrange:
+        string phoneNumber = "1234567#";
+
+        //Act & Assert
         Assert.Throws<DomainException>(() => CreatePhoneNumberWithValidData(phoneNumber));
     }
 }
