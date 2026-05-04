@@ -64,13 +64,14 @@ public class TherapistTests
     }
 
 
-    [Fact]
-    
-    public void Create_GivenEmptyAuthorizationNumber_CastDomainException()
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void Create_GivenEmptyAuthorizationNumber_CastDomainException(string authorizationNumber)
     {
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            CreateWithValidData(authorizationNumber: ""));
+            CreateWithValidData(authorizationNumber: authorizationNumber));
     }
 
 
