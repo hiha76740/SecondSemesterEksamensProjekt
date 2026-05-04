@@ -257,4 +257,15 @@ public class CustomerTests
         //Assert
         Assert.Equal(expected, c.TherapistId);
     }
+
+    [Fact]
+    public void ChangePrefferedTherapist_GivenSameId_CastDomainException()
+    {
+        //Arrange
+        var therapistId = Guid.NewGuid();
+        var c = CreateCustomerWithValidData(therapistId: therapistId);
+
+        //Act & Assert
+        Assert.Throws<DomainException>(() => c.ChangePreferredTherapist(therapistId));
+    }
 }
