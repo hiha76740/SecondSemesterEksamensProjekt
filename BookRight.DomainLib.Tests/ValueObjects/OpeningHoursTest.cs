@@ -1,7 +1,7 @@
 ﻿using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
-namespace BookRight.DomainLib.Tests
+namespace BookRight.DomainLib.Tests.ValueObjects
 {
     public class OpeningHoursTest
     {
