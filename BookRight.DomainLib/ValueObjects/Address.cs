@@ -14,11 +14,14 @@ public record Address
         if (string.IsNullOrWhiteSpace(street))
             throw new DomainException("Streetname is required");
 
+
         if (string.IsNullOrWhiteSpace(postalCode))
             throw new DomainException("Postalcode is required");
 
+
         if (string.IsNullOrWhiteSpace(city))
             throw new DomainException("City is required");
+
 
         Street = street;
         PostalCode = postalCode;

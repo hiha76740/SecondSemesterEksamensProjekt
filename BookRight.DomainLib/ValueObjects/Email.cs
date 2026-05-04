@@ -11,9 +11,11 @@ public record Email
     {
         if (string.IsNullOrWhiteSpace(emailAddress))
             throw new DomainException("Email is required");
+        
 
-        if (emailAddress.Count(c => c == '@') != 1)
-            throw new DomainException("Email must contain exactly one @");
+        if (emailAddress.Contains('@') == false)
+            throw new DomainException("Email must have a domain");
+
 
         EmailAddress = emailAddress;
     }
