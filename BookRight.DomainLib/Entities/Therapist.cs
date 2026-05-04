@@ -30,15 +30,6 @@ public class Therapist : AggregateRoot
         if (hourlyRate < 0)
             throw new DomainException("Hourly rate cannot be negative");
 
-        if (address == null)
-            throw new DomainException("Therapist must have an address");
-
-        if (email == null)
-            throw new DomainException("Therapist must have an email");
-
-        if (phoneNumber == null)
-            throw new DomainException("Therapist must have a phonenumber");
-
 
         // Action
 
