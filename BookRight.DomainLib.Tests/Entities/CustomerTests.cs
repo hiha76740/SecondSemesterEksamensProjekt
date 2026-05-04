@@ -1,8 +1,6 @@
 ﻿using BookRight.DomainLib.Entities.Customers;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
-using System.Net;
-using Xunit;
 
 namespace BookRight.DomainLib.Tests.Entities;
 
