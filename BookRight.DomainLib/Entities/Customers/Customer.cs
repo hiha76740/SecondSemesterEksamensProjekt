@@ -5,117 +5,141 @@ namespace BookRight.DomainLib.Entities.Customers;
 
 public class Customer : AggregateRoot
 {
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-    public DateTime Birthdate { get; private set; }
-    public string? Note {  get; private set; }
-    public Address Address { get; private set; } 
+    public string Firstname { get; private set; }
+    public string Lastname { get; private set; }
+    public DateTime Birthdate { get; init; }
+    public string Note { get; private set; }
+    public Address Address { get; private set; }
     public Email Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
+    public Guid? TherapistId { get; private set; }
 
 
     private Customer(
             string firstName,
             string lastName,
-            DateTime birthdate,
-            string? note, 
+            DateTime birthDate,
             Address address,
             Email email,
-            PhoneNumber phoneNumber)
+            PhoneNumber phoneNumber,
+            string note,
+            Guid? therapistId)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new DomainException("Customer must have a firstname");
+        EnsureValidFirstname(firstName);
+        EnsureValidLastname(lastName);
 
-        string normalisedFirstName = firstName.Trim();
-
-
-        if (string.IsNullOrWhiteSpace(lastName))
-            throw new DomainException("Customer must have a lastname");
-
-        string normalisedLastName = lastName.Trim();
-
-
-        DateTime normalisedBirthDate = birthdate.Date;
-        if (normalisedBirthDate > DateTime.Today)
+        if (birthDate.Date > DateTime.Today)
             throw new DomainException("Birthdate cannot be in future");
-        if (normalisedBirthDate < new DateTime(1900, 1, 1))
-            throw new DomainException("Birthdate cannot be this far back");
+
+        if (address == null)
+            throw new DomainException("Customer must have an address");
+
+        if (email == null)
+            throw new DomainException("Customer must have an email");
+
+        if (phoneNumber == null)
+            throw new DomainException("Customer must have a phonenumber");
+
+        if (therapistId == Guid.Empty)
+            throw new DomainException("TherapistId cannot be empty");
 
 
         Id = Guid.NewGuid();
-        FirstName = normalisedFirstName;
-        LastName = normalisedLastName;
-        Birthdate = normalisedBirthDate;
+        Firstname = firstName;
+        Lastname = lastName;
+        Birthdate = birthDate.Date;
         Note = note;
-        Address = address ?? throw new DomainException("Customer must have an address");
-        Email = email ?? throw new DomainException("Customer must have an email");
-        PhoneNumber = phoneNumber ?? throw new DomainException("Customer must have a phonenumber");
+        Address = address;
+        Email = email;
+        PhoneNumber = phoneNumber;
+        TherapistId = therapistId;
     }
 
     public static Customer Create(
             string firstName,
             string lastName,
-            DateTime birthdate,
-            string? note,
+            DateTime birthDate,
             Address address,
             Email email,
-            PhoneNumber phoneNumber)
+            PhoneNumber phoneNumber,
+            string note = "",
+            Guid? therapistId = null)
     {
-        var customer = new Customer(firstName, lastName, birthdate, note, address, email, phoneNumber);
+        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, therapistId);
         return customer;
     }
 
 
-    public void ChangeFirstName(string firstName)
+    public void ChangeFirstname(string newFirstname)
+    {
+        EnsureValidFirstname(newFirstname);
+
+        if (Firstname == newFirstname)
+            throw new DomainException("New firstname is the same as current firstname");
+
+        Firstname = newFirstname;
+    }
+
+    public void ChangeLastname(string newLastname)
+    {
+        EnsureValidLastname(newLastname);
+
+        if (Lastname == newLastname)
+            throw new DomainException("New lastname is the same as current lastname");
+
+        Lastname = newLastname;
+    }
+
+
+    public void ChangeAddress(Address newAddress)
+    {
+        if (Address == newAddress)
+            throw new DomainException("New address is the same as the current address");
+        
+        Address = newAddress;
+    }
+
+
+    public void ChangeEmail(Email newEmail)
+    {
+        if (Email == newEmail)
+            throw new DomainException("New email is the same as the current email");
+
+        Email = newEmail;
+    }
+
+
+    public void ChangePhoneNumber(PhoneNumber newPhoneNumber)
+    {
+        if (PhoneNumber == newPhoneNumber)
+            throw new DomainException("New phonenumber is the same as the current phonenumber");
+
+        PhoneNumber = newPhoneNumber;
+    }
+
+    public void ChangeNote(string note)
+    {
+        Note = note;
+    }
+
+    public void ChangePreferredTherapist(Guid newTherapistId)
+    {
+        if (TherapistId == newTherapistId)
+            throw new DomainException("New preferred therapist is the same as current therapist");
+
+        TherapistId = newTherapistId;
+    }
+
+    private void EnsureValidFirstname(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             throw new DomainException("Customer must have a firstname");
-
-        string normalisedFirstName = firstName.Trim();
-
-        if (FirstName != normalisedFirstName)
-            FirstName = normalisedFirstName;
     }
 
-
-    public void ChangeLastName(string lastName)
+    private void EnsureValidLastname(string lastName)
     {
         if (string.IsNullOrWhiteSpace(lastName))
             throw new DomainException("Customer must have a lastname");
-
-        string normalisedLastName = lastName.Trim();
-
-        if (LastName != normalisedLastName)
-            LastName = normalisedLastName;
     }
 
-
-    public void ChangeAddress(Address address)
-    {
-        if (address == null)
-            throw new DomainException("Customer must have an address");
-
-        if (Address != address)
-            Address = address;
-    }
-
-
-    public void ChangeEmail(Email email)
-    {
-        if (Address == null)
-            throw new DomainException("Customer must have an email");
-
-        if (Email != email)
-            Email = email;
-    }
-
-
-    public void ChangePhoneNumber(PhoneNumber phoneNumber)
-    {
-        if (PhoneNumber == null)
-            throw new DomainException("Customer must have a phonenumber");
-
-        if (PhoneNumber != phoneNumber)
-            PhoneNumber = phoneNumber;
-    }
 }
