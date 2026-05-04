@@ -137,15 +137,17 @@ public class TherapistTests
     }
 
 
-    [Fact]
-    public void ChangeHourlyRate_GivenNegativeHourlyRate_CastDomainException()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void ChangeHourlyRate_GivenInvalidHourlyRate_CastDomainException(decimal newHourlyRate)
     {
         // Arrange
         var therapist = CreateWithValidData();
 
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            therapist.ChangeHourlyRate(-1));
+            therapist.ChangeHourlyRate(newHourlyRate));
     }
 
 
