@@ -1,4 +1,5 @@
-﻿using BookRight.DomainLib.Exceptions;
+﻿using BookRight.DomainLib.Enums;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
 namespace BookRight.DomainLib.Entities.Therapists;
@@ -13,9 +14,8 @@ public class Therapist : AggregateRoot
     public Email Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
 
-    private readonly List<CertificationType> _certificationTypes = [];
-    public IReadOnlyCollection<CertificationType> CertificationTypes => _certificationTypes.AsReadOnly();
-
+    private readonly List<CertificationTypes> _certificationTypes = new();
+    public IReadOnlyCollection<CertificationTypes> CertificationTypes => _certificationTypes.AsReadOnly();
 
     private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber)
     {
