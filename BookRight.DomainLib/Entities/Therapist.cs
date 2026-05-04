@@ -149,14 +149,11 @@ public class Therapist : AggregateRoot
     }
 
 
-    public void AddCertificationType(CertificationType certificationType)
+    public void AddCertificationType(CertificationTypes certificationType)
     {
         // Pre-condition
 
-        if (certificationType == null)
-            throw new DomainException("Certification type cannot be null");
-
-        if (_certificationTypes.Contains(certificationType))
+        if (_certificationTypes.Contains(certificationType) == true)
             throw new DomainException("Therapist already has this certification type");
 
 
