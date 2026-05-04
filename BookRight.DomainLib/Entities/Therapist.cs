@@ -26,8 +26,7 @@ public class Therapist : AggregateRoot
 
         EnsureValidName(name);
 
-        if (hourlyRate < 0)
-            throw new DomainException("Hourly rate cannot be negative");
+        EnsureValidHourlyRate(hourlyRate);
 
 
         // Action
@@ -74,8 +73,7 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
 
-        if (newHourlyRate < 0)
-            throw new DomainException("Hourly rate cannot be negative");
+        EnsureValidHourlyRate(newHourlyRate);
 
         if (HourlyRate == newHourlyRate)
             throw new DomainException("New hourly rate cannot be the same as current hourly rate");
@@ -160,5 +158,11 @@ public class Therapist : AggregateRoot
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException("Therapist must have a name");
+    }
+
+    private void EnsureValidHourlyRate(decimal hourlyRate)
+    {
+        if (hourlyRate < 0)
+            throw new DomainException("Hourly rate cannot be negative");
     }
 }
