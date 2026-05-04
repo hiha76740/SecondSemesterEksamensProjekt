@@ -45,7 +45,10 @@ public class Clinic
         OpeningHours = newOpeningHours;
     }
 
-    
+    public void ChangeAddress(Address newAddress)
+    {
+        Address = newAddress;
+    }
 
 
     private Clinic(string name, int treatmentRoomLimit, OpeningHours openingHours)
