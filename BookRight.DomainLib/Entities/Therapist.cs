@@ -163,14 +163,11 @@ public class Therapist : AggregateRoot
     }
 
 
-    public void RemoveCertificationType(CertificationType certificationType)
+    public void RemoveCertificationType(CertificationTypes certificationType)
     {
         // Pre-condition
 
-        if (certificationType == null)
-            throw new DomainException("Certification type cannot be null");
-
-        if (!_certificationTypes.Contains(certificationType))
+        if (_certificationTypes.Contains(certificationType) == false)
             throw new DomainException("Therapist does not have this certification type");
 
 
