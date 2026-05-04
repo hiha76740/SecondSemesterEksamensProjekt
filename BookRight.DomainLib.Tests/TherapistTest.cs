@@ -94,12 +94,13 @@ public class TherapistTests
     {
         // Arrange
         var therapist = CreateWithValidData();
+        string newName = "Jane Doe";
 
         // Act
-        therapist.ChangeName("Jane Doe");
+        therapist.ChangeName(newName);
 
         // Assert
-        Assert.Equal("Jane Doe", therapist.Name);
+        Assert.Equal(newName, therapist.Name);
     }
 
 
