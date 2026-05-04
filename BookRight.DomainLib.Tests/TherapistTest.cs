@@ -103,15 +103,17 @@ public class TherapistTests
     }
 
 
-    [Fact]
-    public void ChangeName_GivenEmptyName_CastDomainException()
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void ChangeName_GivenEmptyName_CastDomainException(string name)
     {
         // Arrange
         var therapist = CreateWithValidData();
 
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            therapist.ChangeName(""));
+            therapist.ChangeName(name));
     }
 
 
