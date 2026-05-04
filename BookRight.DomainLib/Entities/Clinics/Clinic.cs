@@ -18,7 +18,7 @@ public class Clinic
 
     public OpeningHours OpeningHours { get; private set; }
 
-    // TODO: Tilføj Address Property
+    public Address Address { get; private set; }
 
     /// <summary>
     /// Creates a new instance of the Clinic class with the specified name, treatment room limit, and opening hours.
@@ -45,7 +45,7 @@ public class Clinic
         OpeningHours = newOpeningHours;
     }
 
-    // TODO: Lav ChangeAddress metode
+    
 
 
     private Clinic(string name, int treatmentRoomLimit, OpeningHours openingHours)
