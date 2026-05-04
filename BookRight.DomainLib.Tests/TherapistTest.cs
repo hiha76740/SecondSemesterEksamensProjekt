@@ -52,16 +52,20 @@ public class TherapistTests
     // CREATE VALIDATION TESTS
  
 
-    [Fact]
-    public void Create_GivenEmptyName_CastDomainException()
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+
+    public void Create_GivenEmptyName_CastDomainException(string name)
     {
         // Act + Assert
         Assert.Throws<DomainException>(() =>
-            CreateWithValidData(name: ""));
+            CreateWithValidData(name: name));
     }
 
 
     [Fact]
+    
     public void Create_GivenEmptyAuthorizationNumber_CastDomainException()
     {
         // Act + Assert
