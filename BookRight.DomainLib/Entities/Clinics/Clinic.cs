@@ -27,9 +27,9 @@ public class Clinic
     /// <param name="treatmentRoomLimit">The maximum number of treatment rooms available in the clinic. Must be greater than zero.</param>
     /// <param name="openingHours">The opening hours for the clinic. Specifies when the clinic is available for appointments.</param>
     /// <returns>A Clinic instance initialized with the provided name, treatment room limit, and opening hours.</returns>
-    public static Clinic Create(string name, int treatmentRoomLimit, OpeningHours openingHours)
+    public static Clinic Create(string name, int treatmentRoomLimit, OpeningHours openingHours, Address address)
     {
-        var clinic = new Clinic(name, treatmentRoomLimit, openingHours);
+        var clinic = new Clinic(name, treatmentRoomLimit, openingHours, address);
 
         return clinic;
     }
@@ -51,19 +51,20 @@ public class Clinic
     }
 
 
-    private Clinic(string name, int treatmentRoomLimit, OpeningHours openingHours)
+    private Clinic(string name, int treatmentRoomLimit, OpeningHours openingHours, Address address)
     {
         if (string.IsNullOrEmpty(name))
             throw new DomainException("Clinic must have a name");
         if (treatmentRoomLimit < 1)
             throw new DomainException("Clinic must have atleast 1 treatment room");
-        
+
         EnsureValidTime(openingHours.Open);
 
 
         Name = name;
         TreatmentRoomLimit = treatmentRoomLimit;
         OpeningHours = openingHours;
+        Address = address;
     }
 
     /// <summary>
