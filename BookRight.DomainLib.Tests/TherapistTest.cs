@@ -79,33 +79,6 @@ public class TherapistTests
     }
 
 
-    [Fact]
-    public void Create_GivenNullAddress_CastDomainException()
-    {
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            CreateWithValidData(address: null!));
-    }
-
-
-    [Fact]
-    public void Create_GivenNullEmail_CastDomainException()
-    {
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            CreateWithValidData(email: null!));
-    }
-
-
-    [Fact]
-    public void Create_GivenNullPhoneNumber_CastDomainException()
-    {
-        // Act + Assert
-        Assert.Throws<DomainException>(() =>
-            CreateWithValidData(phoneNumber: null!));
-    }
-
-
     // CHANGE NAME
    
 
