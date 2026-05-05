@@ -102,6 +102,7 @@ public class BookingTests
     [InlineData("2027-05-01 10:30", "2027-05-01 11:30")]  // overlapper slutningen
     public void Create_WithCostumerOverlap_CastDomainException(string otherFromText, string otherToText)
     {
+        // Arrange
         var timeSlot = new TimeSlot(
            new DateTime(2027, 05, 01, 09, 00, 00),
            new DateTime(2027, 05, 01, 11, 00, 00));
