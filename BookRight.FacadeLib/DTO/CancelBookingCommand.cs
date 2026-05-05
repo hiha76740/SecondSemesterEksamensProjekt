@@ -2,4 +2,4 @@
 
 // === Request DTO'er til Use Cases (commands) ===
 
-public record CancelBookingRequest(Guid BookingId);
+public record CancelBookingCommand(Guid BookingId);

@@ -1,8 +1,10 @@
 ﻿using BookRight.ApplicationLib.Repositories;
+using BookRight.FacadeLib.DTO;
+using BookRight.FacadeLib.Handlers;
 
 namespace BookRight.ApplicationLib.Handlers;
 
-public class CancelBookingHandler
+public class CancelBookingHandler : ICancelBookingHandler
 {
     private readonly IBookingRepository _bookingRepository;
 
@@ -11,15 +13,15 @@ public class CancelBookingHandler
         _bookingRepository = bookingRepository;
     }
 
-    public async Task HandleAsync(Guid bookingId)
+    public async Task Handle(CancelBookingCommand command)
     {
-        if (bookingId == Guid.Empty)
+        if (command.BookingId == Guid.Empty)
             throw new BookRight.ApplicationLib.Exceptions.ApplicationException("BookingId cannot be empty.");
 
-        var booking = await _bookingRepository.GetByIdAsync(bookingId);
+        var booking = await _bookingRepository.GetByIdAsync(command.BookingId);
 
         if (booking is null)
-            throw new BookRight.ApplicationLib.Exceptions.ApplicationException("Booking was not found.");
+            throw new BookRight.ApplicationLib.Exceptions.ApplicationException("Booking could not be found.");
 
         booking.Cancel();
 
