@@ -10,7 +10,7 @@ namespace BookRight.DomainLib.Entities.Clinics;
 /// the Create method to instantiate a Clinic with valid parameters. The class enforces that each clinic must have a
 /// name, at least one treatment room, and valid opening hours. Thread safety is not guaranteed for instance
 /// members.</remarks>
-public class Clinic
+public class Clinic : AggregateRoot
 {
     public string Name { get; private set; }
 
@@ -63,7 +63,7 @@ public class Clinic
 
         EnsureValidTime(openingHours.Open);
 
-
+        Id = Guid.NewGuid();
         Name = name;
         TreatmentRoomLimit = treatmentRoomLimit;
         OpeningHours = openingHours;
