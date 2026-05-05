@@ -63,7 +63,7 @@ public class Clinic : AggregateRoot
 
         EnsureValidTime(openingHours.Open);
 
-
+        Id = Guid.NewGuid();
         Name = name;
         TreatmentRoomLimit = treatmentRoomLimit;
         OpeningHours = openingHours;
