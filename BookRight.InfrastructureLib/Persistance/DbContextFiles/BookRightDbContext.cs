@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace BookRight.InfrastructureLib.Persistance;
+namespace BookRight.InfrastructureLib.Persistance.DbContextFiles;
 
 public class BookRightDbContext : DbContext
 {
