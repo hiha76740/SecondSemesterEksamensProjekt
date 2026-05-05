@@ -8,7 +8,7 @@ namespace BookRight.DomainLib.Tests.Services;
 public class BookingCapasityServiceTests
 {
     private static int ClinicRoomLimit => 2;
-    private static DateTime openHour => new DateTime(2026, 05, 5, 8, 0, 0);
+    private static DateTime openHour => new DateTime(2027, 05, 5, 8, 0, 0);
     private static DateTime closeHour => openHour.AddHours(8);
     private static Clinic Clinic => Clinic.Create("TestKlinik", ClinicRoomLimit, new OpeningHours(openHour, closeHour),new Address("Testvej 1","1234","FantasiBy"));
 
@@ -33,17 +33,17 @@ public class BookingCapasityServiceTests
     public void CanCreateBooking_GivenOverlappingBookingsAreBelowRoomLimit_ReturnsTrue()
     {
         // Arrange
-        var service = new BookingCapacityService();
+        IBookingCapacityService service = new BookingCapacityService();
 
         TimeSlot newTimeSlot = new TimeSlot(
-            new DateTime(2026, 5, 1, 10, 0, 0),
-            new DateTime(2026, 5, 1, 11, 0, 0));
+            new DateTime(2027, 5, 1, 10, 0, 0),
+            new DateTime(2027, 5, 1, 11, 0, 0));
 
         var existingBookings = new List<Booking>
         {
             CreateWithoutOverlap(
-                new DateTime(2026,5,1,10,30,0),
-                new DateTime(2026,5,1,11,30,0))
+                new DateTime(2027,5,1,10,30,0),
+                new DateTime(2027,5,1,11,30,0))
         };
 
         // Act
@@ -57,25 +57,25 @@ public class BookingCapasityServiceTests
     public void CanCreateBooking_GivenOverlappingBookingsAreAboveRoomLimit_ReturnsFalse()
     {
         // Arrange
-        var service = new BookingCapacityService();
+        IBookingCapacityService service = new BookingCapacityService();
 
         TimeSlot newTimeSlot = new TimeSlot(
-            new DateTime(2026, 5, 1, 10, 0, 0),
-            new DateTime(2026, 5, 1, 11, 0, 0));
+            new DateTime(2027, 5, 1, 10, 0, 0),
+            new DateTime(2027, 5, 1, 11, 0, 0));
 
         var existingBookings = new List<Booking>
         {
             CreateWithoutOverlap(
-                new DateTime(2026,5,1,10,20,0),
-                new DateTime(2026,5,1,11,20,0)),
+                new DateTime(2027,5,1,10,20,0),
+                new DateTime(2027,5,1,11,20,0)),
 
             CreateWithoutOverlap(
-                new DateTime(2026,5,1,10,20,0),
-                new DateTime(2026,5,1,11,20,0)),
+                new DateTime(2027,5,1,10,20,0),
+                new DateTime(2027,5,1,11,20,0)),
 
             CreateWithoutOverlap(
-                new DateTime(2026,5,1,10,10,0),
-                new DateTime(2026,5,1,11,10,0))
+                new DateTime(2027,5,1,10,10,0),
+                new DateTime(2027,5,1,11,10,0))
         };
 
         // Act
