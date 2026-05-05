@@ -1,8 +1,5 @@
 ﻿using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Clinics;
-using BookRight.DomainLib.Entities.Customers;
-using BookRight.DomainLib.Entities.Therapists;
-using BookRight.DomainLib.Entities.Treatments;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
 
