@@ -37,6 +37,7 @@ public class BookingTests
         Guid? therapistId = null,
         Guid? clinicId = null,
         decimal? price = null,
+        //TODO: refactor, order of parameter doesn't match, TherapistBookings need to swap place with CustomerBookings
         IEnumerable<Booking>? existingCustomerBookings = null,
         IEnumerable<Booking>? existingTherapistBookings = null)
     {
