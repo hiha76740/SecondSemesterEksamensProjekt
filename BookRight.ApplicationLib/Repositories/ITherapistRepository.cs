@@ -4,5 +4,5 @@ namespace BookRight.ApplicationLib.Repositories;
 
 public interface ITherapistRepository
 {
-    Task<Therapist?> GetAsync(Guid id);
+    Task<Therapist?> GetByIdAsync(Guid id);
 }

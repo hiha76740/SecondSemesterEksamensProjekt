@@ -4,7 +4,7 @@ namespace BookRight.ApplicationLib.Repositories;
 
 public interface ICustomerRepository
 {
-    Task<Customer?> GetAsync(Guid id);
+    Task<Customer?> GetByIdAsync(Guid id);
     Task AddAsync(Customer customer);
     Task SaveAsync();
 }
