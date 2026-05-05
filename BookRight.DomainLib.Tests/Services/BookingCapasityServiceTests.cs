@@ -55,4 +55,36 @@ public class BookingCapasityServiceTests
         // Assert
         Assert.True(result);
     }
+
+    [Fact]
+    public void CanCreateBooking_GivenOverlappingBookingsAreAboveRoomLimit_ReturnsFalse()
+    {
+        // Arrange
+        var service = new BookingCapacityService();
+
+        TimeSlot newTimeSlot = new TimeSlot(
+            new DateTime(2026, 5, 1, 10, 0, 0),
+            new DateTime(2026, 5, 1, 11, 0, 0));
+
+        var existingBookings = new List<Booking>
+        {
+            CreateWithoutOverlap(
+                new DateTime(2026,5,1,10,20,0),
+                new DateTime(2026,5,1,11,20,0)),
+
+            CreateWithoutOverlap(
+                new DateTime(2026,5,1,10,20,0),
+                new DateTime(2026,5,1,11,20,0)),
+
+            CreateWithoutOverlap(
+                new DateTime(2026,5,1,10,10,0),
+                new DateTime(2026,5,1,11,10,0))
+        };
+
+        // Act
+        var result = service.CanCreateBooking(Clinic, existingBookings, newTimeSlot);
+
+        // Assert
+        Assert.False(result);
+    }
 }
