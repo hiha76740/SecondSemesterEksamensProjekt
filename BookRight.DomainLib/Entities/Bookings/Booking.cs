@@ -50,6 +50,7 @@ public class Booking : AggregateRoot
         Guid clinicId,
         decimal price,
         IEnumerable<Booking> existingTherapistBookings,
+        // TODO: Refactor Change parameter name to existingCostumerBookings
         IEnumerable<Booking> existingClinicBookings)
     {
         var booking = new Booking(timeSlot, customerId, treatmentId, therapistId, clinicId, price);

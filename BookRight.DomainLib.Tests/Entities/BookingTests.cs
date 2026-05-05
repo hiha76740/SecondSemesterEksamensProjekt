@@ -37,6 +37,7 @@ public class BookingTests
         Guid? therapistId = null,
         Guid? clinicId = null,
         decimal? price = null,
+        //TODO: refactor, order of parameter doesn't match, TherapistBookings need to swap place with CustomerBookings
         IEnumerable<Booking>? existingCustomerBookings = null,
         IEnumerable<Booking>? existingTherapistBookings = null)
     {
@@ -73,19 +74,49 @@ public class BookingTests
             CreateWithoutOverlap(price: NegativePrice));
     }
 
-    [Fact]
-    public void Create_GivenTherapistOverlap_CastDomainException()
+    [Theory]
+    [InlineData("2027-05-01 09:30", "2027-05-01 10:30")]  // overlapper inde i
+    [InlineData("2027-05-01 08:00", "2027-05-01 09:30")]  // overlapper starten
+    [InlineData("2027-05-01 10:30", "2027-05-01 11:30")]  // overlapper slutningen
+    public void Create_GivenTherapistOverlap_CastDomainException(string otherFromText, string otherToText)
     {
         // Arrange
-        Booking existingBooking = CreateWithoutOverlap();
+        var timeSlot = new TimeSlot(
+            new DateTime(2027, 05, 01, 09, 00, 00),
+            new DateTime(2027, 05, 01, 11, 00, 00));
 
-        TimeSlot overlappingTimeSlot = CreateTimeSlot(9, 11);
+
+        TimeSlot other = new TimeSlot(
+            DateTime.Parse(otherFromText),
+            DateTime.Parse(otherToText));
+        
+
+        var exsist = CreateWithoutOverlap(timeSlot: other);
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            CreateWithoutOverlap(
-                timeSlot: overlappingTimeSlot,
-                existingTherapistBookings: new[] { existingBooking }));
+        Assert.Throws<DomainException>(() => CreateWithoutOverlap(timeSlot: timeSlot, existingTherapistBookings: new[] { exsist }));
+    }
+
+    [Theory]
+    [InlineData("2027-05-01 09:30", "2027-05-01 10:30")]  // overlapper inde i
+    [InlineData("2027-05-01 08:00", "2027-05-01 09:30")]  // overlapper starten
+    [InlineData("2027-05-01 10:30", "2027-05-01 11:30")]  // overlapper slutningen
+    public void Create_WithCostumerOverlap_CastDomainException(string otherFromText, string otherToText)
+    {
+        // Arrange
+        var timeSlot = new TimeSlot(
+           new DateTime(2027, 05, 01, 09, 00, 00),
+           new DateTime(2027, 05, 01, 11, 00, 00));
+
+        TimeSlot other = new TimeSlot(
+            DateTime.Parse(otherFromText),
+            DateTime.Parse(otherToText)
+            );
+
+        var exsist = CreateWithoutOverlap(timeSlot: other);
+
+        // Act and Assert
+        Assert.Throws<DomainException>(() => CreateWithoutOverlap(timeSlot: timeSlot, existingCustomerBookings: new[] { exsist }));
     }
 
     [Fact]
