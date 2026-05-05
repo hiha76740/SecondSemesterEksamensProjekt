@@ -5,12 +5,12 @@ using BookRight.DomainLib.ValueObjects;
 namespace BookRight.DomainLib.Services;
 
 /// <summary>
-/// Provides functionality to determine whether a new booking can be created for a clinic based on its current capacity
-/// and existing bookings.
+/// Provides functionality to determine whether a new booking can be created for a clinic based on existing bookings and
+/// treatment room limits.
 /// </summary>
-/// <remarks>This service evaluates booking capacity by comparing the number of overlapping bookings within a
-/// specified time slot to the number of available treatment rooms in the clinic. It is intended to help prevent
-/// overbooking scenarios in scheduling workflows.</remarks>
+/// <remarks>This service enforces booking capacity constraints for clinics by evaluating the number of
+/// overlapping bookings within a specified time slot. It is typically used to prevent overbooking beyond the clinic's
+/// available treatment rooms.</remarks>
 public sealed class BookingCapacityService : IBookingCapacityService
 {
 
