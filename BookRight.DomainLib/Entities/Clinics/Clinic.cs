@@ -53,11 +53,11 @@ public class Clinic : AggregateRoot
         Address = newAddress;
     }
 
-    public void ChangeTreatmentRoomCount(int newTreatmentRoomCount)
+    public void ChangeTreatmentRoomCount(int newTreatmentRoomLimit)
     {
-        EnsureValidTreatmentRoomCount(newTreatmentRoomCount);
+        EnsureValidTreatmentRoomCount(newTreatmentRoomLimit);
 
-        TreatmentRoomLimit = newTreatmentRoomCount;
+        TreatmentRoomLimit = newTreatmentRoomLimit;
     }
 
 
@@ -87,9 +87,9 @@ public class Clinic : AggregateRoot
             throw new DomainException("Opening time must be in the future");
     }
 
-    private void EnsureValidTreatmentRoomCount(int treatmentRoomCount)
+    private void EnsureValidTreatmentRoomCount(int treatmentRoomLimit)
     {
-        if (treatmentRoomCount < 1)
+        if (treatmentRoomLimit < 1)
             throw new DomainException("Clinic must have atleast 1 treatment room");
     }
 }
