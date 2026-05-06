@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookRight.InfrastructureLib.Persistance
+namespace BookRight.InfrastructureLib.Repositories.Clinics
 {
     internal class Dummy
     {
