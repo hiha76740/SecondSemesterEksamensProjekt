@@ -21,3 +21,33 @@ public class CreateTherapistHandlerTests
             _therapistRepositoryMock.Object);
     }
 }
+
+    [Fact]
+    public async Task Handle_GivenValidCommand_AddsTherapistToRepository()
+    {
+        // Arrange
+
+        var command = new CreateTherapistCommand(
+            "AUTH123",
+            "John Doe",
+            550,
+            "Testvej 1",
+            "6700",
+            "Esbjerg",
+            "test@test.dk",
+            "12345678");
+
+
+        // Act
+
+        await ((ICreateTherapistHandler)_handler)
+            .Handle(command);
+
+
+        // Assert
+
+        _therapistRepositoryMock.Verify(
+            x => x.AddAsync(
+                It.IsAny<Therapist>()),
+            Times.Once);
+    }
