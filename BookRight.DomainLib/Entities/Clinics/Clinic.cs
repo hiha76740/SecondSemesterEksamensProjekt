@@ -54,13 +54,14 @@ public class Clinic : AggregateRoot
     }
 
 
+
+
     private Clinic(string name, int treatmentRoomLimit, OpeningHours openingHours, Address address)
     {
         if (string.IsNullOrEmpty(name))
             throw new DomainException("Clinic must have a name");
-        if (treatmentRoomLimit < 1)
-            throw new DomainException("Clinic must have atleast 1 treatment room");
-
+        
+        EnsureValidTreatmentRoomCount();
         EnsureValidTime(openingHours.Open);
 
         Id = Guid.NewGuid();
@@ -79,5 +80,11 @@ public class Clinic : AggregateRoot
     {
         if (openingTime < DateTime.Now)
             throw new DomainException("Opening time must be in the future");
+    }
+
+    private void EnsureValidTreatmentRoomCount()
+    {
+        if (newTreatmentRoomCount < 1)
+            throw new DomainException("Clinic must have atleast 1 treatment room");
     }
 }
