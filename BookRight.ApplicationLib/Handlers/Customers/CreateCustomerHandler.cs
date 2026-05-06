@@ -2,8 +2,8 @@
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Customers;
 using BookRight.DomainLib.ValueObjects;
-using BookRight.FacadeLib.DTO;
-using BookRight.FacadeLib.Handlers;
+using BookRight.FacadeLib.Commands.Customers.DTOs;
+using BookRight.FacadeLib.Commands.Customers.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Customers;
 

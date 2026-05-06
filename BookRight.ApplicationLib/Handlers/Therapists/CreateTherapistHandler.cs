@@ -1,8 +1,8 @@
 ﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Therapists;
 using BookRight.DomainLib.ValueObjects;
-using BookRight.FacadeLib.DTO;
-using BookRight.FacadeLib.Handlers;
+using BookRight.FacadeLib.Commands.Therapists.DTOs;
+using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Therapists;
 

@@ -1,8 +1,8 @@
-﻿using BookRight.ApplicationLib.Exceptions;
-using BookRight.ApplicationLib.Repositories;
+﻿using BookRight.ApplicationLib.Repositories;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
-using BookRight.FacadeLib.Booking.DTOs;
-using BookRight.FacadeLib.Booking.Interfaces;
+using BookRight.FacadeLib.Commands.Booking.DTOs;
+using BookRight.FacadeLib.Commands.Booking.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Booking;
 
@@ -14,7 +14,7 @@ public class ChangeTimeHandler(
     async Task IChangeTimeHandler.Handle(ChangeTimeCommand command)
     {
         if (command.BookingId == Guid.Empty)
-            throw new BookRight.ApplicationLib.Exceptions.ApplicationException("BookingId cannot be empty.");
+            throw new Exceptions.ApplicationException("BookingId cannot be empty.");
 
         var booking = await bookingRepository.GetByIdAsync(command.BookingId)
             ?? throw new NotFoundException("Booking could not be found.");
