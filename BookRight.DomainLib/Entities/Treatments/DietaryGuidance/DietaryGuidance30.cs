@@ -1,4 +1,6 @@
-﻿namespace BookRight.DomainLib.Entities.Treatments.DietaryGuidance;
+﻿using BookRight.DomainLib.Enums;
+
+namespace BookRight.DomainLib.Entities.Treatments.DietaryGuidance;
 
 public class DietaryGuidance30 : Treatment
 {
@@ -7,5 +9,6 @@ public class DietaryGuidance30 : Treatment
         Name = "Dietary Guidance follow-up";
         Price = 450m;
         Duration = TimeSpan.FromMinutes(30);
+        CertificationRequired = CertificationTypes.Dietary;
     }
 }
