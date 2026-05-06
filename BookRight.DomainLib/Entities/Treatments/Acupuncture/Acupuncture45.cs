@@ -1,4 +1,6 @@
-﻿namespace BookRight.DomainLib.Entities.Treatments.Acupuncture;
+﻿using BookRight.DomainLib.Enums;
+
+namespace BookRight.DomainLib.Entities.Treatments.Acupuncture;
 
 public class Acupuncture45 : Treatment
 {
@@ -7,5 +9,6 @@ public class Acupuncture45 : Treatment
         Name = "Acupuncture";
         Price = 550m;
         Duration = TimeSpan.FromMinutes(45);
+        CertificationRequired = CertificationTypes.Acupuncture;
     }
 }
