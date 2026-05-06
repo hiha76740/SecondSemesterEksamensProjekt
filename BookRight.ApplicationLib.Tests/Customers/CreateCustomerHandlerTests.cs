@@ -1,9 +1,9 @@
 ﻿using BookRight.ApplicationLib.Handlers.Customers;
 using BookRight.ApplicationLib.Repositories;
-using BookRight.DomainLib.ValueObjects;
+using BookRight.DomainLib.Entities.Customers;
 using BookRight.FacadeLib.Handlers.Customers.DTOs;
+using BookRight.FacadeLib.Handlers.Customers.Interfaces;
 using Moq;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace BookRight.ApplicationLib.Tests.Customers;
@@ -50,9 +50,27 @@ public class CreateCustomerHandlerTests
     private readonly Mock<ITherapistRepository> _mockTherapistRepo = new();
 
     //SystemUnderTest
-    private CreateCustomerHandler CreateSut() => new(
+    private ICreateCustomerHandler CreateSut() => new CreateCustomerHandler(
         _mockCustomerRepo.Object,
         _mockTherapistRepo.Object
         );
 
+
+    // ---------------------------------------------------------
+    // 1. CreateCustomerHandler Tests
+    // ---------------------------------------------------------
+
+    [Fact]
+    public async Task Handle_GivenValidCommandWithoutTherapist_CallAddAndSave()
+    {
+        //Arrange
+        var command = CreateCustomerCommandWithValidData();
+
+        //Act
+        await CreateSut().Handle(command);
+
+        //Assert
+        _mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
+        _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+    }
 }
