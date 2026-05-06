@@ -1,6 +1,7 @@
 ﻿
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Customers;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Customers.DTOs;
 using BookRight.FacadeLib.Commands.Customers.Interfaces;
@@ -27,7 +28,7 @@ public class CreateCustomerHandler : ICreateCustomerHandler
         {
             Guid therapistId = command.TherapistId.Value;
             _ = await _therapistRepository.GetByIdAsync(therapistId)
-                ?? throw new ApplicationException("Therapist could not be found");
+                ?? throw new NotFoundException("Therapist could not be found");
         }
 
         var address = new Address(command.Street, command.PostalCode, command.City);
