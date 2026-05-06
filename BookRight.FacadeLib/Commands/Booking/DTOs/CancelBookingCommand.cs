@@ -1,4 +1,4 @@
-﻿namespace BookRight.FacadeLib.Booking.DTOs;
+﻿namespace BookRight.FacadeLib.Commands.Booking.DTOs;
 
 // === Request DTO'er til Use Cases (commands) ===
 

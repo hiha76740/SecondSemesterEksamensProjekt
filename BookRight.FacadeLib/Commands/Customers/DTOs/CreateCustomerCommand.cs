@@ -1,5 +1,4 @@
-﻿
-namespace BookRight.FacadeLib.DTO;
+﻿namespace BookRight.FacadeLib.Commands.Customers.DTOs;
 
 // === Request DTOs for Handlers ===
 public record CreateCustomerCommand(
