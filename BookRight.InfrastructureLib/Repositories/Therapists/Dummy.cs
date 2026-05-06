@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookRight.ApplicationLib.Handlers
+namespace BookRight.InfrastructureLib.Repositories.Therapists
 {
     internal class Dummy
     {
