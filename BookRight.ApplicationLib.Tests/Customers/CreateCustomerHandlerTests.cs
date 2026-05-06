@@ -3,7 +3,7 @@ using BookRight.ApplicationLib.Repositories;
 using Moq;
 using Xunit;
 
-namespace BookRight.ApplicationLib.Tests.Handlers;
+namespace BookRight.ApplicationLib.Tests.Customers;
 
 public class CreateCustomerHandlerTests
 {
