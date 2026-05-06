@@ -1,8 +1,8 @@
 ﻿using BookRight.ApplicationLib.Handlers.Customers;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Customers;
-using BookRight.FacadeLib.Handlers.Customers.DTOs;
-using BookRight.FacadeLib.Handlers.Customers.Interfaces;
+using BookRight.FacadeLib.Commands.Customers.DTOs;
+using BookRight.FacadeLib.Commands.Customers.Interfaces;
 using Moq;
 using Xunit;
 
