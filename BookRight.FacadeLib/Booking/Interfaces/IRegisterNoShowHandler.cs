@@ -1,6 +1,6 @@
-﻿using BookRight.FacadeLib.DTO;
+﻿using BookRight.FacadeLib.Booking.DTOs;
 
-namespace BookRight.FacadeLib.Handlers;
+namespace BookRight.FacadeLib.Booking.Interfaces;
 
 public interface IRegisterNoShowHandler
 {
