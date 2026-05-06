@@ -1,4 +1,6 @@
-﻿namespace BookRight.DomainLib.Entities.Treatments.Physiotherapy;
+﻿using BookRight.DomainLib.Enums;
+
+namespace BookRight.DomainLib.Entities.Treatments.Physiotherapy;
 
 public class Physiotherapy60 : Treatment
 {
@@ -7,5 +9,6 @@ public class Physiotherapy60 : Treatment
         Name = "Physiotherapy";
         Price = 745;
         Duration = TimeSpan.FromMinutes(60);
+        CertificationRequired = CertificationTypes.Physiotherapy;
     }
 }
