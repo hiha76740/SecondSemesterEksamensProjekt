@@ -1,4 +1,6 @@
-﻿namespace BookRight.DomainLib.Entities.Treatments.TeamTraining_Rehabilitation;
+﻿using BookRight.DomainLib.Enums;
+
+namespace BookRight.DomainLib.Entities.Treatments.TeamTraining_Rehabilitation;
 
 public class TeamTraining_Rehabilitation60 : Treatment
 {
@@ -10,5 +12,6 @@ public class TeamTraining_Rehabilitation60 : Treatment
         Price = 150;
         Duration = TimeSpan.FromMinutes(60);
         teamSizeLimit = 6;
+        CertificationRequired = CertificationTypes.TeamTraining;
     }
 }
