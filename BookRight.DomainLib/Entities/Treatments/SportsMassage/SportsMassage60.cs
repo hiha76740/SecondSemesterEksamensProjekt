@@ -1,4 +1,6 @@
-﻿namespace BookRight.DomainLib.Entities.Treatments.SportsMassage;
+﻿using BookRight.DomainLib.Enums;
+
+namespace BookRight.DomainLib.Entities.Treatments.SportsMassage;
 
 public class SportsMassage60 : Treatment
 {
@@ -7,6 +9,7 @@ public class SportsMassage60 : Treatment
         Name = "Sports Massage";
         Price = 699m;
         Duration = TimeSpan.FromMinutes(60);
+        CertificationRequired = CertificationTypes.Message;
     }
 }
 
