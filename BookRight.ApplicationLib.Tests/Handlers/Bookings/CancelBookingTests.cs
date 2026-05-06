@@ -1,11 +1,11 @@
-﻿using BookRight.ApplicationLib.Exceptions;
-using BookRight.ApplicationLib.Handlers.Booking;
+﻿using BookRight.ApplicationLib.Handlers.Booking;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Enums;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
-using BookRight.FacadeLib.Booking.DTOs;
-using BookRight.FacadeLib.Booking.Interfaces;
+using BookRight.FacadeLib.Commands.Booking.DTOs;
+using BookRight.FacadeLib.Commands.Booking.Interfaces;
 using Moq;
 
 namespace BookRight.ApplicationLib.Tests.Handlers.Bookings;
@@ -121,7 +121,7 @@ public class CancelBookingTests
         var command = new CancelBookingCommand(Guid.Empty);
 
         // Act & Assert
-        await Assert.ThrowsAsync<BookRight.ApplicationLib.Exceptions.ApplicationException>(() => handler.Handle(command));
+        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
 
         bookingRepositoryMock.Verify(repository => repository.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
 
