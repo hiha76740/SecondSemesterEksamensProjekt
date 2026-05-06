@@ -1,5 +1,4 @@
-﻿using BookRight.ApplicationLib.Exceptions;
-using BookRight.ApplicationLib.Repositories;
+﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Exceptions;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
