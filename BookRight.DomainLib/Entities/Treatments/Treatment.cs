@@ -1,4 +1,6 @@
-﻿namespace BookRight.DomainLib.Entities.Treatments;
+﻿using BookRight.DomainLib.Enums;
+
+namespace BookRight.DomainLib.Entities.Treatments;
 
 public class Treatment : AggregateRoot
 {
@@ -8,7 +10,7 @@ public class Treatment : AggregateRoot
 
     public TimeSpan Duration { get; protected set; }
 
-    // TODO: Tilføj Certification Type Value Object property
+    public CertificationTypes CertificationRequired { get; protected set; }
 
     protected Treatment()
     {
