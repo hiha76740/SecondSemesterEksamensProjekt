@@ -258,6 +258,16 @@ public class TherapistTests
     // 10. AddAssociatedClinic tests (Adding new associated clinic to a Therapist) 
     // ---------------------------------------------------------
 
+    [Fact]
+    public void AddAssociatedClinic_GivenAlreadyAddedAssociatedClinicType_CastDomainException()
+    {
+        // Arrange
+        var therapist = CreateWithValidData();
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => therapist.AddAssociatedClinic(AssociatedClinicId));
+    }
+
 
     // ---------------------------------------------------------
     // 11. RemoveAssociatedClinic tests (Removing associated clinic from a Therapist) 
