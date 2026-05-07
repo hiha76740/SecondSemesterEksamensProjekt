@@ -180,13 +180,13 @@ public class Therapist : AggregateRoot
         _associatedclinics.Remove(clinicId);
     }
 
-    private void EnsureValidName(string name)
+    private static void EnsureValidName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException("Therapist must have a name");
     }
 
-    private void EnsureValidHourlyRate(decimal hourlyRate)
+    private static void EnsureValidHourlyRate(decimal hourlyRate)
     {
         if (hourlyRate <= 0)
             throw new DomainException("Hourly rate cannot be negative or 0");

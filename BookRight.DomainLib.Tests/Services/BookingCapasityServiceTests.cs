@@ -8,9 +8,9 @@ namespace BookRight.DomainLib.Tests.Services;
 public class BookingCapasityServiceTests
 {
     private static int ClinicRoomLimit => 2;
-    private static DateTime openHour => new DateTime(2027, 05, 5, 8, 0, 0);
-    private static DateTime closeHour => openHour.AddHours(8);
-    private static Clinic Clinic => Clinic.Create("TestKlinik", ClinicRoomLimit, new OpeningHours(openHour, closeHour),new Address("Testvej 1","1234","FantasiBy"));
+    private static DateTime OpenHour => new DateTime(2027, 05, 5, 8, 0, 0);
+    private static DateTime CloseHour => OpenHour.AddHours(8);
+    private static Clinic Clinic => Clinic.Create("TestKlinik", ClinicRoomLimit, new OpeningHours(OpenHour, CloseHour),new Address("Testvej 1","1234","FantasiBy"));
 
     private static Booking CreateWithoutOverlap(DateTime from, DateTime to)
     {

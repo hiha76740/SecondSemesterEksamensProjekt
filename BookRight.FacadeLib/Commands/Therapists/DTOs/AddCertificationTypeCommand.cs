@@ -1,4 +1,4 @@
-﻿namespace BookRight.FacadeLib.DTO;
+﻿namespace BookRight.FacadeLib.Commands.Therapists.DTOs;
 
 public sealed record AddCertificationTypeCommand(
     Guid TherapistId,
