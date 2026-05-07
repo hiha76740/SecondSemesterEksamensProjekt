@@ -8,4 +8,5 @@ public sealed record CreateTherapistCommand(
  string PostalCode,
  string City,
  string EmailAddress,
- string PhoneNumber);
+ string PhoneNumber,
+ List<Guid> AssociatedClinicIds);
