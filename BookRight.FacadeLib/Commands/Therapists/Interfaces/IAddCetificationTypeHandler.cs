@@ -1,4 +1,4 @@
-﻿using BookRight.FacadeLib.DTO;
+﻿using BookRight.FacadeLib.Commands.Therapists.DTOs;
 
 namespace BookRight.FacadeLib.Handlers;
 
