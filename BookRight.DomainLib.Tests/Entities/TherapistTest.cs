@@ -13,7 +13,8 @@ public class TherapistTests
     private static string Name => "John Doe";
     private static string AuthorizationNumber => "AUTH123";
     private static decimal HourlyRate => 550;
-    private static List<Guid> AssociatedClinicIds => new() { Guid.Parse("d62f5c2d-a5e6-4523-902d-108acac956c8") };
+    private static Guid AssociatedClinicId => Guid.Parse("d62f5c2d-a5e6-4523-902d-108acac956c8");
+    private static List<Guid> AssociatedClinicIds => new() { AssociatedClinicId };
 
     private static Address Address(
         string street = "Testvej 1",
