@@ -1,6 +1,7 @@
 ﻿using BookRight.ApplicationLib.Handlers.Customers;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Customers;
+using BookRight.DomainLib.Exceptions;
 using BookRight.FacadeLib.Commands.Customers.DTOs;
 using BookRight.FacadeLib.Commands.Customers.Interfaces;
 using Moq;
@@ -51,5 +52,15 @@ public class CreateCustomerHandlerTests
         // Assert
         _mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
         _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenInvalidCommandWithEmptyTherapist_CastNotFoundException()
+    {
+        // Arrange
+        var command = CreateCustomerCommandWithValidData(therapistId: Guid.Empty);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => CreateSut().Handle(command));
     }
 }
