@@ -12,7 +12,7 @@ public class Customer : AggregateRoot
     public Address Address { get; private set; }
     public Email Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
-    public Guid? TherapistId { get; private set; }
+    public Guid? PrefferedTherapist { get; private set; }
 
 
     private Customer(
@@ -23,25 +23,13 @@ public class Customer : AggregateRoot
             Email email,
             PhoneNumber phoneNumber,
             string note,
-            Guid? therapistId)
+            Guid? prefferedTherapist)
     {
         EnsureValidFirstname(firstName);
         EnsureValidLastname(lastName);
 
         if (birthDate.Date > DateTime.Today)
             throw new DomainException("Birthdate cannot be in future");
-
-        if (address == null)
-            throw new DomainException("Customer must have an address");
-
-        if (email == null)
-            throw new DomainException("Customer must have an email");
-
-        if (phoneNumber == null)
-            throw new DomainException("Customer must have a phonenumber");
-
-        if (therapistId == Guid.Empty)
-            throw new DomainException("TherapistId cannot be empty");
 
 
         Id = Guid.NewGuid();
@@ -52,7 +40,7 @@ public class Customer : AggregateRoot
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
-        TherapistId = therapistId;
+        PrefferedTherapist = prefferedTherapist;
     }
 
     public static Customer Create(
@@ -63,9 +51,9 @@ public class Customer : AggregateRoot
             Email email,
             PhoneNumber phoneNumber,
             string note = "",
-            Guid? therapistId = null)
+            Guid? prefferedTherapistId = null)
     {
-        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, therapistId);
+        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, prefferedTherapistId);
         return customer;
     }
 
@@ -124,19 +112,19 @@ public class Customer : AggregateRoot
 
     public void ChangePreferredTherapist(Guid newTherapistId)
     {
-        if (TherapistId == newTherapistId)
+        if (PrefferedTherapist == newTherapistId)
             throw new DomainException("New preferred therapist is the same as current therapist");
 
-        TherapistId = newTherapistId;
+        PrefferedTherapist = newTherapistId;
     }
 
-    private void EnsureValidFirstname(string firstName)
+    private static void EnsureValidFirstname(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             throw new DomainException("Customer must have a firstname");
     }
 
-    private void EnsureValidLastname(string lastName)
+    private static void EnsureValidLastname(string lastName)
     {
         if (string.IsNullOrWhiteSpace(lastName))
             throw new DomainException("Customer must have a lastname");
