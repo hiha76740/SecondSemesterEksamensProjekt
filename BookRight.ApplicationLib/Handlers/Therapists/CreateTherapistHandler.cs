@@ -1,5 +1,7 @@
 ﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Therapists;
+using BookRight.DomainLib.Enums;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Therapists.DTOs;
 using BookRight.FacadeLib.Commands.Therapists.Interfaces;
@@ -31,6 +33,22 @@ public class CreateTherapistHandler : ICreateTherapistHandler
         var phoneNumber = new PhoneNumber(
             command.PhoneNumber);
 
+        List<CertificationTypes>? certifications = null;
+
+        if (command.Certifications.Count > 0)
+        {
+            certifications = new();
+
+            foreach (var certification in command.Certifications)
+            {
+                bool exsists = Enum.TryParse<CertificationTypes>(certification, out CertificationTypes certificationTypes);
+
+                if (exsists == false)
+                    throw new NotFoundException($"Unable to find cerification {certification}");
+
+                certifications.Add(certificationTypes);
+            }
+        }
 
         var therapist = Therapist.Create(
             command.AuthorizationNumber,
@@ -39,7 +57,8 @@ public class CreateTherapistHandler : ICreateTherapistHandler
             address,
             email,
             phoneNumber,
-            command.AssociatedClinicIds);
+            command.AssociatedClinicIds,
+            certifications);
 
 
         await _therapistRepository.AddAsync(therapist);
