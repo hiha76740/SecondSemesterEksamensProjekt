@@ -1,7 +1,9 @@
 ﻿using BookRight.ApplicationLib.Handlers.Customers;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Customers;
+using BookRight.DomainLib.Entities.Therapists;
 using BookRight.DomainLib.Exceptions;
+using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Customers.DTOs;
 using BookRight.FacadeLib.Commands.Customers.Interfaces;
 using Moq;
@@ -56,6 +58,36 @@ public class CreateCustomerHandlerTests
     }
 
     [Fact]
+    public async Task Handle_GivenValidCommandWithTherapist_CallAddAndSave()
+    {
+        // Arrange
+        var therapistId = Guid.NewGuid();
+        List<Guid> therapistAssociatedClinicIds = new List<Guid> { Guid.NewGuid() };
+        var therapist = Therapist.Create(
+                "AUTH246",
+                "Pia Hansen",
+                300,
+                new Address("Vestergade 4", "8765", "Testby"),
+                new Email("PiaH@test.dk"),
+                new PhoneNumber("67328954"),
+                therapistAssociatedClinicIds
+                );
+
+        _mockTherapistRepo.Setup(c => c.GetByIdAsync(therapistId))
+            .ReturnsAsync(therapist);
+
+        var command = CreateCustomerCommandWithValidData(therapistId: therapistId);
+
+        // Act
+        await CreateSut().Handle(command);
+
+        // Assert
+        _mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
+        _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        _mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
+    }
+
+    [Fact]
     public async Task Handle_GivenInvalidCommandWithEmptyTherapist_CastNotFoundException()
     {
         // Arrange
@@ -64,4 +96,5 @@ public class CreateCustomerHandlerTests
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => CreateSut().Handle(command));
     }
+
 }
