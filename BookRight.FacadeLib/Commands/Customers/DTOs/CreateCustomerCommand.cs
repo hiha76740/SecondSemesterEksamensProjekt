@@ -11,5 +11,5 @@ public record CreateCustomerCommand(
     string City,
     string EmailAddress,
     string PhoneNumber,
-    Guid? TherapistId
+    Guid? PreferredTherapist
     );
