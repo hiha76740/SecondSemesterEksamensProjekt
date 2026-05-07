@@ -8,18 +8,8 @@ using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Therapists;
 
-public class CreateTherapistHandler : ICreateTherapistHandler
+public class CreateTherapistHandler(ITherapistRepository therapistRepository, IClinicRepository clinicRepository) : ICreateTherapistHandler
 {
-    private readonly ITherapistRepository _therapistRepository;
-    private readonly IClinicRepository _clinicRepository;
-
-    public CreateTherapistHandler(ITherapistRepository therapistRepository, IClinicRepository clinicRepository)
-    {
-        _therapistRepository = therapistRepository;
-        _clinicRepository = clinicRepository;
-    }
-
-
     async Task ICreateTherapistHandler.Handle(
         CreateTherapistCommand command)
     {
@@ -53,7 +43,7 @@ public class CreateTherapistHandler : ICreateTherapistHandler
 
         foreach (var clinicId in command.AssociatedClinicIds)
         {
-            _ = _clinicRepository.GetByIdAsync(clinicId)
+            _ = clinicRepository.GetByIdAsync(clinicId)
                 ?? throw new NotFoundException($"Clinic with id {clinicId} not found");
         }
 
@@ -68,8 +58,8 @@ public class CreateTherapistHandler : ICreateTherapistHandler
             certifications);
 
 
-        await _therapistRepository.AddAsync(therapist);
+        await therapistRepository.AddAsync(therapist);
 
-        await _therapistRepository.SaveAsync();
+        await therapistRepository.SaveAsync();
     }
 }
