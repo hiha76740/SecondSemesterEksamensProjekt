@@ -1,4 +1,5 @@
 ﻿using BookRight.DomainLib.Entities.Therapists;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
@@ -15,6 +16,8 @@ public class TherapistTests
     private static decimal HourlyRate => 550;
     private static Guid AssociatedClinicId => Guid.Parse("d62f5c2d-a5e6-4523-902d-108acac956c8");
     private static List<Guid> AssociatedClinicIds => new() { AssociatedClinicId };
+    private static CertificationTypes Certification => CertificationTypes.Acupuncture;
+    private static List<CertificationTypes> Certifications => new() { Certification };
 
     private static Address Address(
         string street = "Testvej 1",
@@ -42,6 +45,7 @@ public class TherapistTests
         Address? address = null,
         PhoneNumber? phoneNumber = null,
         Email? email = null,
+        List<CertificationTypes>? certificationTypes = null,
         List<Guid>? associatedClinicIds = null)
         => Therapist.Create(
             authorizationNumber ?? AuthorizationNumber,
@@ -50,7 +54,8 @@ public class TherapistTests
             address ?? Address(),
             email ?? Email(),
             phoneNumber ?? PhoneNumber(),
-            associatedClinicIds ?? AssociatedClinicIds
+            associatedClinicIds ?? AssociatedClinicIds,
+            certificationTypes
             );
 
 
@@ -225,6 +230,15 @@ public class TherapistTests
     // 8. AddCertificationType tests (Adding certifications to a Therapist) 
     // ---------------------------------------------------------
 
+    [Fact]
+    public void AddCertificationType_GivenAlreadyAddedCertificationType_CastDomainException()
+    {
+        // Arrange
+        var therapist = CreateWithValidData(certificationTypes: Certifications);
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => therapist.AddCertificationType(Certification));
+    }
 
     // ---------------------------------------------------------
     // 9. RemoveCertificationType tests (Removing certifications from a Therapist) 
