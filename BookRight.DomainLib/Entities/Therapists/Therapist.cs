@@ -160,6 +160,16 @@ public class Therapist : AggregateRoot
         _certificationTypes.Remove(certificationType);
     }
 
+    public void AddAssociatedClinic(Guid clinicId)
+    {
+        if (_associatedclinics.Contains(clinicId) == true)
+            throw new DomainException($"Clinic is already associated with therapist {Name}");
+
+        _associatedclinics.Add(clinicId);
+    }
+
+    
+
     private void EnsureValidName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
