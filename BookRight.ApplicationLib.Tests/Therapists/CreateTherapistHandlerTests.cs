@@ -5,7 +5,7 @@ using BookRight.FacadeLib.Commands.Therapists.DTOs;
 using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 using Moq;
 
-namespace BookRight.ApplicationLib.Tests.Handlers.Therapists;
+namespace BookRight.ApplicationLib.Tests.Therapists;
 
 public class CreateTherapistHandlerTests
 {
@@ -17,8 +17,9 @@ public class CreateTherapistHandlerTests
     public async Task Handle_GivenValidCommand_CallsAddAndSave()
     {
         var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
 
-        var handler = new CreateTherapistHandler(mockTherapistRepo.Object) as ICreateTherapistHandler;
+        var handler = new CreateTherapistHandler(mockTherapistRepo.Object,mockClinicRepo.Object) as ICreateTherapistHandler;
 
         var command = new CreateTherapistCommand(
             "AUTH123",
