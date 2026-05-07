@@ -9,7 +9,7 @@ public interface IBookingRepository
 {
     Task<Booking?> GetByIdAsync(Guid id);
 
-    Task<IEnumerable<Booking>> GetAllBookingsByIdAsync(Guid id);
+    Task<IReadOnlyList<Booking>> GetAllBookingsByIdAsync(Guid id);
 
     Task AddAsync(Booking booking);
 
