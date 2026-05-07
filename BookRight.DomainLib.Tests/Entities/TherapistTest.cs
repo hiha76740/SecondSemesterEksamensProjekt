@@ -268,8 +268,19 @@ public class TherapistTests
         Assert.Throws<DomainException>(() => therapist.AddAssociatedClinic(AssociatedClinicId));
     }
 
-
     // ---------------------------------------------------------
     // 11. RemoveAssociatedClinic tests (Removing associated clinic from a Therapist) 
     // ---------------------------------------------------------
+
+    [Fact]
+    public void RemoveAssociatedClinic_GivenNotEcistingClinic_CastDomainException()
+    {
+        // Arrange
+        var therapist = CreateWithValidData();
+
+        therapist.RemoveAssociatedClinic(AssociatedClinicId);
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => therapist.RemoveAssociatedClinic(AssociatedClinicId));
+    }
 }
