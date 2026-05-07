@@ -10,5 +10,25 @@ public class AddClinicToTherapistHandler(
     IClinicRepository clinicRepository)
     : IAddClinicToTherapistHandler
 {
-    
+    async Task IAddClinicToTherapistHandler.Handle(
+        AddClinicToTherapistCommand command)
+    {
+        var therapist = await therapistRepository
+            .GetByIdAsync(command.TherapistId)
+            ?? throw new NotFoundException(
+                "Therapist could not be found");
+
+
+        _ = await clinicRepository
+            .GetByIdAsync(command.ClinicId)
+            ?? throw new NotFoundException(
+                "Clinic could not be found");
+
+
+
+        therapist.AssociatedClinicIds.Add(command.ClinicId);
+
+
+        await therapistRepository.SaveAsync();
+    }
 }
