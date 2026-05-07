@@ -21,7 +21,6 @@ public class BookingTests
 
     private static IEnumerable<Booking> ExistingCustomerBookings => Array.Empty<Booking>();
     private static IEnumerable<Booking> ExistingTherapistBookings => Array.Empty<Booking>();
-    private static IEnumerable<Booking> ExistingClinicBookings => Array.Empty<Booking>();
 
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
@@ -401,7 +400,7 @@ public class BookingTests
 
         // Act & Assert
         Assert.Throws<DomainException>(() =>
-            booking.ChangeClinic(NewClinicId, ExistingClinicBookings));
+            booking.ChangeClinic(NewClinicId));
     }
 
     [Fact]
@@ -410,11 +409,11 @@ public class BookingTests
         // Arrange
         Booking booking = CreateWithoutOverlap();
 
-        booking.ChangeClinic(NewClinicId, ExistingClinicBookings);
+        booking.ChangeClinic(NewClinicId);
 
         // Act & Assert
         Assert.Throws<DomainException>(() =>
-            booking.ChangeClinic(NewClinicId, ExistingClinicBookings));
+            booking.ChangeClinic(NewClinicId));
     }
 
     [Fact]
@@ -424,7 +423,7 @@ public class BookingTests
         Booking booking = CreateWithoutOverlap();
 
         // Act
-        booking.ChangeClinic(NewClinicId, ExistingClinicBookings);
+        booking.ChangeClinic(NewClinicId);
 
         // Assert
         Assert.Equal(NewClinicId, booking.ClinicId);

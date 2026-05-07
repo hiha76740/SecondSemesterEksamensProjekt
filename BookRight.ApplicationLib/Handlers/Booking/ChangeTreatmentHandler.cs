@@ -7,7 +7,8 @@ namespace BookRight.ApplicationLib.Handlers.Booking;
 
 public class ChangeTreatmentHandler(
     IBookingRepository bookingRepository,
-    ITreatmentRepository treatmentRepository) : IChangeTreatmentHandler
+    ITreatmentRepository treatmentRepository,
+    ITherapistRepository therapistRepository) : IChangeTreatmentHandler
 {
     async Task IChangeTreatmentHandler.Handle(ChangeTreatmentCommand command)
     {
@@ -22,6 +23,12 @@ public class ChangeTreatmentHandler(
 
         var treatment = await treatmentRepository.GetByIdAsync(command.TreatmentId)
             ?? throw new NotFoundException("Treatment could not be found.");
+
+        var therapist = await therapistRepository.GetByIdAsync(booking.TherapistId)
+            ?? throw new NotFoundException("Therapist could not be found.");
+
+        if (therapist.CertificationTypes.Contains(treatment.CertificationRequired) == false)
+            throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
 
         booking.ChangeTreatment(treatment.Id);
 
