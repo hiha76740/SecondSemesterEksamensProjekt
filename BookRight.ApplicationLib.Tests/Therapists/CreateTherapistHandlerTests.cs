@@ -29,7 +29,8 @@ public class CreateTherapistHandlerTests
             "Esbjerg",
             "test@test.dk",
             "12345678",
-            new List<Guid> { Guid.Parse("d62f5c2d-a5e6-4523-902d-108acac956c8") });
+            new List<Guid> { Guid.Parse("d62f5c2d-a5e6-4523-902d-108acac956c8") },
+            new List<string>());
         // Act
         await handler.Handle(command);
 
