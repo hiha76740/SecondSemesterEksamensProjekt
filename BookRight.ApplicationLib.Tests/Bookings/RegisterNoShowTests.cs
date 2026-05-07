@@ -8,7 +8,7 @@ using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
 using Moq;
 
-namespace BookRight.ApplicationLib.Tests.Handlers.Bookings;
+namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class RegisterNoShowTests
 {
