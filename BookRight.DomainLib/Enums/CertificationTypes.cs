@@ -2,7 +2,6 @@
 
 public enum CertificationTypes
 {
-    None,
     Acupuncture,
     Dietary,
     Physiotherapy,
