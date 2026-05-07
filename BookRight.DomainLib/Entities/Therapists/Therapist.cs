@@ -17,9 +17,14 @@ public class Therapist : AggregateRoot
     private readonly List<CertificationTypes> _certificationTypes = new();
     public IReadOnlyCollection<CertificationTypes> CertificationTypes => _certificationTypes.AsReadOnly();
 
-    private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber)
+    private readonly List<Guid> _associatedclinics = new();
+    public IReadOnlyCollection<Guid> AssociatedClinics => _associatedclinics.AsReadOnly();
+
+    private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics)
     {
         // Pre-condition
+        if (associatedClinics.Count == 0)
+            throw new DomainException("Therapist must be associated to atleast 1 clinic");
 
         if (string.IsNullOrWhiteSpace(authorizationNumber))
             throw new DomainException("Therapist must have an authorization number");
@@ -30,7 +35,6 @@ public class Therapist : AggregateRoot
 
 
         // Action
-
         Id = Guid.NewGuid();
 
         AuthorizationNumber = authorizationNumber;
@@ -40,17 +44,19 @@ public class Therapist : AggregateRoot
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
+        _associatedclinics = associatedClinics;
     }
 
 
-    public static Therapist Create(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber)
+    public static Therapist Create(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics)
         => new(
             authorizationNumber,
             name,
             hourlyRate,
             address,
             email,
-            phoneNumber);
+            phoneNumber,
+            associatedClinics);
 
 
     public void ChangeName(string newName)
@@ -165,4 +171,6 @@ public class Therapist : AggregateRoot
         if (hourlyRate <= 0)
             throw new DomainException("Hourly rate cannot be negative or 0");
     }
+
+    
 }
