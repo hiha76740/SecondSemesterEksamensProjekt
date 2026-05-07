@@ -1,6 +1,6 @@
 ﻿using BookRight.FacadeLib.Commands.Therapists.DTOs;
 
-namespace BookRight.FacadeLib.Handlers;
+namespace BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 public interface IAddCertificationTypeHandler
 {
