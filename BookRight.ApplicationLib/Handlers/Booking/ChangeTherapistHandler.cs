@@ -12,10 +12,10 @@ public class ChangeTherapistHandler(
     async Task IChangeTherapistHandler.Handle(ChangeTherapistCommand command)
     {
         if (command.BookingId == Guid.Empty)
-            throw new BookRight.ApplicationLib.Exceptions.ApplicationException("BookingId cannot be empty.");
+            throw new Exceptions.ApplicationException("BookingId cannot be empty.");
 
         if (command.TherapistId == Guid.Empty)
-            throw new BookRight.ApplicationLib.Exceptions.ApplicationException("TherapistId cannot be empty.");
+            throw new Exceptions.ApplicationException("TherapistId cannot be empty.");
 
         var booking = await bookingRepository.GetByIdAsync(command.BookingId)
             ?? throw new NotFoundException("Booking could not be found.");
