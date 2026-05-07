@@ -1,5 +1,4 @@
-﻿
-namespace BookRight.DomainLib.Enums;
+﻿namespace BookRight.DomainLib.Enums;
 
 public enum BookingStatus
 {
