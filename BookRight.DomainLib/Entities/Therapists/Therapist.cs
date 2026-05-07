@@ -20,7 +20,7 @@ public class Therapist : AggregateRoot
     private readonly List<Guid> _associatedclinics = new();
     public IReadOnlyCollection<Guid> AssociatedClinics => _associatedclinics.AsReadOnly();
 
-    private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics)
+    private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics, List<CertificationTypes>? certifications)
     {
         // Pre-condition
         if (associatedClinics.Count == 0)
@@ -45,10 +45,13 @@ public class Therapist : AggregateRoot
         Email = email;
         PhoneNumber = phoneNumber;
         _associatedclinics = associatedClinics;
+
+        if (certifications != null)
+            _certificationTypes = certifications;
     }
 
 
-    public static Therapist Create(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics)
+    public static Therapist Create(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics, List<CertificationTypes>? certifications = null)
         => new(
             authorizationNumber,
             name,
@@ -56,7 +59,8 @@ public class Therapist : AggregateRoot
             address,
             email,
             phoneNumber,
-            associatedClinics);
+            associatedClinics,
+            certifications);
 
 
     public void ChangeName(string newName)
