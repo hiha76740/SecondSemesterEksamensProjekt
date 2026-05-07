@@ -63,7 +63,7 @@ public class Therapist : AggregateRoot
     {
         // Pre-condition
         EnsureValidName(newName);
-        
+
 
         if (Name == newName)
             throw new DomainException("New name cannot be the same as current name");
@@ -168,7 +168,13 @@ public class Therapist : AggregateRoot
         _associatedclinics.Add(clinicId);
     }
 
-    
+    public void RemoveAssociatedClinic(Guid clinicId)
+    {
+        if (_associatedclinics.Contains(clinicId) == false)
+            throw new DomainException($"Clinic is not associated with therapist {Name}");
+
+        _associatedclinics.Remove(clinicId);
+    }
 
     private void EnsureValidName(string name)
     {
@@ -182,5 +188,5 @@ public class Therapist : AggregateRoot
             throw new DomainException("Hourly rate cannot be negative or 0");
     }
 
-    
+
 }
