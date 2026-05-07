@@ -17,5 +17,29 @@ public class RemoveCertificationTypeHandler : IRemoveCertificationTypeHandler
     }
 
 
-   
+    async Task IRemoveCertificationTypeHandler.Handle(
+        RemoveCertificationTypeCommand command)
+    {
+        var therapist = await _therapistRepository
+            .GetByIdAsync(command.TherapistId)
+            ?? throw new NotFoundException(
+                "Therapist could not be found");
+
+
+        bool certificationTypeExsists =
+            Enum.TryParse<CertificationTypes>(
+                command.CertificationType,
+                out var certificationType);
+
+        if (certificationTypeExsists == false)
+            throw new NotFoundException(
+                "Certification Type not found");
+
+
+        therapist.RemoveCertificationType(
+            certificationType);
+
+
+        await _therapistRepository.SaveAsync();
+    }
 }
