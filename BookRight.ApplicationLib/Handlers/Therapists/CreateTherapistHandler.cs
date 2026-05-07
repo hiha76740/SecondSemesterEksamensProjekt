@@ -11,11 +11,12 @@ namespace BookRight.ApplicationLib.Handlers.Therapists;
 public class CreateTherapistHandler : ICreateTherapistHandler
 {
     private readonly ITherapistRepository _therapistRepository;
+    private readonly IClinicRepository _clinicRepository;
 
-    public CreateTherapistHandler(
-        ITherapistRepository therapistRepository)
+    public CreateTherapistHandler(ITherapistRepository therapistRepository, IClinicRepository clinicRepository)
     {
         _therapistRepository = therapistRepository;
+        _clinicRepository = clinicRepository;
     }
 
 
@@ -48,6 +49,12 @@ public class CreateTherapistHandler : ICreateTherapistHandler
 
                 certifications.Add(certificationTypes);
             }
+        }
+
+        foreach (var clinicId in command.AssociatedClinicIds)
+        {
+            _ = _clinicRepository.GetByIdAsync(clinicId)
+                ?? throw new NotFoundException($"Clinic with id {clinicId} not found");
         }
 
         var therapist = Therapist.Create(
