@@ -2,4 +2,4 @@
 
 public sealed record AddCertificationTypeCommand(
     Guid TherapistId,
-    CertificationTypes CertificationType);
+    string CertificationType);
