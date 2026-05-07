@@ -244,6 +244,15 @@ public class TherapistTests
     // 9. RemoveCertificationType tests (Removing certifications from a Therapist) 
     // ---------------------------------------------------------
 
+    [Fact]
+    public void RemoveCertificationType_GivenNotExistingCertificationType_CastDomainException()
+    {
+        // Arrange
+        var therapist = CreateWithValidData();
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => therapist.RemoveCertificationType(Certification));
+    }
 
     // ---------------------------------------------------------
     // 10. AddAssociatedClinic tests (Adding new associated clinic to a Therapist) 
