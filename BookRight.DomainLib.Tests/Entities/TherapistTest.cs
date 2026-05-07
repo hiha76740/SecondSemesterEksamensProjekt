@@ -13,6 +13,7 @@ public class TherapistTests
     private static string Name => "John Doe";
     private static string AuthorizationNumber => "AUTH123";
     private static decimal HourlyRate => 550;
+    private static List<Guid> AssociatedClinicIds => new() { Guid.Parse("d62f5c2d-a5e6-4523-902d-108acac956c8") };
 
     private static Address Address(
         string street = "Testvej 1",
@@ -29,7 +30,7 @@ public class TherapistTests
         => new(number);
 
 
- 
+
     // HELPER METHOD
 
 
@@ -39,14 +40,17 @@ public class TherapistTests
         decimal? hourlyRate = null,
         Address? address = null,
         PhoneNumber? phoneNumber = null,
-        Email? email = null)
+        Email? email = null,
+        List<Guid>? associatedClinicIds = null)
         => Therapist.Create(
             authorizationNumber ?? AuthorizationNumber,
             name ?? Name,
             hourlyRate ?? HourlyRate,
             address ?? Address(),
             email ?? Email(),
-            phoneNumber ?? PhoneNumber());
+            phoneNumber ?? PhoneNumber(),
+            associatedClinicIds ?? AssociatedClinicIds
+            );
 
 
     // CREATE VALIDATION TESTS
