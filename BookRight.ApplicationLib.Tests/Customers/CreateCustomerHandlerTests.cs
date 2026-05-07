@@ -52,6 +52,7 @@ public class CreateCustomerHandlerTests
         // Assert
         _mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
         _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        _mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
     }
 
     [Fact]
