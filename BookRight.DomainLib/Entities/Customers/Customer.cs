@@ -110,12 +110,12 @@ public class Customer : AggregateRoot
         Note = note;
     }
 
-    public void ChangePreferredTherapist(Guid newTherapistId)
+    public void ChangePreferredTherapist(Guid newpreferredTherapist)
     {
-        if (PrefferedTherapist == newTherapistId)
+        if (PrefferedTherapist == newpreferredTherapist)
             throw new DomainException("New preferred therapist is the same as current therapist");
 
-        PrefferedTherapist = newTherapistId;
+        PrefferedTherapist = newpreferredTherapist;
     }
 
     private static void EnsureValidFirstname(string firstName)
