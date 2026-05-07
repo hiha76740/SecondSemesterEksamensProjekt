@@ -1,4 +1,6 @@
 ﻿using BookRight.ApplicationLib.Repositories;
+using BookRight.DomainLib.Enums;
+using BookRight.DomainLib.Exceptions;
 using BookRight.FacadeLib.DTO;
 using BookRight.FacadeLib.Handlers;
 
@@ -18,12 +20,16 @@ public class AddCertificationTypeHandler : IAddCertificationTypeHandler
     {
         var therapist = await _therapistRepository
             .GetByIdAsync(command.TherapistId)
-            ?? throw new ApplicationException(
+            ?? throw new NotFoundException(
                 "Therapist could not be found");
 
+        bool certificationTypeExsists = Enum.TryParse< CertificationTypes>(command.CertificationType, out var certificationType);
+
+        if (certificationTypeExsists == false)
+            throw new NotFoundException("Certification Type not found");
 
         therapist.AddCertificationType(
-            command.CertificationType);
+            certificationType);
 
 
         await _therapistRepository.SaveAsync();
