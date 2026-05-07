@@ -38,7 +38,8 @@ public class CreateTherapistHandler : ICreateTherapistHandler
             command.HourlyRate,
             address,
             email,
-            phoneNumber);
+            phoneNumber,
+            command.AssociatedClinicIds);
 
 
         await _therapistRepository.AddAsync(therapist);
