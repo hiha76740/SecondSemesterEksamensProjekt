@@ -54,8 +54,9 @@ public class TherapistTests
             );
 
 
-    // CREATE VALIDATION TESTS
- 
+    // ---------------------------------------------------------
+    // 1. Create tests (Creating a Therapist)
+    // ---------------------------------------------------------
 
     [Theory]
     [InlineData("")]
@@ -91,8 +92,10 @@ public class TherapistTests
     }
 
 
-    // CHANGE NAME
-   
+    // ---------------------------------------------------------
+    // 2. ChangeName tests (Changing a Therapist name) 
+    // ---------------------------------------------------------
+
 
     [Fact]
     public void ChangeName_GivenValidName_ChangesName()
@@ -123,9 +126,9 @@ public class TherapistTests
     }
 
 
-    // -----------------------------
-    // CHANGE HOURLY RATE
-    // -----------------------------
+    // ---------------------------------------------------------
+    // 3. ChangeHourlyRate tests (Changing a Therapist hourly rate) 
+    // ---------------------------------------------------------
 
     [Fact]
     public void ChangeHourlyRate_GivenValidHourlyRate_ChangesHourlyRate()
@@ -156,9 +159,9 @@ public class TherapistTests
     }
 
 
-    // -----------------------------
-    // CHANGE ADDRESS
-    // -----------------------------
+    // ---------------------------------------------------------
+    // 4. ChangeAddress tests (Changing a Therapist Address) 
+    // ---------------------------------------------------------
 
     [Fact]
     public void ChangeAddress_GivenValidAddress_ChangesAddress()
@@ -179,9 +182,9 @@ public class TherapistTests
     }
 
 
-    // -----------------------------
-    // CHANGE EMAIL
-    // -----------------------------
+    // ---------------------------------------------------------
+    // 5. ChangeEmail tests (Changing a Therapist Email) 
+    // ---------------------------------------------------------
 
     [Fact]
     public void ChangeEmail_GivenValidEmail_ChangesEmail()
@@ -199,9 +202,9 @@ public class TherapistTests
     }
 
 
-    // -----------------------------
-    // CHANGE PHONE NUMBER
-    // -----------------------------
+    // ---------------------------------------------------------
+    // 6. ChangePhoneNumber tests (Changing a Therapist Phone Number) 
+    // ---------------------------------------------------------
 
     [Fact]
     public void ChangePhoneNumber_GivenValidPhoneNumber_ChangesPhoneNumber()
@@ -217,4 +220,23 @@ public class TherapistTests
         // Assert
         Assert.Equal(newPhoneNumber, therapist.PhoneNumber);
     }
+
+    // ---------------------------------------------------------
+    // 8. AddCertificationType tests (Adding certifications to a Therapist) 
+    // ---------------------------------------------------------
+
+
+    // ---------------------------------------------------------
+    // 9. RemoveCertificationType tests (Removing certifications from a Therapist) 
+    // ---------------------------------------------------------
+
+
+    // ---------------------------------------------------------
+    // 10. AddAssociatedClinic tests (Adding new associated clinic to a Therapist) 
+    // ---------------------------------------------------------
+
+
+    // ---------------------------------------------------------
+    // 11. RemoveAssociatedClinic tests (Removing associated clinic from a Therapist) 
+    // ---------------------------------------------------------
 }
