@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Commands\Therapists\DTOs\CreateTherapistCommand.cs" />
   </ItemGroup>
 
