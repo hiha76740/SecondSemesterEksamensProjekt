@@ -28,19 +28,20 @@ public class Booking : AggregateRoot
     public bool IsActive => Status != BookingStatus.Cancelled;
 
     /// <summary>
-    /// Creates a new booking for a specified time slot, customer, treatment, therapist, and clinic, ensuring there are
-    /// no scheduling conflicts.
+    /// Creates a new booking for the specified time slot, customer, treatment, therapist, and clinic, ensuring there
+    /// are no overlapping bookings.
     /// </summary>
-    /// <remarks>If the specified time slot overlaps with any existing booking for the therapist or clinic, an
-    /// exception is thrown to indicate the conflict.</remarks>
-    /// <param name="timeSlot">The time slot for the booking. Must not overlap with existing bookings for the therapist or clinic.</param>
+    /// <remarks>If the new booking overlaps with any existing booking for the customer or therapist, an
+    /// exception is thrown. Ensure that the provided collections contain all relevant bookings to avoid
+    /// conflicts.</remarks>
+    /// <param name="timeSlot">The time slot for the booking. Specifies the start and end time of the appointment.</param>
     /// <param name="customerId">The unique identifier of the customer for whom the booking is created.</param>
     /// <param name="treatmentId">The unique identifier of the treatment to be performed during the booking.</param>
     /// <param name="therapistId">The unique identifier of the therapist assigned to the booking.</param>
     /// <param name="clinicId">The unique identifier of the clinic where the booking will take place.</param>
-    /// <param name="price">The price to be charged for the booking.</param>
-    /// <param name="existingTherapistBookings">A collection of existing bookings for the therapist. Used to check for scheduling conflicts.</param>
-    /// <param name="existingClinicBookings">A collection of existing bookings for the clinic. Used to check for scheduling conflicts.</param>
+    /// <param name="price">The price to be charged for the booking. Must be a non-negative value.</param>
+    /// <param name="existingCustomerBookings">A collection of the customer's existing bookings. Used to check for overlapping appointments.</param>
+    /// <param name="existingTherapistBookings">A collection of the therapist's existing bookings. Used to check for overlapping appointments.</param>
     /// <returns>A new Booking instance representing the scheduled appointment.</returns>
     public static Booking Create(
         TimeSlot timeSlot,
@@ -49,13 +50,12 @@ public class Booking : AggregateRoot
         Guid therapistId,
         Guid clinicId,
         decimal price,
-        IEnumerable<Booking> existingTherapistBookings,
-        // TODO: Refactor Change parameter name to existingCostumerBookings
-        IEnumerable<Booking> existingClinicBookings)
+        IEnumerable<Booking> existingCustomerBookings,
+        IEnumerable<Booking> existingTherapistBookings)
     {
         var booking = new Booking(timeSlot, customerId, treatmentId, therapistId, clinicId, price);
 
-        ValidateNoOverlap(booking, existingTherapistBookings, existingClinicBookings);
+        ValidateNoOverlap(booking, existingCustomerBookings, existingTherapistBookings);
 
         return booking;
     }
@@ -126,21 +126,16 @@ public class Booking : AggregateRoot
     }
 
     /// <summary>
-    /// Changes the associated clinic for the current booking to the specified clinic.
+    /// Changes the associated clinic to the specified clinic identifier.
     /// </summary>
-    /// <param name="newClinicId">The unique identifier of the new clinic to associate with this booking.</param>
-    /// <param name="existsForClinic">A collection of existing bookings for the target clinic. Used to validate that the change does not result in
-    /// overlapping bookings.</param>
-    /// <exception cref="DomainException">Thrown if the new clinic is the same as the current clinic, or if the change would result in overlapping
-    /// bookings.</exception>
-    public void ChangeClinic(Guid newClinicId, IEnumerable<Booking> existsForClinic)
+    /// <param name="newClinicId">The unique identifier of the new clinic to associate with. Must not be equal to the current clinic identifier.</param>
+    /// <exception cref="DomainException">Thrown if the specified clinic identifier is the same as the current clinic identifier.</exception>
+    public void ChangeClinic(Guid newClinicId)
     {
         EnsureCanBeChanged();
 
         if (newClinicId == ClinicId)
             throw new DomainException("New and old clinic can't be the same");
-
-        ValidateNoOverlap(this, existsForClinic);
 
         ClinicId = newClinicId;
     }
