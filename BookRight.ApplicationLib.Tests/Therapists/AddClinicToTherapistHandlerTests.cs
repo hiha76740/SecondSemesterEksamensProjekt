@@ -1,5 +1,6 @@
 ﻿using BookRight.ApplicationLib.Handlers.Therapists;
 using BookRight.ApplicationLib.Repositories;
+using BookRight.DomainLib.Entities.Clinics;
 using BookRight.DomainLib.Entities.Therapists;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
@@ -7,9 +8,9 @@ using BookRight.FacadeLib.Commands.Therapists.DTOs;
 using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 using Moq;
 
-namespace BookRight.ApplicationLib.Tests.Handlers.Therapists;
+namespace BookRight.ApplicationLib.Tests.Therapists;
 
-public class RemoveClinicFromTherapistHandlerTests
+public class AddClinicToTherapistHandlerTests
 {
     private static readonly Guid TherapistId = Guid.NewGuid();
     private static readonly Guid ClinicId = Guid.NewGuid();
@@ -32,12 +33,12 @@ public class RemoveClinicFromTherapistHandlerTests
             Address,
             Email,
             PhoneNumber,
-            new List<Guid> { ClinicId },
+            new List<Guid>(),
             null);
     }
 
     [Fact]
-    public async Task GivenValidIds_WhenRemovingClinic_ThenClinicIsRemoved()
+    public async Task GivenValidIds_WhenAddingClinic_ThenClinicIsAdded()
     {
 
         var therapist = CreateTherapist();
@@ -54,18 +55,19 @@ public class RemoveClinicFromTherapistHandlerTests
 
         clinicRepositoryMock
             .Setup(x => x.GetByIdAsync(ClinicId))
-            .ReturnsAsync(Mock.Of<DomainLib.Entities.Clinics.Clinic>());
+            .ReturnsAsync(Mock.Of<Clinic>());
 
-        IRemoveClinicFromTherapistHandler handler =
-            new RemoveClinicFromTherapistHandler(
+        IAddClinicToTherapistHandler handler =
+            new AddClinicToTherapistHandler(
                 therapistRepositoryMock.Object,
                 clinicRepositoryMock.Object);
 
-        var command = new RemoveClinicFromTherapistCommand(
+        var command = new AddClinicToTherapistCommand(
             TherapistId,
             ClinicId);
 
         await handler.Handle(command);
+
 
 
         therapistRepositoryMock.Verify(
@@ -74,7 +76,7 @@ public class RemoveClinicFromTherapistHandlerTests
     }
 
     [Fact]
-    public async Task GivenInvalidTherapistId_WhenRemovingClinic_ThenCastNotFoundException()
+    public async Task GivenInvalidTherapistId_WhenAddingClinic_ThenCastNotFoundException()
     {
 
         var therapistRepositoryMock =
@@ -87,12 +89,12 @@ public class RemoveClinicFromTherapistHandlerTests
             .Setup(x => x.GetByIdAsync(TherapistId))
             .ReturnsAsync((Therapist?)null);
 
-        IRemoveClinicFromTherapistHandler handler =
-            new RemoveClinicFromTherapistHandler(
+        IAddClinicToTherapistHandler handler =
+            new AddClinicToTherapistHandler(
                 therapistRepositoryMock.Object,
                 clinicRepositoryMock.Object);
 
-        var command = new RemoveClinicFromTherapistCommand(
+        var command = new AddClinicToTherapistCommand(
             TherapistId,
             ClinicId);
 
@@ -101,7 +103,7 @@ public class RemoveClinicFromTherapistHandlerTests
     }
 
     [Fact]
-    public async Task GivenInvalidClinicId_WhenRemovingClinic_ThenCastNotFoundException()
+    public async Task GivenInvalidClinicId_WhenAddingClinic_ThenCastNotFoundException()
     {
 
         var therapist = CreateTherapist();
@@ -118,14 +120,14 @@ public class RemoveClinicFromTherapistHandlerTests
 
         clinicRepositoryMock
             .Setup(x => x.GetByIdAsync(ClinicId))
-            .ReturnsAsync((DomainLib.Entities.Clinics.Clinic?)null);
+            .ReturnsAsync((Clinic?)null);
 
-        IRemoveClinicFromTherapistHandler handler =
-            new RemoveClinicFromTherapistHandler(
+        IAddClinicToTherapistHandler handler =
+            new AddClinicToTherapistHandler(
                 therapistRepositoryMock.Object,
                 clinicRepositoryMock.Object);
 
-        var command = new RemoveClinicFromTherapistCommand(
+        var command = new AddClinicToTherapistCommand(
             TherapistId,
             ClinicId);
 
