@@ -2,7 +2,7 @@
 
 namespace BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
-public interface IRemoveCertificationTypeHandler
+public interface IRemoveCertificationFromTherapistHandler
 {
     Task Handle(RemoveCertificationTypeCommand command);
 }

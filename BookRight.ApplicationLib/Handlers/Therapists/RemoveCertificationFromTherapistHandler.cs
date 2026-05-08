@@ -6,7 +6,7 @@ using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Therapists;
 
-public class RemoveCertificationFromTherapistHandler : IRemoveCertificationTypeHandler
+public class RemoveCertificationFromTherapistHandler : IRemoveCertificationFromTherapistHandler
 {
     private readonly ITherapistRepository _therapistRepository;
 
@@ -17,7 +17,7 @@ public class RemoveCertificationFromTherapistHandler : IRemoveCertificationTypeH
     }
 
 
-    async Task IRemoveCertificationTypeHandler.Handle(
+    async Task IRemoveCertificationFromTherapistHandler.Handle(
         RemoveCertificationTypeCommand command)
     {
         var therapist = await _therapistRepository
