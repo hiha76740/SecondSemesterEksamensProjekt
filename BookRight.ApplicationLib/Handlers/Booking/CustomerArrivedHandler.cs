@@ -18,6 +18,6 @@ public class CustomerArrivedHandler(
 
         booking.Arrived();
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }
