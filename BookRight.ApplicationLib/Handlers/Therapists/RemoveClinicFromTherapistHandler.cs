@@ -25,9 +25,7 @@ public class RemoveClinicFromTherapistHandler(
                 "Clinic could not be found");
 
 
-        if (therapist.AssociatedClinicIds.Contains(command.ClinicId) == false)
-            throw new NotFoundException(
-                "Therapist is not associated with this clinic");
+
 
 
         therapist.AssociatedClinicIds.Remove(command.ClinicId);
