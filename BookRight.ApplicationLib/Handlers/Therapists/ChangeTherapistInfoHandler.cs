@@ -85,6 +85,8 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             }
 
             changesMade = true;
+            if (changesMade == true)
+                await therapistRepository.SaveAsync();
         }
     }
 }
