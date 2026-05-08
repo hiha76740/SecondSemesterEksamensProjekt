@@ -11,6 +11,8 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
 {
     async Task IChangeCustomerInfoHandler.Handle(ChangeCustomerInfoCommand command)
     {
+        bool changesMade = false;
+
         var customer = await customerRepository.GetByIdAsync(command.CustomerId)
             ?? throw new NotFoundException("Customer could not be found");
 
@@ -26,14 +28,51 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
         var email = new Email(command.EmailAddress);
         var phoneNumber = new PhoneNumber(command.PhoneNumber);
 
-        customer.ChangeFirstname(command.Firstname);
-        customer.ChangeLastname(command.Lastname);
-        customer.ChangeAddress(address);
-        customer.ChangeEmail(email);
-        customer.ChangePhoneNumber(phoneNumber);
-        customer.ChangeNote(command.Note);
-        customer.ChangePreferredTherapist(command.PreferredTherapist);
 
-        await customerRepository.SaveAsync();
+        if (customer.Firstname != command.Firstname)
+        {
+            customer.ChangeFirstname(command.Firstname);
+            changesMade = true;
+        }
+
+        if (customer.Lastname != command.Lastname)
+        {
+            customer.ChangeLastname(command.Lastname);
+            changesMade = true;
+        }
+
+        if (customer.Address != address)
+        {
+            customer.ChangeAddress(address);
+            changesMade = true;
+        }
+
+        if (customer.Email != email)
+        {
+            customer.ChangeEmail(email);
+            changesMade = true;
+        }
+
+        if (customer.PhoneNumber != phoneNumber)
+        {
+            customer.ChangePhoneNumber(phoneNumber);
+            changesMade = true;
+        }
+
+        if (customer.Note != command.Note)
+        {
+            customer.ChangeNote(command.Note);
+            changesMade = true;
+        }
+
+        if (customer.PrefferedTherapist != command.PreferredTherapist)
+        {
+            customer.ChangePreferredTherapist(command.PreferredTherapist);
+            changesMade = true;
+        }
+
+
+        if (changesMade == true)
+            await customerRepository.SaveAsync();
     }
 }
