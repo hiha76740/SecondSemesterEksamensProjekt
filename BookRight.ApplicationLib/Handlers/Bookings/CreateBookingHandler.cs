@@ -1,11 +1,12 @@
 ﻿using BookRight.ApplicationLib.Repositories;
+using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
 
-namespace BookRight.ApplicationLib.Handlers.Booking;
+namespace BookRight.ApplicationLib.Handlers.Bookings;
 
 public class CreateBookingHandler(
     IBookingRepository bookingRepository,
@@ -40,7 +41,7 @@ public class CreateBookingHandler(
         if (therapist.CertificationTypes.Contains(treatment.CertificationRequired) == false)
             throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
 
-        var customer = await customerRepository.GetByIdAsync(command.CustomerId)
+        _ = await customerRepository.GetByIdAsync(command.CustomerId)
             ?? throw new NotFoundException("Customer could not be found.");
 
         var clinic = await clinicRepository.GetByIdAsync(command.ClinicId)
@@ -50,7 +51,7 @@ public class CreateBookingHandler(
 
         var timeSlot = new TimeSlot(command.From, command.To);
 
-        var customerBookings = await bookingRepository.GetAllBookingsByIdAsync(customer.Id);
+        var customerBookings = await bookingRepository.GetAllBookingsByIdAsync(command.CustomerId);
 
         var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
 
@@ -59,9 +60,9 @@ public class CreateBookingHandler(
         if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, timeSlot) == false)
             throw new Exceptions.ApplicationException("Clinic capacity was exceeded.");
 
-        var booking = BookRight.DomainLib.Entities.Bookings.Booking.Create(
+        var booking = Booking.Create(
             timeSlot,
-            customer.Id,
+            command.CustomerId,
             treatment.Id,
             therapist.Id,
             clinic.Id,

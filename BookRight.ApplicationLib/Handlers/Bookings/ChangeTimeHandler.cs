@@ -4,7 +4,7 @@ using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
 
-namespace BookRight.ApplicationLib.Handlers.Booking;
+namespace BookRight.ApplicationLib.Handlers.Bookings;
 
 public class ChangeTimeHandler(
     IBookingRepository bookingRepository,
