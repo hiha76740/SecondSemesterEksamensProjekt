@@ -6,19 +6,12 @@ using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Therapists;
 
-public class AddCertificationTypeHandler : IAddCertificationTypeHandler
+public class AddCertificationToTherapistHandler(ITherapistRepository therapistRepository) : IAddCertificationTypeHandler
 {
-    private readonly ITherapistRepository _therapistRepository;
-
-    public AddCertificationTypeHandler(
-        ITherapistRepository therapistRepository)
-    {
-        _therapistRepository = therapistRepository;
-    }
     async Task IAddCertificationTypeHandler.Handle(
        AddCertificationTypeCommand command)
     {
-        var therapist = await _therapistRepository
+        var therapist = await therapistRepository
             .GetByIdAsync(command.TherapistId)
             ?? throw new NotFoundException(
                 "Therapist could not be found");
@@ -32,7 +25,7 @@ public class AddCertificationTypeHandler : IAddCertificationTypeHandler
             certificationType);
 
 
-        await _therapistRepository.SaveAsync();
+        await therapistRepository.SaveAsync();
     }
 
 }
