@@ -126,7 +126,7 @@ public class CreateBookingTests
 
         // Assert
         bookingRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<Booking>()), Times.Once);
-        bookingRepositoryMock.Verify(repository => repository.Save(), Times.Once);
+        bookingRepositoryMock.Verify(repository => repository.SaveAsync(), Times.Once);
     }
 
     [Fact]
