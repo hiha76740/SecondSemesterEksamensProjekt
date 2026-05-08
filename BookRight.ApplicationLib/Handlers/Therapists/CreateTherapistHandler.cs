@@ -10,19 +10,14 @@ namespace BookRight.ApplicationLib.Handlers.Therapists;
 
 public class CreateTherapistHandler(ITherapistRepository therapistRepository, IClinicRepository clinicRepository) : ICreateTherapistHandler
 {
-    async Task ICreateTherapistHandler.Handle(
-        CreateTherapistCommand command)
+    async Task ICreateTherapistHandler.Handle(CreateTherapistCommand command)
     {
+        var email = new Email(command.EmailAddress);
+        var phoneNumber = new PhoneNumber(command.PhoneNumber);
         var address = new Address(
             command.Street,
             command.PostalCode,
-            command.City);
-
-        var email = new Email(
-            command.EmailAddress);
-
-        var phoneNumber = new PhoneNumber(
-            command.PhoneNumber);
+            command.City);   
 
         List<CertificationTypes>? certifications = null;
 
