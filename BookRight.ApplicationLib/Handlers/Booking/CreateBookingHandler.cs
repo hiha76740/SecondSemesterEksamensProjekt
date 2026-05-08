@@ -28,21 +28,25 @@ public class CreateBookingHandler(
 
         if (command.ClinicId == Guid.Empty)
             throw new Exceptions.ApplicationException("ClinicId cannot be empty.");
+        
 
-        var customer = await customerRepository.GetByIdAsync(command.CustomerId)
-            ?? throw new NotFoundException("Customer could not be found.");
 
         var therapist = await therapistRepository.GetByIdAsync(command.TherapistId)
             ?? throw new NotFoundException("Therapist could not be found.");
-
-        var clinic = await clinicRepository.GetByIdAsync(command.ClinicId)
-            ?? throw new NotFoundException("Clinic could not be found.");
 
         var treatment = await treatmentRepository.GetByIdAsync(command.TreatmentId)
             ?? throw new NotFoundException("Treatment could not be found.");
 
         if (therapist.CertificationTypes.Contains(treatment.CertificationRequired) == false)
             throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
+
+        var customer = await customerRepository.GetByIdAsync(command.CustomerId)
+            ?? throw new NotFoundException("Customer could not be found.");
+
+        var clinic = await clinicRepository.GetByIdAsync(command.ClinicId)
+            ?? throw new NotFoundException("Clinic could not be found.");
+
+
 
         var timeSlot = new TimeSlot(command.From, command.To);
 
