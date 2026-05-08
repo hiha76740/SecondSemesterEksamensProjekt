@@ -97,4 +97,16 @@ public class ChangeCustomerInfoHandlerTests
         // Assert
         _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Never);
     }
+
+    [Fact]
+    public async Task Handle_GivenInvalidCommandEmptyPreferredTherapist_CastNotFoundException()
+    {
+        // Arrange
+        var customerId = Guid.NewGuid();
+        var preferredTherapistId = Guid.Empty;
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customerId, preferredTherapist: preferredTherapistId);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => CreateSut().Handle(command));
+    }
 }
