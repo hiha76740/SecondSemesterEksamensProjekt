@@ -8,11 +8,11 @@ using BookRight.FacadeLib.Commands.Therapists.DTOs;
 using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 using Moq;
 
-namespace BookRight.ApplicationLib.Tests.Handlers.Therapists;
+namespace BookRight.ApplicationLib.Tests.Therapists;
 
 public class ChangeTherapistInfoHandlerTests
 {
-    private static List<string> certificationType = new() { CertificationTypes.Physiotherapy.ToString(), CertificationTypes.Acupuncture.ToString() };
+    private readonly static List<string> certificationType = new() { CertificationTypes.Physiotherapy.ToString(), CertificationTypes.Acupuncture.ToString() };
 
     private static Therapist CreateTherapist()
     {
