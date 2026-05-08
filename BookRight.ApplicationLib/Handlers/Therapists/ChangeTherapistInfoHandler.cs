@@ -26,5 +26,12 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
 
         var phoneNumber = new PhoneNumber(
           command.PhoneNumber);
+
+        if (therapist.Name != command.Name)
+        {
+            therapist.ChangeName(command.Name);
+            changesMade = true;
+        }
+
     }
 }
