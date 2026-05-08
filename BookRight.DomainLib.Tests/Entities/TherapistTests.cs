@@ -273,7 +273,7 @@ public class TherapistTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void RemoveAssociatedClinic_GivenNotEcistingClinic_CastDomainException()
+    public void RemoveAssociatedClinic_GivenNotExistingClinic_CastDomainException()
     {
         // Arrange
         var therapist = CreateWithValidData();
