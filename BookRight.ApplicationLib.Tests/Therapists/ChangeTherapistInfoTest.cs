@@ -23,4 +23,19 @@ public class ChangeTherapistInfoHandlerTests
     private static readonly PhoneNumber PhoneNumber =
     new("12345678");
 
+    private static Therapist CreateTherapist()
+    {
+        return Therapist.Create(
+        "AUTH123",
+        "John Doe",
+        550,
+        Address,
+        Email,
+        PhoneNumber,
+        new List<Guid>(),
+        new List<CertificationTypes>
+        {
+         CertificationTypes.CognitiveTherapy
+        });
+    }
 }
