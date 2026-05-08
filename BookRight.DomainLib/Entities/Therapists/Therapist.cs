@@ -195,14 +195,5 @@ public class Therapist : AggregateRoot
             throw new DomainException("Hourly rate cannot be negative or 0");
     }
 
-    private void EnsureValidAssociatedClinicCount()
-    {
-        if (_associatedclinics.Count == 0)
-        {
-            throw new DomainException("Therapist needs to have atleast ");
-        }
-            
-    }
-
 
 }
