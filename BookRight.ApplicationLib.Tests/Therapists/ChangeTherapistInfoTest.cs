@@ -12,16 +12,7 @@ namespace BookRight.ApplicationLib.Tests.Handlers.Therapists;
 
 public class ChangeTherapistInfoHandlerTests
 {
-    private static readonly Guid TherapistId = Guid.NewGuid();
-
-    private static readonly Address Address =
-    new("Testvej 1", "6700", "Esbjerg");
-
-    private static readonly Email Email =
-    new("test@test.dk");
-
-    private static readonly PhoneNumber PhoneNumber =
-    new("12345678");
+    private static List<string> certificationType = new() { CertificationTypes.Physiotherapy.ToString(), CertificationTypes.Acupuncture.ToString() };
 
     private static Therapist CreateTherapist()
     {
@@ -29,35 +20,17 @@ public class ChangeTherapistInfoHandlerTests
         "AUTH123",
         "John Doe",
         550,
-        Address,
-        Email,
-        PhoneNumber,
-        new List<Guid>() { Guid.NewGuid()},
-        new List<CertificationTypes>
-        {
-         CertificationTypes.Acupuncture
-        });
+        new Address("Testvej 1", "6700", "Esbjerg"),
+        new Email("test@test.dk"),
+        new PhoneNumber("12345678"),
+        new List<Guid>() { Guid.NewGuid() },
+        new List<CertificationTypes> { CertificationTypes.Acupuncture, CertificationTypes.Dietary }
+        );
     }
-
-        [Fact]
-        public async Task GivenChangedValues_WhenChangingTherapistInfo_ThenTherapistIsUpdated()
-        {
-
-            var therapist = CreateTherapist();
-
-            var therapistRepositoryMock =
-            new Mock<ITherapistRepository>();
-
-            therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
-            .ReturnsAsync(therapist);
-
-            IChangeTherapistInfoHandler handler =
-            new ChangeTherapistInfoHandler(
-            therapistRepositoryMock.Object);
-
-            var command = new ChangeTherapistInfoCommand(
-            TherapistId,
+    private static ChangeTherapistInfoCommand CreateCommand(Guid therapistId, List<string>? certificationTypeString = null)
+    {
+        return new ChangeTherapistInfoCommand(
+            therapistId,
             "Jane Doe",
             750,
             "Nyvej 5",
@@ -65,87 +38,97 @@ public class ChangeTherapistInfoHandlerTests
             "Varde",
             "new@test.dk",
             "87654321",
-            new List<string>
-            {CertificationTypes.Acupuncture.ToString()
-            });
-
-
-            await handler.Handle(command);
-
-            therapistRepositoryMock.Verify(
-            x => x.SaveAsync(),
-            Times.Once);
-        }
-
-        [Fact]
-        public async Task GivenInvalidCertification_WhenChangingTherapistInfo_ThenCastNotFoundException()
-        {
-
-            var therapist = CreateTherapist();
-
-            var therapistRepositoryMock =
-            new Mock<ITherapistRepository>();
-
-            therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
-            .ReturnsAsync(therapist);
-
-            IChangeTherapistInfoHandler handler =
-            new ChangeTherapistInfoHandler(
-            therapistRepositoryMock.Object);
-
-            var command = new ChangeTherapistInfoCommand(
-            TherapistId,
-            "Jane Doe",
-            750,
-            "Nyvej 5",
-            "6800",
-            "Varde",
-            "new@test.dk",
-            "87654321",
-            new List<string>
-            {
-                "InvalidCertification"
-            });
-
-            await Assert.ThrowsAsync<NotFoundException>(
-            () => handler.Handle(command));
-        }
-
-        [Fact]
-        public async Task GivenNoChanges_WhenChangingTherapistInfo_ThenRepositoryIsNotSaved()
-        {
-
-            var therapist = CreateTherapist();
-
-            var therapistRepositoryMock =
-            new Mock<ITherapistRepository>();
-
-            therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
-            .ReturnsAsync(therapist);
-
-            IChangeTherapistInfoHandler handler =
-            new ChangeTherapistInfoHandler(
-            therapistRepositoryMock.Object);
-
-            var command = new ChangeTherapistInfoCommand(
-            TherapistId,
-            therapist.Name,
-            therapist.HourlyRate,
-            therapist.Address.Street,
-            therapist.Address.PostalCode,
-            therapist.Address.City,
-            therapist.Email.EmailAddress,
-            therapist.PhoneNumber.Number,
-            therapist.CertificationTypes
-            .Select(x => x.ToString())
-            .ToList());
-
-            await handler.Handle(command);
-
-            therapistRepositoryMock.Verify(
-            x => x.SaveAsync(),
-            Times.Never);
-        }
+            certificationTypeString ?? certificationType
+            );
     }
+
+    [Fact]
+    public async Task GivenChangedValues_WhenChangingTherapistInfo_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockTherapistRepo
+        .Setup(x => x.GetByIdAsync(therapist.Id))
+        .ReturnsAsync(therapist);
+
+        var command = CreateCommand(therapist.Id);
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        Assert.Equal(command.Name, therapist.Name);
+
+        Assert.Equal(command.HourlyRate, therapist.HourlyRate);
+
+        Assert.Equal(command.EmailAddress, therapist.Email.EmailAddress);
+
+        Assert.Equal(command.PhoneNumber, therapist.PhoneNumber.Number);
+
+        Assert.Contains(CertificationTypes.Physiotherapy, therapist.CertificationTypes);
+
+        Assert.Contains(CertificationTypes.Acupuncture, therapist.CertificationTypes);
+
+        Assert.DoesNotContain(CertificationTypes.Dietary, therapist.CertificationTypes);
+
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task GivenInvalidCertification_WhenChangingTherapistInfo_CastNotFoundException()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockTherapistRepo
+        .Setup(x => x.GetByIdAsync(therapist.Id))
+        .ReturnsAsync(therapist);
+
+        var command = CreateCommand(therapist.Id, new List<string> { "InvalidCertification" });
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
+    }
+
+
+    [Fact]
+    public async Task GivenNoChanges_WhenChangingTherapistInfo_NeverCallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockTherapistRepo
+        .Setup(x => x.GetByIdAsync(therapist.Id))
+        .ReturnsAsync(therapist);
+
+        var command = new ChangeTherapistInfoCommand(
+        therapist.Id,
+        therapist.Name,
+        therapist.HourlyRate,
+        therapist.Address.Street,
+        therapist.Address.PostalCode,
+        therapist.Address.City,
+        therapist.Email.EmailAddress,
+        therapist.PhoneNumber.Number,
+        therapist.CertificationTypes
+        .Select(x => x.ToString())
+        .ToList());
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object) as IChangeTherapistInfoHandler;
+
+        await handler.Handle(command);
+
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Never);
+    }
+}
