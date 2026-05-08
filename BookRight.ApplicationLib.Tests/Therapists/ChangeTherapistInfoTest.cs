@@ -12,5 +12,15 @@ namespace BookRight.ApplicationLib.Tests.Handlers.Therapists;
 
 public class ChangeTherapistInfoHandlerTests
 {
+    private static readonly Guid TherapistId = Guid.NewGuid();
+
+    private static readonly Address Address =
+    new("Testvej 1", "6700", "Esbjerg");
+
+    private static readonly Email Email =
+    new("test@test.dk");
+
+    private static readonly PhoneNumber PhoneNumber =
+    new("12345678");
 
 }
