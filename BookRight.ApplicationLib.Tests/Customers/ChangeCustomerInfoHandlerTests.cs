@@ -9,19 +9,31 @@ namespace BookRight.ApplicationLib.Tests.Customers;
 
 public class ChangeCustomerInfoHandlerTests
 {
-    //Helpermethod to instatiate a CreateCustomerCommand Dto
-    private static ChangeCustomerInfoCommand ChangeCustomerInfoCommandWithValidData(Guid? preferredTherapist = null)
+    // Helpermethod for instatiating a ChangeCustomerInfoCommand Dto
+    private static ChangeCustomerInfoCommand CreateChangeCustomerInfoCommandWithValidData(
+        Guid customerId,
+        string? firstName = null,
+        string? lastName = null,
+        DateTime? birthDate = null,
+        string? note = null,
+        string? street = null,
+        string? postalCode = null,
+        string? city = null,
+        string? email = null,
+        string? phoneNumber = null,
+        Guid? preferredTherapist = null
+        )
         => new ChangeCustomerInfoCommand(
-            CustomerId: Guid.NewGuid(),
-            "Torben",
-            "Svendsen",
-            new DateTime(1956, 7, 16),
-            "Gets easily confused",
-            "Niels Bohrs Gade 43",
-            "6534",
-            "Testlev",
-            "TorbenS@testing.com",
-            "96538562",
+            customerId,
+            firstName ?? "Torben",
+            lastName ?? "Svendsen",
+            birthDate ?? new DateTime(1956, 7, 16),
+            note ?? "Gets easily confused",
+            street ?? "Niels Bohrs Gade 43",
+            postalCode ?? "6534",
+            city ?? "Testlev",
+            email ?? "TorbenS@testing.com",
+            phoneNumber ?? "96538562",
             preferredTherapist
             );
 
