@@ -50,5 +50,11 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             therapist.ChangeEmail(email);
             changesMade = true;
         }
+
+        if (therapist.PhoneNumber != phoneNumber)
+        {
+            therapist.ChangePhoneNumber(phoneNumber);
+            changesMade = true;
+        }
     }
 }
