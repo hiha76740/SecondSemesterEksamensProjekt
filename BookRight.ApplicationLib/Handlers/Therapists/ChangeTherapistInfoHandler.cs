@@ -76,6 +76,7 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             if (therapist.CertificationTypes.Contains(certificationType) == false)
             {
                 therapist.AddCertificationType(certificationType);
+                changesMade = true;
             }
         }
         
@@ -86,6 +87,7 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             if (command.Certifications.Contains(certification.ToString()) == false)
             {
                 therapist.RemoveCertificationType(certification);
+                changesMade = true;
             }
         }
 
