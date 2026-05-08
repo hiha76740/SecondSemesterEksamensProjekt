@@ -32,6 +32,6 @@ public class ChangeClinicHandler(
 
         booking.ChangeClinic(clinic.Id);
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }

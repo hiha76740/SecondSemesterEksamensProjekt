@@ -35,6 +35,6 @@ public class ChangeTherapistHandler(
 
         booking.ChangeTherapist(therapist.Id, therapistBookings);
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }

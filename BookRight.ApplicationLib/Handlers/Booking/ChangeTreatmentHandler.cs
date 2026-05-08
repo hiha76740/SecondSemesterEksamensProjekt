@@ -34,6 +34,6 @@ public class ChangeTreatmentHandler(
 
         booking.ChangeTreatment(treatment.Id);
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }
