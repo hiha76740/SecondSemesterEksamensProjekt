@@ -283,4 +283,14 @@ public class TherapistTests
         // Act & Assert
         Assert.Throws<DomainException>(() => therapist.RemoveAssociatedClinic(AssociatedClinicId));
     }
+
+    [Fact]
+    public void RemoveAssociatedClinic_GivenLastClinicInList_CastDomainException()
+    {
+        // Arrange
+        var therapist = CreateWithValidData();
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => therapist.RemoveAssociatedClinic(AssociatedClinicId));
+    }
 }
