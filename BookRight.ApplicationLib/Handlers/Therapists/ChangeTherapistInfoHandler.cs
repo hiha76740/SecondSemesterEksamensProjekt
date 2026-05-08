@@ -71,5 +71,20 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
 
             certifications.Add(certificationType);
         }
+
+        if (therapist.CertificationTypes.SequenceEqual(certifications) == false)
+        {
+            foreach (var certification in therapist.CertificationTypes.ToList())
+            {
+                therapist.RemoveCertificationType(certification);
+            }
+
+            foreach (var certification in certifications)
+            {
+                therapist.AddCertificationType(certification);
+            }
+
+            changesMade = true;
+        }
     }
 }
