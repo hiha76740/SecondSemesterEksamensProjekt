@@ -30,6 +30,8 @@ public class ChangeTreatmentHandler(
         if (therapist.CertificationTypes.Contains(treatment.CertificationRequired) == false)
             throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
 
+        // TODO: Tilføj Price Calculator så bookingen har den korrekte pris ud fra den nye treatment.
+
         booking.ChangeTreatment(treatment.Id);
 
         await bookingRepository.Save();
