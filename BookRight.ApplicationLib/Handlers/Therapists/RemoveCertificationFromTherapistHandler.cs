@@ -8,27 +8,17 @@ namespace BookRight.ApplicationLib.Handlers.Therapists;
 
 public class RemoveCertificationFromTherapistHandler(ITherapistRepository therapistRepository) : IRemoveCertificationFromTherapistHandler
 {
-    async Task IRemoveCertificationFromTherapistHandler.Handle(
-        RemoveCertificationTypeCommand command)
+    async Task IRemoveCertificationFromTherapistHandler.Handle(RemoveCertificationTypeCommand command)
     {
-        var therapist = await therapistRepository
-            .GetByIdAsync(command.TherapistId)
-            ?? throw new NotFoundException(
-                "Therapist could not be found");
+        var therapist = await therapistRepository.GetByIdAsync(command.TherapistId)
+            ?? throw new NotFoundException("Therapist could not be found");
 
-
-        bool certificationTypeExsists =
-            Enum.TryParse<CertificationTypes>(
-                command.CertificationType,
-                out var certificationType);
+        bool certificationTypeExsists = Enum.TryParse<CertificationTypes>(command.CertificationType, out var certificationType);
 
         if (certificationTypeExsists == false)
-            throw new NotFoundException(
-                "Certification Type not found");
+            throw new NotFoundException("Certification Type not found");
 
-
-        therapist.RemoveCertificationType(
-            certificationType);
+        therapist.RemoveCertificationType(certificationType);
 
 
         await therapistRepository.SaveAsync();
