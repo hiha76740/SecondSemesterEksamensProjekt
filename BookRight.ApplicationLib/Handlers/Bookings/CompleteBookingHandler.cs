@@ -3,11 +3,12 @@ using BookRight.DomainLib.Exceptions;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
 
-namespace BookRight.ApplicationLib.Handlers.Booking;
+namespace BookRight.ApplicationLib.Handlers.Bookings;
 
-public class CancelBookingHandler(IBookingRepository bookingRepository) : ICancelBookingHandler
+public class CompleteBookingHandler(
+    IBookingRepository bookingRepository) : ICompleteBookingHandler
 {
-    async Task ICancelBookingHandler.Handle(CancelBookingCommand command)
+    async Task ICompleteBookingHandler.Handle(CompleteBookingCommand command)
     {
         if (command.BookingId == Guid.Empty)
             throw new Exceptions.ApplicationException("BookingId cannot be empty.");
@@ -15,7 +16,7 @@ public class CancelBookingHandler(IBookingRepository bookingRepository) : ICance
         var booking = await bookingRepository.GetByIdAsync(command.BookingId)
             ?? throw new NotFoundException("Booking could not be found.");
 
-        booking.Cancel();
+        booking.Complete();
 
         await bookingRepository.SaveAsync();
     }
