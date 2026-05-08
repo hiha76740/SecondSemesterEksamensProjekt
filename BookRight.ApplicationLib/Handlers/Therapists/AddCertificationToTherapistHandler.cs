@@ -13,9 +13,9 @@ public class AddCertificationToTherapistHandler(ITherapistRepository therapistRe
         var therapist = await therapistRepository.GetByIdAsync(command.TherapistId)
             ?? throw new NotFoundException("Therapist could not be found");
 
-        bool certificationTypeExsists = Enum.TryParse< CertificationTypes>(command.CertificationType, out var certificationType);
+        bool exsists = Enum.TryParse< CertificationTypes>(command.CertificationType, out var certificationType);
 
-        if (certificationTypeExsists == false)
+        if (exsists == false)
             throw new NotFoundException("Certification Type not found");
 
         therapist.AddCertificationType(certificationType);
