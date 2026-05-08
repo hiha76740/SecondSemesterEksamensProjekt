@@ -55,12 +55,12 @@ public class AddCertificationToTherapistHandlerTests
 
         var command = new AddCertificationTypeCommand(
             TherapistId,
-            CertificationTypes.CognitiveTherapy.ToString());
+            CertificationTypes.Acupuncture.ToString());
 
         await handler.Handle(command);
 
         Assert.Contains(
-            CertificationTypes.CognitiveTherapy,
+            CertificationTypes.Acupuncture,
             therapist.CertificationTypes);
 
         therapistRepositoryMock.Verify(
@@ -85,7 +85,7 @@ public class AddCertificationToTherapistHandlerTests
 
         var command = new AddCertificationTypeCommand(
             TherapistId,
-            CertificationTypes.CognitiveTherapy.ToString());
+            CertificationTypes.Acupuncture.ToString());
 
         await Assert.ThrowsAsync<NotFoundException>(
             () => handler.Handle(command));
