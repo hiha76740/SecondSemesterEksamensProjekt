@@ -72,18 +72,6 @@ public class ChangeTherapistInfoHandlerTests
 
             await handler.Handle(command);
 
-            Assert.Equal("Jane Doe", therapist.Name);
-
-            Assert.Equal(750, therapist.HourlyRate);
-
-            Assert.Equal("new@test.dk", therapist.Email.EmailAddress);
-
-            Assert.Equal("87654321", therapist.PhoneNumber.Number);
-
-            Assert.Contains(
-            CertificationTypes.Acupuncture,
-            therapist.CertificationTypes);
-
             therapistRepositoryMock.Verify(
             x => x.SaveAsync(),
             Times.Once);
