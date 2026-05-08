@@ -32,9 +32,8 @@ public class ChangeTherapistHandler(
 
         var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
 
-        booking.ChangeTherapist(
-            therapist.Id,
-            therapistBookings);
+
+        booking.ChangeTherapist(therapist.Id, therapistBookings);
 
         await bookingRepository.Save();
     }
