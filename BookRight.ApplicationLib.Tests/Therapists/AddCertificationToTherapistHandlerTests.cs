@@ -8,7 +8,7 @@ using BookRight.FacadeLib.Commands.Therapists.DTOs;
 using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 using Moq;
 
-namespace BookRight.ApplicationLib.Tests.Handlers.Therapists;
+namespace BookRight.ApplicationLib.Tests.Therapists;
 
 public class AddCertificationToTherapistHandlerTests
 {
