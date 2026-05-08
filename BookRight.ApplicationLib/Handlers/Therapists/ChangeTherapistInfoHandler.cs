@@ -39,5 +39,11 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             changesMade = true;
         }
 
+        if (therapist.Address != address)
+        {
+            therapist.ChangeAddress(address);
+            changesMade = true;
+        }
+
     }
 }
