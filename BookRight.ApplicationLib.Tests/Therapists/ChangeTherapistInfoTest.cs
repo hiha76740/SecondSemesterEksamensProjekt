@@ -35,8 +35,9 @@ public class ChangeTherapistInfoHandlerTests
         new List<Guid>(),
         new List<CertificationTypes>
         {
-         CertificationTypes.CognitiveTherapy
+         CertificationTypes.Acupuncture
         });
+    }
 
         [Fact]
         public async Task GivenChangedValues_WhenChangingTherapistInfo_ThenTherapistIsUpdated()
@@ -65,7 +66,7 @@ public class ChangeTherapistInfoHandlerTests
             "new@test.dk",
             "87654321",
             new List<string>
-            {CertificationTypes.Psychotherapy.ToString()
+            {CertificationTypes.Acupuncture.ToString()
             });
 
 
@@ -75,12 +76,12 @@ public class ChangeTherapistInfoHandlerTests
 
             Assert.Equal(750, therapist.HourlyRate);
 
-            Assert.Equal("new@test.dk", therapist.Email.Value);
+            Assert.Equal("new@test.dk", therapist.Email.EmailAddress);
 
-            Assert.Equal("87654321", therapist.PhoneNumber.Value);
+            Assert.Equal("87654321", therapist.PhoneNumber.Number);
 
             Assert.Contains(
-            CertificationTypes.Psychotherapy,
+            CertificationTypes.Acupuncture,
             therapist.CertificationTypes);
 
             therapistRepositoryMock.Verify(
@@ -147,8 +148,8 @@ public class ChangeTherapistInfoHandlerTests
             therapist.Address.Street,
             therapist.Address.PostalCode,
             therapist.Address.City,
-            therapist.Email.Value,
-            therapist.PhoneNumber.Value,
+            therapist.Email.EmailAddress,
+            therapist.PhoneNumber.Number,
             therapist.CertificationTypes
             .Select(x => x.ToString())
             .ToList());
