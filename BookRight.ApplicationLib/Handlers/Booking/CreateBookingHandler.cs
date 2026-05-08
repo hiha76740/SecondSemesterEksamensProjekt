@@ -67,6 +67,6 @@ public class CreateBookingHandler(
 
         await bookingRepository.AddAsync(booking);
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }
