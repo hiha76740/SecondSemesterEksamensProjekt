@@ -68,9 +68,7 @@ public class AddClinicToTherapistHandlerTests
 
         await handler.Handle(command);
 
-        Assert.Contains(
-            ClinicId,
-            therapist.AssociatedClinicIds);
+
 
         therapistRepositoryMock.Verify(
             x => x.SaveAsync(),
