@@ -57,36 +57,39 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             changesMade = true;
         }
 
-        List<CertificationTypes> certifications = new();
-
+        // Gennemgår alle certificeringer fra commandet og sikrer:
+        // 1. At certificeringen findes som en gyldig enum-værdi
+        // 2. At certificeringen bliver tilføjet til behandleren,
+        //    hvis den ikke allerede findes
         foreach (var certification in command.Certifications)
         {
             bool exsists = Enum.TryParse<CertificationTypes>(
               certification,
               out var certificationType);
 
+            // Kaster exception hvis certificeringen ikke findes i enum'en
             if (exsists == false)
                 throw new NotFoundException(
                   $"Certification type {certification} not found");
 
-            certifications.Add(certificationType);
+            // Tilføjer kun certificeringen hvis behandleren ikke allerede har den
+            if (therapist.CertificationTypes.Contains(certificationType) == false)
+            {
+                therapist.AddCertificationType(certificationType);
+            }
         }
 
-        if (therapist.CertificationTypes.SequenceEqual(certifications) == false)
+        // Gennemgår behandlerens nuværende certificeringer og fjerner:
+        // certificeringer som ikke længere findes i commandet
+        foreach (var certification in therapist.CertificationTypes)
         {
-            foreach (var certification in therapist.CertificationTypes.ToList())
+            if (command.Certifications.Contains(certification.ToString()) == false)
             {
                 therapist.RemoveCertificationType(certification);
             }
-
-            foreach (var certification in certifications)
-            {
-                therapist.AddCertificationType(certification);
-            }
-
-            changesMade = true;
-            if (changesMade == true)
-                await therapistRepository.SaveAsync();
         }
+
+        if (changesMade == true)
+            await therapistRepository.SaveAsync();
     }
 }
