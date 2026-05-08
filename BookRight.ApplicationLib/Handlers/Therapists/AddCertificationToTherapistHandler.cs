@@ -8,21 +8,17 @@ namespace BookRight.ApplicationLib.Handlers.Therapists;
 
 public class AddCertificationToTherapistHandler(ITherapistRepository therapistRepository) : IAddCertificationTypeHandler
 {
-    async Task IAddCertificationTypeHandler.Handle(
-       AddCertificationTypeCommand command)
+    async Task IAddCertificationTypeHandler.Handle(AddCertificationTypeCommand command)
     {
-        var therapist = await therapistRepository
-            .GetByIdAsync(command.TherapistId)
-            ?? throw new NotFoundException(
-                "Therapist could not be found");
+        var therapist = await therapistRepository.GetByIdAsync(command.TherapistId)
+            ?? throw new NotFoundException("Therapist could not be found");
 
         bool certificationTypeExsists = Enum.TryParse< CertificationTypes>(command.CertificationType, out var certificationType);
 
         if (certificationTypeExsists == false)
             throw new NotFoundException("Certification Type not found");
 
-        therapist.AddCertificationType(
-            certificationType);
+        therapist.AddCertificationType(certificationType);
 
 
         await therapistRepository.SaveAsync();
