@@ -28,7 +28,7 @@ public class RemoveClinicFromTherapistHandler(
 
 
 
-        therapist.AssociatedClinicIds.Remove(command.ClinicId);
+        therapist.RemoveAssociatedClinic(command.ClinicId);
 
 
         await therapistRepository.SaveAsync();
