@@ -2,7 +2,4 @@
 
 // === Request DTO'er til Use Cases (commands) ===
 
-public record ChangeTimeCommand(
-    Guid BookingId,
-    DateTime From,
-    DateTime To);
+public record ChangeTimeCommand(Guid BookingId, DateTime From, DateTime To);
