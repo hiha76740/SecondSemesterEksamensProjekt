@@ -78,10 +78,10 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
                 therapist.AddCertificationType(certificationType);
             }
         }
-
+        
         // Gennemgår behandlerens nuværende certificeringer og fjerner:
         // certificeringer som ikke længere findes i commandet
-        foreach (var certification in therapist.CertificationTypes)
+        foreach (var certification in therapist.CertificationTypes.ToList())
         {
             if (command.Certifications.Contains(certification.ToString()) == false)
             {
