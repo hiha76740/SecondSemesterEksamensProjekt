@@ -9,6 +9,18 @@ namespace BookRight.ApplicationLib.Tests.Customers;
 
 public class ChangeCustomerInfoHandlerTests
 {
+    // Helpermethod for instantiating a Customer-object for Mock-tests
+    private static Customer CreateTestCustomerWithValidData(Guid? preferredTherapist = null)
+        => Customer.Create(
+    "Torben",
+    "Svendsen",
+    new DateTime(1956, 7, 16),
+    new Address("Niels Bohrs Gade 43", "6534", "Testlev"),
+    new Email("TorbenS@testing.com"),
+    new PhoneNumber("96538562"),
+    "Gets easily confused",
+    preferredTherapist);
+
     // Helpermethod for instatiating a ChangeCustomerInfoCommand Dto
     private static ChangeCustomerInfoCommand CreateChangeCustomerInfoCommandWithValidData(
         Guid customerId,
