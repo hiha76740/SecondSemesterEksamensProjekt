@@ -18,6 +18,6 @@ public class CompleteBookingHandler(
 
         booking.Complete();
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }
