@@ -56,4 +56,26 @@ public class ChangeCustomerInfoHandlerTests
     private IChangeCustomerInfoHandler CreateSut() => new ChangeCustomerInfoHandler(_mockCustomerRepo.Object, _mockTherapistRepo.Object);
 
 
+    // ---------------------------------------------------------
+    // 1. Handle tests (Changes a Customer)
+    // ---------------------------------------------------------
+
+    [Fact]
+    public async Task Handle_GivenValidCommandNewFirstname_ShallCallSaveAsync()
+    {
+        // Arrange
+        var newFirstname = "Thomas";
+        var customer = CreateTestCustomerWithValidData();
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, firstName: newFirstname);
+
+        _mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        // Act
+        await CreateSut().Handle(command);
+
+        // Assert
+        _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+    }
+
 }
