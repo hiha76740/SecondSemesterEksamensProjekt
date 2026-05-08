@@ -36,5 +36,83 @@ public class AddCertificationToTherapistHandlerTests
             null);
     }
 
-  
+    [Fact]
+    public async Task GivenValidCertification_WhenAddingCertification_ThenCertificationIsAdded()
+    {
+
+        var therapist = CreateTherapist();
+
+        var therapistRepositoryMock =
+            new Mock<ITherapistRepository>();
+
+        therapistRepositoryMock
+            .Setup(x => x.GetByIdAsync(TherapistId))
+            .ReturnsAsync(therapist);
+
+        IAddCertificationTypeHandler handler =
+            new AddCertificationToTherapistHandler(
+                therapistRepositoryMock.Object);
+
+        var command = new AddCertificationTypeCommand(
+            TherapistId,
+            CertificationTypes.CognitiveTherapy.ToString());
+
+        await handler.Handle(command);
+
+        Assert.Contains(
+            CertificationTypes.CognitiveTherapy,
+            therapist.CertificationTypes);
+
+        therapistRepositoryMock.Verify(
+            x => x.SaveAsync(),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GivenInvalidTherapistId_WhenAddingCertification_ThenCastNotFoundException()
+    {
+
+        var therapistRepositoryMock =
+            new Mock<ITherapistRepository>();
+
+        therapistRepositoryMock
+            .Setup(x => x.GetByIdAsync(TherapistId))
+            .ReturnsAsync((Therapist?)null);
+
+        IAddCertificationTypeHandler handler =
+            new AddCertificationToTherapistHandler(
+                therapistRepositoryMock.Object);
+
+        var command = new AddCertificationTypeCommand(
+            TherapistId,
+            CertificationTypes.CognitiveTherapy.ToString());
+
+        await Assert.ThrowsAsync<NotFoundException>(
+            () => handler.Handle(command));
+    }
+
+    [Fact]
+    public async Task GivenInvalidCertification_WhenAddingCertification_ThenCastNotFoundException()
+    {
+
+        var therapist = CreateTherapist();
+
+        var therapistRepositoryMock =
+            new Mock<ITherapistRepository>();
+
+        therapistRepositoryMock
+            .Setup(x => x.GetByIdAsync(TherapistId))
+            .ReturnsAsync(therapist);
+
+        IAddCertificationTypeHandler handler =
+            new AddCertificationToTherapistHandler(
+                therapistRepositoryMock.Object);
+
+        var command = new AddCertificationTypeCommand(
+            TherapistId,
+            "InvalidCertification");
+
+        await Assert.ThrowsAsync<NotFoundException>(
+            () => handler.Handle(command));
+    }
 }
