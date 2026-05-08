@@ -37,5 +37,56 @@ public class ChangeTherapistInfoHandlerTests
         {
          CertificationTypes.CognitiveTherapy
         });
+
+        [Fact]
+        public async Task GivenChangedValues_WhenChangingTherapistInfo_ThenTherapistIsUpdated()
+        {
+
+            var therapist = CreateTherapist();
+
+            var therapistRepositoryMock =
+            new Mock<ITherapistRepository>();
+
+            therapistRepositoryMock
+            .Setup(x => x.GetByIdAsync(TherapistId))
+            .ReturnsAsync(therapist);
+
+            IChangeTherapistInfoHandler handler =
+            new ChangeTherapistInfoHandler(
+            therapistRepositoryMock.Object);
+
+            var command = new ChangeTherapistInfoCommand(
+            TherapistId,
+            "Jane Doe",
+            750,
+            "Nyvej 5",
+            "6800",
+            "Varde",
+            "new@test.dk",
+            "87654321",
+            new List<string>
+            {
+CertificationTypes.Psychotherapy.ToString()
+            });
+
+
+            await handler.Handle(command);
+
+            Assert.Equal("Jane Doe", therapist.Name);
+
+            Assert.Equal(750, therapist.HourlyRate);
+
+            Assert.Equal("new@test.dk", therapist.Email.Value);
+
+            Assert.Equal("87654321", therapist.PhoneNumber.Value);
+
+            Assert.Contains(
+            CertificationTypes.Psychotherapy,
+            therapist.CertificationTypes);
+
+            therapistRepositoryMock.Verify(
+            x => x.SaveAsync(),
+            Times.Once);
+        }
     }
 }
