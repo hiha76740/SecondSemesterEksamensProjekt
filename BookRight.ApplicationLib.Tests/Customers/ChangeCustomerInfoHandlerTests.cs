@@ -1,5 +1,9 @@
 ﻿
+using BookRight.ApplicationLib.Handlers.Customers;
+using BookRight.ApplicationLib.Repositories;
 using BookRight.FacadeLib.Commands.Customers.DTOs;
+using BookRight.FacadeLib.Commands.Customers.Interfaces;
+using Moq;
 
 namespace BookRight.ApplicationLib.Tests.Customers;
 
@@ -20,5 +24,13 @@ public class ChangeCustomerInfoHandlerTests
             "96538562",
             preferredTherapist
             );
+
+    // Mock of relevant repositories
+    private readonly Mock<ICustomerRepository> _mockCustomerRepo = new();
+    private readonly Mock<ITherapistRepository> _mockTherapistRepo = new();
+
+    // SystemUnderTest
+    private IChangeCustomerInfoHandler CreateSut() => new ChangeCustomerInfoHandler(_mockCustomerRepo.Object, _mockTherapistRepo.Object);
+
 
 }
