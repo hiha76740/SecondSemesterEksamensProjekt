@@ -277,6 +277,7 @@ public class TherapistTests
     {
         // Arrange
         var therapist = CreateWithValidData();
+        therapist.AddAssociatedClinic(Guid.NewGuid());
 
         therapist.RemoveAssociatedClinic(AssociatedClinicId);
 
