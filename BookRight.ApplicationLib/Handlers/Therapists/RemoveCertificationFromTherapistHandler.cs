@@ -6,21 +6,12 @@ using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Therapists;
 
-public class RemoveCertificationFromTherapistHandler : IRemoveCertificationFromTherapistHandler
+public class RemoveCertificationFromTherapistHandler(ITherapistRepository therapistRepository) : IRemoveCertificationFromTherapistHandler
 {
-    private readonly ITherapistRepository _therapistRepository;
-
-    public RemoveCertificationFromTherapistHandler(
-        ITherapistRepository therapistRepository)
-    {
-        _therapistRepository = therapistRepository;
-    }
-
-
     async Task IRemoveCertificationFromTherapistHandler.Handle(
         RemoveCertificationTypeCommand command)
     {
-        var therapist = await _therapistRepository
+        var therapist = await therapistRepository
             .GetByIdAsync(command.TherapistId)
             ?? throw new NotFoundException(
                 "Therapist could not be found");
@@ -40,6 +31,6 @@ public class RemoveCertificationFromTherapistHandler : IRemoveCertificationFromT
             certificationType);
 
 
-        await _therapistRepository.SaveAsync();
+        await therapistRepository.SaveAsync();
     }
 }
