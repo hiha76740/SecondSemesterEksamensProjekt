@@ -56,5 +56,20 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             therapist.ChangePhoneNumber(phoneNumber);
             changesMade = true;
         }
+
+        List<CertificationTypes> certifications = new();
+
+        foreach (var certification in command.Certifications)
+        {
+            bool exsists = Enum.TryParse<CertificationTypes>(
+              certification,
+              out var certificationType);
+
+            if (exsists == false)
+                throw new NotFoundException(
+                  $"Certification type {certification} not found");
+
+            certifications.Add(certificationType);
+        }
     }
 }
