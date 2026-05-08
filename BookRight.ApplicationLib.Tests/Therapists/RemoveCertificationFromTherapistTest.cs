@@ -36,7 +36,7 @@ public class RemoveCertificationFromTherapistHandlerTests
             null);
 
         therapist.AddCertificationType(
-            CertificationTypes.CognitiveTherapy);
+            CertificationTypes.Acupuncture);
 
         return therapist;
     }
@@ -60,12 +60,12 @@ public class RemoveCertificationFromTherapistHandlerTests
 
         var command = new RemoveCertificationTypeCommand(
             TherapistId,
-            CertificationTypes.CognitiveTherapy.ToString());
+            CertificationTypes.Acupuncture.ToString());
 
         await handler.Handle(command);
 
         Assert.DoesNotContain(
-            CertificationTypes.CognitiveTherapy,
+            CertificationTypes.Acupuncture,
             therapist.CertificationTypes);
 
         therapistRepositoryMock.Verify(
@@ -90,7 +90,7 @@ public class RemoveCertificationFromTherapistHandlerTests
 
         var command = new RemoveCertificationTypeCommand(
             TherapistId,
-            CertificationTypes.CognitiveTherapy.ToString());
+            CertificationTypes.Acupuncture.ToString());
 
         await Assert.ThrowsAsync<NotFoundException>(
             () => handler.Handle(command));
