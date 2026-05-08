@@ -122,5 +122,42 @@ public class ChangeTherapistInfoHandlerTests
             await Assert.ThrowsAsync<NotFoundException>(
             () => handler.Handle(command));
         }
+
+        [Fact]
+        public async Task GivenNoChanges_WhenChangingTherapistInfo_ThenRepositoryIsNotSaved()
+        {
+
+            var therapist = CreateTherapist();
+
+            var therapistRepositoryMock =
+            new Mock<ITherapistRepository>();
+
+            therapistRepositoryMock
+            .Setup(x => x.GetByIdAsync(TherapistId))
+            .ReturnsAsync(therapist);
+
+            IChangeTherapistInfoHandler handler =
+            new ChangeTherapistInfoHandler(
+            therapistRepositoryMock.Object);
+
+            var command = new ChangeTherapistInfoCommand(
+            TherapistId,
+            therapist.Name,
+            therapist.HourlyRate,
+            therapist.Address.Street,
+            therapist.Address.PostalCode,
+            therapist.Address.City,
+            therapist.Email.Value,
+            therapist.PhoneNumber.Value,
+            therapist.CertificationTypes
+            .Select(x => x.ToString())
+            .ToList());
+
+            await handler.Handle(command);
+
+            therapistRepositoryMock.Verify(
+            x => x.SaveAsync(),
+            Times.Never);
+        }
     }
 }
