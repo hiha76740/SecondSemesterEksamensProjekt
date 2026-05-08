@@ -109,4 +109,20 @@ public class ChangeCustomerInfoHandlerTests
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => CreateSut().Handle(command));
     }
+
+    [Fact]
+    public async Task Handle_GivenInvalidCommandNoCustomer_CastNotFoundException()
+    {
+        // Arrange
+        var customerId = Guid.NewGuid();
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customerId);
+        _mockCustomerRepo.Setup(c => c.GetByIdAsync(customerId))
+            .ReturnsAsync((Customer?)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => CreateSut().Handle(command));
+
+    }
+    // TODO: Reevaluate current tests and their naming, consider more tests and extra check to see if the appropriate Change-method is called.
+
 }
