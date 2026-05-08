@@ -1,6 +1,9 @@
 ﻿
 using BookRight.ApplicationLib.Handlers.Customers;
 using BookRight.ApplicationLib.Repositories;
+using BookRight.DomainLib.Entities.Customers;
+using BookRight.DomainLib.Exceptions;
+using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Customers.DTOs;
 using BookRight.FacadeLib.Commands.Customers.Interfaces;
 using Moq;
@@ -78,4 +81,20 @@ public class ChangeCustomerInfoHandlerTests
         _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
     }
 
+    [Fact]
+    public async Task Handle_GivenValidCommandNoChanges_ShallNotCallSaveAsync()
+    {
+        // Arrange
+        var customer = CreateTestCustomerWithValidData();
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id);
+        _mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+
+        // Act
+        await CreateSut().Handle(command);
+
+        // Assert
+        _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Never);
+    }
 }
