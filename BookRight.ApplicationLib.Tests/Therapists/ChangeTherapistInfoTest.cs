@@ -32,7 +32,7 @@ public class ChangeTherapistInfoHandlerTests
         Address,
         Email,
         PhoneNumber,
-        new List<Guid>(),
+        new List<Guid>() { Guid.NewGuid()},
         new List<CertificationTypes>
         {
          CertificationTypes.Acupuncture
