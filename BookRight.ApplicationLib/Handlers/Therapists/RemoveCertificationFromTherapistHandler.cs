@@ -6,11 +6,11 @@ using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Therapists;
 
-public class RemoveCertificationTypeHandler : IRemoveCertificationTypeHandler
+public class RemoveCertificationFromTherapistHandler : IRemoveCertificationTypeHandler
 {
     private readonly ITherapistRepository _therapistRepository;
 
-    public RemoveCertificationTypeHandler(
+    public RemoveCertificationFromTherapistHandler(
         ITherapistRepository therapistRepository)
     {
         _therapistRepository = therapistRepository;
