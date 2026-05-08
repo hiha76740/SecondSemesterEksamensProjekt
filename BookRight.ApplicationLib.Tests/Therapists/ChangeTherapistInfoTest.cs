@@ -65,8 +65,7 @@ public class ChangeTherapistInfoHandlerTests
             "new@test.dk",
             "87654321",
             new List<string>
-            {
-CertificationTypes.Psychotherapy.ToString()
+            {CertificationTypes.Psychotherapy.ToString()
             });
 
 
@@ -87,6 +86,41 @@ CertificationTypes.Psychotherapy.ToString()
             therapistRepositoryMock.Verify(
             x => x.SaveAsync(),
             Times.Once);
+        }
+
+        [Fact]
+        public async Task GivenInvalidCertification_WhenChangingTherapistInfo_ThenCastNotFoundException()
+        {
+
+            var therapist = CreateTherapist();
+
+            var therapistRepositoryMock =
+            new Mock<ITherapistRepository>();
+
+            therapistRepositoryMock
+            .Setup(x => x.GetByIdAsync(TherapistId))
+            .ReturnsAsync(therapist);
+
+            IChangeTherapistInfoHandler handler =
+            new ChangeTherapistInfoHandler(
+            therapistRepositoryMock.Object);
+
+            var command = new ChangeTherapistInfoCommand(
+            TherapistId,
+            "Jane Doe",
+            750,
+            "Nyvej 5",
+            "6800",
+            "Varde",
+            "new@test.dk",
+            "87654321",
+            new List<string>
+            {
+                "InvalidCertification"
+            });
+
+            await Assert.ThrowsAsync<NotFoundException>(
+            () => handler.Handle(command));
         }
     }
 }
