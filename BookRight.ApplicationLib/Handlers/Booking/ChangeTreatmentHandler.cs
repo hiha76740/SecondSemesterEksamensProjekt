@@ -1,5 +1,4 @@
 ﻿using BookRight.ApplicationLib.Repositories;
-using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
@@ -31,8 +30,10 @@ public class ChangeTreatmentHandler(
         if (therapist.CertificationTypes.Contains(treatment.CertificationRequired) == false)
             throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
 
+        // TODO: Tilføj Price Calculator så bookingen har den korrekte pris ud fra den nye treatment.
+
         booking.ChangeTreatment(treatment.Id);
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }

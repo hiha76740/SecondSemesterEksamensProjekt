@@ -17,6 +17,6 @@ public class RegisterNoShowHandler(IBookingRepository bookingRepository) : IRegi
 
         booking.NoShow();
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }

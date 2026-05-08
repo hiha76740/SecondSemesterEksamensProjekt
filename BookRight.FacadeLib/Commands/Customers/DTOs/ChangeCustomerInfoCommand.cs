@@ -1,7 +1,9 @@
-﻿namespace BookRight.FacadeLib.Commands.Customers.DTOs;
+﻿
+namespace BookRight.FacadeLib.Commands.Customers.DTOs;
 
-// === Request DTOs for Handlers ===
-public record CreateCustomerCommand(
+// === Request DTO for ChangeCustomerInfoHandler ===
+public record ChangeCustomerInfoCommand(
+    Guid CustomerId,
     string Firstname,
     string Lastname,
     DateTime Birthdate,

@@ -273,12 +273,23 @@ public class TherapistTests
     // ---------------------------------------------------------
 
     [Fact]
-    public void RemoveAssociatedClinic_GivenNotEcistingClinic_CastDomainException()
+    public void RemoveAssociatedClinic_GivenNotExistingClinic_CastDomainException()
     {
         // Arrange
         var therapist = CreateWithValidData();
+        therapist.AddAssociatedClinic(Guid.NewGuid());
 
         therapist.RemoveAssociatedClinic(AssociatedClinicId);
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => therapist.RemoveAssociatedClinic(AssociatedClinicId));
+    }
+
+    [Fact]
+    public void RemoveAssociatedClinic_GivenLastClinicInList_CastDomainException()
+    {
+        // Arrange
+        var therapist = CreateWithValidData();
 
         // Act & Assert
         Assert.Throws<DomainException>(() => therapist.RemoveAssociatedClinic(AssociatedClinicId));

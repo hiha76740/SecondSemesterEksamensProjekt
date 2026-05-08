@@ -177,6 +177,9 @@ public class Therapist : AggregateRoot
         if (_associatedclinics.Contains(clinicId) == false)
             throw new DomainException($"Clinic is not associated with therapist {Name}");
 
+        if (_associatedclinics.Count == 1)
+            throw new DomainException("Therapist must be associated to atleast 1 clinic");
+
         _associatedclinics.Remove(clinicId);
     }
 

@@ -55,7 +55,7 @@ public class RegisterNoShowTests
         await handler.Handle(command);
 
         // Assert
-        bookingRepositoryMock.Verify(repository => repository.Save(), Times.Once);
+        bookingRepositoryMock.Verify(repository => repository.SaveAsync(), Times.Once);
     }
 
     [Fact]

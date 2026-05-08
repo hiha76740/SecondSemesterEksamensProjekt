@@ -17,6 +17,6 @@ public class CancelBookingHandler(IBookingRepository bookingRepository) : ICance
 
         booking.Cancel();
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }

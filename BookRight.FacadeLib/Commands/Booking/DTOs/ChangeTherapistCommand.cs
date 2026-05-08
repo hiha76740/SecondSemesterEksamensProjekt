@@ -2,6 +2,4 @@
 
 // === Request DTO'er til Use Cases (commands) ===
 
-public record ChangeTherapistCommand(
-    Guid BookingId,
-    Guid TherapistId);
+public record ChangeTherapistCommand(Guid BookingId, Guid TherapistId);

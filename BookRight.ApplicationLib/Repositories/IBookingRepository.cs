@@ -13,5 +13,5 @@ public interface IBookingRepository
 
     Task AddAsync(Booking booking);
 
-    Task Save();
+    Task SaveAsync();
 }

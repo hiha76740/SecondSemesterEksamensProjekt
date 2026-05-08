@@ -1,6 +1,4 @@
-﻿using BookRight.ApplicationLib.Exceptions;
-using BookRight.ApplicationLib.Repositories;
-using BookRight.DomainLib.Enums;
+﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Exceptions;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
@@ -34,10 +32,9 @@ public class ChangeTherapistHandler(
 
         var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
 
-        booking.ChangeTherapist(
-            therapist.Id,
-            therapistBookings);
 
-        await bookingRepository.Save();
+        booking.ChangeTherapist(therapist.Id, therapistBookings);
+
+        await bookingRepository.SaveAsync();
     }
 }

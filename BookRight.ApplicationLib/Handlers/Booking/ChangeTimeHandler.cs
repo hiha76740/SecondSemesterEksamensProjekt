@@ -33,6 +33,6 @@ public class ChangeTimeHandler(
 
         booking.ChangeTime(newTimeSlot, customerBookings, therapistBookings);
 
-        await bookingRepository.Save();
+        await bookingRepository.SaveAsync();
     }
 }
