@@ -45,5 +45,10 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
             changesMade = true;
         }
 
+        if (therapist.Email != email)
+        {
+            therapist.ChangeEmail(email);
+            changesMade = true;
+        }
     }
 }
