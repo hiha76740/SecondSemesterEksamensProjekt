@@ -18,9 +18,6 @@ public class CreateBookingHandler(
 {
     async Task ICreateBookingHandler.Handle(CreateBookingCommand command)
     {
-        if (command.CustomerId == Guid.Empty)
-            throw new Exceptions.ApplicationException("CustomerId cannot be empty.");
-
         if (command.TreatmentId == Guid.Empty)
             throw new Exceptions.ApplicationException("TreatmentId cannot be empty.");
 
@@ -29,7 +26,7 @@ public class CreateBookingHandler(
 
         if (command.ClinicId == Guid.Empty)
             throw new Exceptions.ApplicationException("ClinicId cannot be empty.");
-        
+
 
 
         var therapist = await therapistRepository.GetByIdAsync(command.TherapistId)
@@ -41,34 +38,42 @@ public class CreateBookingHandler(
         if (therapist.CertificationTypes.Contains(treatment.CertificationRequired) == false)
             throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
 
-        _ = await customerRepository.GetByIdAsync(command.CustomerId)
+
+        IReadOnlyList<Booking>? customerBookings = null;
+
+        if (command.CustomerId.HasValue == true)
+        {
+            _ = await customerRepository.GetByIdAsync(command.CustomerId.Value)
             ?? throw new NotFoundException("Customer could not be found.");
+
+            customerBookings = await bookingRepository.GetAllBookingsByIdAsync(command.CustomerId.Value);
+        }
+        
 
         var clinic = await clinicRepository.GetByIdAsync(command.ClinicId)
             ?? throw new NotFoundException("Clinic could not be found.");
 
+        var time = new TimeSlot(command.From, command.To);
 
-
-        var timeSlot = new TimeSlot(command.From, command.To);
-
-        var customerBookings = await bookingRepository.GetAllBookingsByIdAsync(command.CustomerId);
+        
 
         var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
 
         var clinicBookings = await bookingRepository.GetAllBookingsByIdAsync(clinic.Id);
 
-        if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, timeSlot) == false)
+        if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, time) == false)
             throw new Exceptions.ApplicationException("Clinic capacity was exceeded.");
 
         var booking = Booking.Create(
-            timeSlot,
-            command.CustomerId,
+            time,
             treatment.Id,
             therapist.Id,
             clinic.Id,
             treatment.Price,
-            customerBookings,
-            therapistBookings);
+            therapistBookings,
+            treatment.MaxParticipants,
+            command.CustomerId,
+            customerBookings);
 
         await bookingRepository.AddAsync(booking);
 
