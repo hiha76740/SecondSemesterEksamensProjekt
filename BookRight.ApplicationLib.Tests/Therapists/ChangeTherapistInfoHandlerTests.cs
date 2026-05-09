@@ -58,7 +58,7 @@ public class ChangeTherapistInfoHandlerTests
     }
 
     [Fact]
-    public async Task GivenChangedValues_WhenChangingTherapistInfo_CallsSave()
+    public async Task Handle_GivenChangedValues_CallsSave()
     {
         // Arrange
         var therapist = CreateTherapist();
@@ -105,7 +105,7 @@ public class ChangeTherapistInfoHandlerTests
     }
 
     [Fact]
-    public async Task GivenInvalidCertification_WhenChangingTherapistInfo_CastNotFoundException()
+    public async Task Handle_GivenInvalidCertification_CastNotFoundException()
     {
         // Arrange
         var therapist = CreateTherapist();
@@ -127,7 +127,7 @@ public class ChangeTherapistInfoHandlerTests
 
 
     [Fact]
-    public async Task GivenNoChanges_WhenChangingTherapistInfo_NeverCallsSave()
+    public async Task Handle_GivenNoChanges_NeverCallsSave()
     {
         // Arrange
         var therapist = CreateTherapist();
