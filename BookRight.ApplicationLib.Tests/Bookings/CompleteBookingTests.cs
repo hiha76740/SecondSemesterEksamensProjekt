@@ -55,7 +55,7 @@ public class CompleteBookingTests
         await handler.Handle(command);
 
         // Assert
-        bookingRepositoryMock.Verify(repository => repository.SaveAsync(), Times.Once);
+        bookingRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
