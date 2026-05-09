@@ -6,7 +6,7 @@ using BookRight.FacadeLib.Commands.Clinics.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Clinics;
 
-public class ChangeClinicInfo(IClinicRepository clinicRepository) : IChangeClinicInfoHandler
+public class ChangeClinicInfoHandler(IClinicRepository clinicRepository) : IChangeClinicInfoHandler
 {
     async Task IChangeClinicInfoHandler.Handle(ChangeClinicInfoCommand command)
     {
