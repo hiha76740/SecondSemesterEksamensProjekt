@@ -54,38 +54,29 @@ public class Booking : AggregateRoot
         Guid therapistId,
         Guid clinicId,
         decimal price,
-        IEnumerable<Booking> existingTherapistBookings,
         int participantLimit,
-        Guid? customerId = null,
-        IEnumerable<Booking>? existingCustomerBookings = null)
+        Guid? customerId = null)
     {
         if (participantLimit < 1)
             throw new DomainException("A booking must allow at least one participant.");
 
-        if (participantLimit == 1 && customerId == null && existingCustomerBookings == null)
+        if (participantLimit == 1 && customerId == null)
             throw new DomainException("Single-person bookings require a customer.");
 
 
         var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price, participantLimit);
 
-        
-        if (customerId != null && existingCustomerBookings != null)
-        {
-            ValidateNoOverlap(booking, existingCustomerBookings, existingTherapistBookings);
+
+        if (customerId != null)
             booking.AddParticipant(customerId.Value);
-        }
-        else
-        {
-            ValidateNoOverlap(booking, existingTherapistBookings);
-        }
-            
+
         return booking;
     }
 
-  
+
     public void ChangeTime(TimeSlot newTimeSlot)
     {
-        EnsureCanBeChanged();   
+        EnsureCanBeChanged();
 
         Time = newTimeSlot;
     }
@@ -120,8 +111,6 @@ public class Booking : AggregateRoot
 
         if (newTherapistId == TherapistId)
             throw new DomainException("New and old therapist can't be the same");
-
-        ValidateNoOverlap(this, existsForNewTherapist);
 
         TherapistId = newTherapistId;
     }
@@ -265,42 +254,6 @@ public class Booking : AggregateRoot
 
         if (Status == BookingStatus.Completed)
             throw new DomainException("Completed booking cannot be changed.");
-    }
-
-    /// <summary>
-    /// Validates that the specified booking does not overlap with any of the existing bookings.
-    /// </summary>
-    /// <param name="booking">The booking to validate for overlap. Cannot be null.</param>
-    /// <param name="existingBookings">A collection of existing bookings to check against for overlap. Cannot be null.</param>
-    private static void ValidateNoOverlap(Booking booking, IEnumerable<Booking> existingBookings)
-    {
-        ValidateNoOverlap(booking, existingBookings, Array.Empty<Booking>());
-    }
-
-    /// <summary>
-    /// Validates that the specified booking does not overlap with any existing active bookings for the same customer or
-    /// therapist.
-    /// </summary>
-    /// <param name="booking">The booking to validate for time slot overlap. Cannot be null.</param>
-    /// <param name="existingCustomerBookings">A collection of the customer's existing bookings to check for overlapping time slots. Only active bookings are
-    /// considered.</param>
-    /// <param name="existingTherapistBookings">A collection of the therapist's existing bookings to check for overlapping time slots. Only active bookings are
-    /// considered.</param>
-    /// <exception cref="DomainException">Thrown if the booking's time slot overlaps with any active booking for the customer or therapist.</exception>
-    private static void ValidateNoOverlap(Booking booking, IEnumerable<Booking> existingCustomerBookings, IEnumerable<Booking> existingTherapistBookings)
-    {
-        bool customerOverlap = existingCustomerBookings.Any(cb =>
-            cb.Id != booking.Id &&
-            cb.IsActive == true &&
-            cb.Time.OverlapsWith(booking.Time));
-
-        bool therapistOverlap = existingTherapistBookings.Any(tb =>
-            tb.Id != booking.Id &&
-            tb.IsActive == true &&
-            tb.Time.OverlapsWith(booking.Time));
-
-        if (customerOverlap == true || therapistOverlap == true)
-            throw new DomainException("Overlap in time.");
     }
 
     // Parameterløs constructor til EF Core

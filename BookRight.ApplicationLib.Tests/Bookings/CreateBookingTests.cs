@@ -84,6 +84,7 @@ public class CreateBookingTests
         var mockTreatmentRepo = new Mock<ITreatmentRepository>();
         var mockBookingRepo = new Mock<IBookingRepository>();
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
 
         mockCustomerRepo
                 .Setup(r => r.GetByIdAsync(customer.Id))
@@ -119,7 +120,7 @@ public class CreateBookingTests
             timeSlot.To,
             customer.Id);
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object,mockValidateOverlapService.Object) as ICreateBookingHandler;
 
         // Act
         await handler.Handle(command);
@@ -139,6 +140,7 @@ public class CreateBookingTests
         var mockTreatmentRepo = new Mock<ITreatmentRepository>();
         var mockBookingRepo = new Mock<IBookingRepository>();
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
 
         mockCustomerRepo
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
@@ -154,7 +156,7 @@ public class CreateBookingTests
             timeSlot.To,
             Guid.NewGuid());
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
 
 
         // Act & Assert
@@ -176,6 +178,7 @@ public class CreateBookingTests
         var mockTreatmentRepo = new Mock<ITreatmentRepository>();
         var mockBookingRepo = new Mock<IBookingRepository>();
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
 
         mockCustomerRepo
             .Setup(r => r.GetByIdAsync(customer.Id))
@@ -203,7 +206,7 @@ public class CreateBookingTests
             timeSlot.To,
             customer.Id);
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object,mockValidateOverlapService.Object) as ICreateBookingHandler;
 
 
         // Act & Assert
@@ -225,6 +228,7 @@ public class CreateBookingTests
         var mockTreatmentRepo = new Mock<ITreatmentRepository>();
         var mockBookingRepo = new Mock<IBookingRepository>();
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
 
         mockCustomerRepo
             .Setup(r => r.GetByIdAsync(customer.Id))
@@ -260,7 +264,7 @@ public class CreateBookingTests
             timeSlot.To,
             customer.Id);
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
 
 
         // Act & Assert

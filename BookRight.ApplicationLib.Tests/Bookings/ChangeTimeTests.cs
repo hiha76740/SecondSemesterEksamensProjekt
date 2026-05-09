@@ -30,10 +30,8 @@ public class ChangeTimeTests
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b993b80d"),
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m,
-            Array.Empty<Booking>(),
             1,
-            Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"),
-            Array.Empty<Booking>());
+            Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"));
     }
 
     private static Customer CreateCustomer()
