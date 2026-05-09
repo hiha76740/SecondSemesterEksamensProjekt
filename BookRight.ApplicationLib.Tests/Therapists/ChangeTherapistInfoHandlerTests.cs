@@ -68,7 +68,7 @@ public class ChangeTherapistInfoHandlerTests
         var mockClinicRepo = new Mock<IClinicRepository>();
 
         mockTherapistRepo
-            .Setup(x => x.GetByIdAsync(therapist.Id))
+            .Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         mockClinicRepo
@@ -114,7 +114,7 @@ public class ChangeTherapistInfoHandlerTests
         var mockClinicRepo = new Mock<IClinicRepository>();
 
         mockTherapistRepo
-        .Setup(x => x.GetByIdAsync(therapist.Id))
+        .Setup(r => r.GetByIdAsync(therapist.Id))
         .ReturnsAsync(therapist);
 
         var command = CreateCommand(therapist.Id, certificationTypeString: new List<string> { "InvalidCertification" });
@@ -137,7 +137,7 @@ public class ChangeTherapistInfoHandlerTests
         var mockClinicRepo = new Mock<IClinicRepository>();
 
         mockTherapistRepo
-            .Setup(x => x.GetByIdAsync(therapist.Id))
+            .Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         mockClinicRepo
@@ -155,7 +155,7 @@ public class ChangeTherapistInfoHandlerTests
         therapist.PhoneNumber.Number,
         therapist.AssociatedClinics.ToList(),
         therapist.CertificationTypes
-        .Select(x => x.ToString())
+        .Select(ct => ct.ToString())
         .ToList());
 
         var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
