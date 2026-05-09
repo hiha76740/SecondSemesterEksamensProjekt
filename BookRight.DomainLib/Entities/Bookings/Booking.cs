@@ -82,33 +82,12 @@ public class Booking : AggregateRoot
         return booking;
     }
 
-    /// <summary>
-    /// Changes the time slot for the current booking to the specified value, ensuring no scheduling conflicts for the
-    /// customer or therapist.
-    /// </summary>
-    /// <remarks>If the new time slot overlaps with any existing booking for the customer or therapist, the
-    /// change is reverted and an exception is thrown.</remarks>
-    /// <param name="newTimeSlot">The new time slot to assign to the booking. Must not overlap with existing bookings for the customer or
-    /// therapist.</param>
-    /// <param name="existsForCustomer">A collection of existing bookings for the customer. Used to check for scheduling conflicts.</param>
-    /// <param name="existsForTherapist">A collection of existing bookings for the therapist. Used to check for scheduling conflicts.</param>
-    public void ChangeTime(TimeSlot newTimeSlot, IEnumerable<Booking> existsForCustomer, IEnumerable<Booking> existsForTherapist)
+  
+    public void ChangeTime(TimeSlot newTimeSlot)
     {
-        EnsureCanBeChanged();
-
-        TimeSlot oldTimeSlot = Time;
+        EnsureCanBeChanged();   
 
         Time = newTimeSlot;
-
-        try
-        {
-            ValidateNoOverlap(this, existsForCustomer, existsForTherapist);
-        }
-        catch (DomainException)
-        {
-            Time = oldTimeSlot;
-            throw;
-        }
     }
 
     /// <summary>

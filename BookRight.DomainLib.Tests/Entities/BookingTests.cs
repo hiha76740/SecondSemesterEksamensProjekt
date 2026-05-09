@@ -42,13 +42,14 @@ public class BookingTests
     {
         return Booking.Create(
             timeSlot ?? CreateTimeSlot(9, 10),
-            customerId ?? CustomerId,
             treatmentId ?? TreatmentId,
             therapistId ?? TherapistId,
             clinicId ?? ClinicId,
             price ?? Price,
-            existingCustomerBookings ?? ExistingCustomerBookings,
-            existingTherapistBookings ?? ExistingTherapistBookings);
+            existingTherapistBookings ?? ExistingTherapistBookings,
+            1,
+            customerId ?? CustomerId,
+            existingCustomerBookings ?? ExistingCustomerBookings);
     }
 
     // ---------------------------------------------------------
@@ -88,7 +89,7 @@ public class BookingTests
         TimeSlot other = new TimeSlot(
             DateTime.Parse(otherFromText),
             DateTime.Parse(otherToText));
-        
+
 
         var exsist = CreateWithoutOverlap(timeSlot: other);
 
@@ -183,9 +184,7 @@ public class BookingTests
 
         // Act
         booking.ChangeTime(
-            newTimeSlot,
-            ExistingCustomerBookings,
-            ExistingTherapistBookings);
+            newTimeSlot);
 
         // Assert
         Assert.Equal(newTimeSlot, booking.Time);
@@ -202,33 +201,7 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeTime(
-                newTimeSlot,
-                ExistingCustomerBookings,
-                ExistingTherapistBookings));
-    }
-
-    [Fact]
-    public void ChangeTime_GivenTherapistOverlap_CastDomainException()
-    {
-        // Arrange
-        Booking booking = CreateWithoutOverlap();
-
-        TimeSlot newTimeSlot = CreateTimeSlot(12, 13);
-
-        Booking existingBooking = CreateWithoutOverlap(timeSlot: newTimeSlot);
-
-        TimeSlot expectedTimeSlot = booking.Time;
-
-        // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeTime(
-                newTimeSlot,
-                ExistingCustomerBookings,
-                new[] { existingBooking }));
-
-        Assert.Equal(expectedTimeSlot, booking.Time);
+        Assert.Throws<DomainException>(() => booking.ChangeTime(newTimeSlot));
     }
 
     // ---------------------------------------------------------
@@ -255,8 +228,7 @@ public class BookingTests
         Booking booking = CreateWithoutOverlap();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeTreatment(TreatmentId));
+        Assert.Throws<DomainException>(() => booking.ChangeTreatment(TreatmentId));
     }
 
     [Fact]
@@ -267,8 +239,7 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeTreatment(NewTreatmentId));
+        Assert.Throws<DomainException>(() => booking.ChangeTreatment(NewTreatmentId));
     }
 
     [Fact]
@@ -279,8 +250,7 @@ public class BookingTests
         booking.Cancel();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeTreatment(NewTreatmentId));
+        Assert.Throws<DomainException>(() => booking.ChangeTreatment(NewTreatmentId));
     }
 
     // ---------------------------------------------------------
@@ -308,8 +278,7 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.Complete());
+        Assert.Throws<DomainException>(() => booking.Complete());
     }
 
     // ---------------------------------------------------------
@@ -337,8 +306,7 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.Arrived());
+        Assert.Throws<DomainException>(() => booking.Arrived());
     }
 
     // ---------------------------------------------------------
@@ -353,8 +321,7 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeTherapist(NewTherapistId, ExistingTherapistBookings));
+        Assert.Throws<DomainException>(() => booking.ChangeTherapist(NewTherapistId, ExistingTherapistBookings));
     }
 
     [Fact]
@@ -381,10 +348,7 @@ public class BookingTests
             timeSlot: booking.Time);
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeTherapist(
-                NewTherapistId,
-                new[] { existingBooking }));
+        Assert.Throws<DomainException>(() => booking.ChangeTherapist(NewTherapistId, new[] { existingBooking }));
     }
 
     // ---------------------------------------------------------
@@ -399,8 +363,7 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeClinic(NewClinicId));
+        Assert.Throws<DomainException>(() => booking.ChangeClinic(NewClinicId));
     }
 
     [Fact]
@@ -412,8 +375,7 @@ public class BookingTests
         booking.ChangeClinic(NewClinicId);
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.ChangeClinic(NewClinicId));
+        Assert.Throws<DomainException>(() => booking.ChangeClinic(NewClinicId));
     }
 
     [Fact]
@@ -454,8 +416,7 @@ public class BookingTests
         booking.Cancel();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.Cancel());
+        Assert.Throws<DomainException>(() => booking.Cancel());
     }
 
     // ---------------------------------------------------------
@@ -483,7 +444,6 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() =>
-            booking.NoShow());
+        Assert.Throws<DomainException>(() => booking.NoShow());
     }
 }

@@ -205,8 +205,9 @@ public class ChangeTherapistTests
     public async Task Handle_GivenTherapistWithoutRequiredCertification_CastApplicationException()
     {
         // Arrange
-        Booking booking = CreateBooking();
-        Therapist therapist = CreateTherapist(CertificationTypes.Acupuncture);
+        var treatment = CreateTreatment();
+        var booking = CreateBooking(treatment.Id,treatment.MaxParticipants);
+        var therapist = CreateTherapist(CertificationTypes.Acupuncture);
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -222,7 +223,7 @@ public class ChangeTherapistTests
 
         treatmentRepositoryMock
             .Setup(r => r.GetByIdAsync(booking.TreatmentId))
-            .ReturnsAsync(Treatment);
+            .ReturnsAsync(treatment);
 
         IChangeTherapistHandler handler = new ChangeTherapistHandler(
             bookingRepositoryMock.Object,

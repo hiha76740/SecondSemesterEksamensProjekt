@@ -13,7 +13,7 @@ public class ChangeClinicInfoHandlerTests
 {
     private static Clinic CreateClinic()
     {
-        DateTime open = DateTime.UtcNow.AddHours(1);
+        DateTime open = new DateTime(2040, 5, 1, 8, 0, 0);
         DateTime close = open.AddHours(8);
 
         return Clinic.Create(
@@ -38,8 +38,8 @@ public class ChangeClinicInfoHandlerTests
             postalCode ?? "7000",
             city ?? "Fredericia",
             treatmentRoomLimit ?? 10,
-            open ?? DateTime.UtcNow.AddDays(7),
-            close ?? DateTime.UtcNow.AddDays(7).AddHours(8)
+            open ?? new DateTime(2040,5,1,8,0,0),
+            close ?? new DateTime(2040, 5, 1, 8, 0, 0).AddHours(8)
             );
     }
 

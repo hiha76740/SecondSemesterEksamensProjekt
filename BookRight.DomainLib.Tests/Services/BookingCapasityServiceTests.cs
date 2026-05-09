@@ -19,9 +19,10 @@ public class BookingCapasityServiceTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             Guid.NewGuid(),
-            Guid.NewGuid(),
             500,
             Array.Empty<Booking>(),
+            1,
+            Guid.NewGuid(),
             Array.Empty<Booking>());
     }
 
