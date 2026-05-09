@@ -7,7 +7,7 @@ using BookRight.FacadeLib.Commands.Therapists.Interfaces;
 
 namespace BookRight.ApplicationLib.Handlers.Therapists;
 
-public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository) : IChangeTherapistInfoHandler
+public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository, IClinicRepository clinicRepository) : IChangeTherapistInfoHandler
 {
     async Task IChangeTherapistInfoHandler.Handle(ChangeTherapistInfoCommand command)
     {
@@ -90,6 +90,34 @@ public class ChangeTherapistInfoHandler(ITherapistRepository therapistRepository
                 changesMade = true;
             }
         }
+
+        // Gennemgår alle klinikker fra commandet og sikre:
+        // 1. At klinikken findes i databasen
+        // 2. At klinikken bliver tilføjet til behandleren,
+        //    hvis den ikke allerede findes
+        foreach (var clinic in command.AssociatedClinics)
+        {
+            _ = clinicRepository.GetByIdAsync(clinic)
+                ?? throw new NotFoundException($"Clinic with id {clinic} not found");
+
+            if (therapist.AssociatedClinics.Contains(clinic) == false)
+            {
+                therapist.AddAssociatedClinic(clinic);
+                changesMade = true;
+            }
+        }
+
+        // Gennemgår behandlerens nuværende klinikker og fjerner:
+        // klinikker som ikke længere findes i commandet
+        foreach (var clinic in therapist.AssociatedClinics.ToList())
+        {
+            if (command.AssociatedClinics.Contains(clinic) == false)
+            {
+                therapist.RemoveAssociatedClinic(clinic);
+                changesMade = true;
+            }
+        }
+
 
         if (changesMade == true)
             await therapistRepository.SaveAsync();
