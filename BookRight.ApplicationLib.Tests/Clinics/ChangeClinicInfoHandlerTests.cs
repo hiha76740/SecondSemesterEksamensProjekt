@@ -64,4 +64,41 @@ public class ChangeClinicInfoHandlerTests
         // Assert
         mockClinicRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
+
+
+    [Fact]
+    public void Handle_GivenSameInfo_NeverCallsSave()
+    {
+        // Arrange
+        var clinic = CreateClinic();
+
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
+
+        var handler = new ChangeClinicInfoHandler(mockClinicRepo.Object) as IChangeClinicInfoHandler;
+
+        var command = CreateCommand(
+            clinic.Id,
+            clinic.Address.Street,
+            clinic.Address.PostalCode,
+            clinic.Address.City,
+            clinic.TreatmentRoomLimit,
+            clinic.OpeningHours.Open,
+            clinic.OpeningHours.Close
+            );
+
+        // Act
+        handler.Handle(command);
+
+        // Assert
+        mockClinicRepo.Verify(r => r.SaveAsync(), Times.Never);
+    }
 }
+
+
+/*
+ * feature-DevOps-324-ChangeClinicInfoHandlerTests-Added-Tests-For-GivenDifferentInfo
+ * */
