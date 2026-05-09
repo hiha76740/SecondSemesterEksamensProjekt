@@ -72,7 +72,7 @@ public class ChangeClinicTests
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock
-            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.TimeSlot))
+            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.Time))
             .Returns(true);
 
         IChangeClinicHandler handler = new ChangeClinicHandler(
@@ -213,7 +213,7 @@ public class ChangeClinicTests
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock
-            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.TimeSlot))
+            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.Time))
             .Returns(false);
 
         IChangeClinicHandler handler = new ChangeClinicHandler(

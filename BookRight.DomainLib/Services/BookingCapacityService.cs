@@ -20,7 +20,7 @@ public sealed class BookingCapacityService : IBookingCapacityService
         TimeSlot timeSlot)
     {
         var overlapping = existingBookings
-           .Count(b => b.TimeSlot.OverlapsWith(timeSlot));
+           .Count(b => b.Time.OverlapsWith(timeSlot));
 
         return overlapping < clinic.TreatmentRoomLimit;
     }

@@ -188,7 +188,7 @@ public class BookingTests
             ExistingTherapistBookings);
 
         // Assert
-        Assert.Equal(newTimeSlot, booking.TimeSlot);
+        Assert.Equal(newTimeSlot, booking.Time);
     }
 
     [Fact]
@@ -219,7 +219,7 @@ public class BookingTests
 
         Booking existingBooking = CreateWithoutOverlap(timeSlot: newTimeSlot);
 
-        TimeSlot expectedTimeSlot = booking.TimeSlot;
+        TimeSlot expectedTimeSlot = booking.Time;
 
         // Act & Assert
         Assert.Throws<DomainException>(() =>
@@ -228,7 +228,7 @@ public class BookingTests
                 ExistingCustomerBookings,
                 new[] { existingBooking }));
 
-        Assert.Equal(expectedTimeSlot, booking.TimeSlot);
+        Assert.Equal(expectedTimeSlot, booking.Time);
     }
 
     // ---------------------------------------------------------
@@ -378,7 +378,7 @@ public class BookingTests
 
         Booking existingBooking = CreateWithoutOverlap(
             therapistId: NewTherapistId,
-            timeSlot: booking.TimeSlot);
+            timeSlot: booking.Time);
 
         // Act & Assert
         Assert.Throws<DomainException>(() =>

@@ -21,7 +21,7 @@ public class Booking : AggregateRoot
     public Guid ClinicId { get; private set; }
 
     public BookingStatus Status { get; private set; }
-    public TimeSlot TimeSlot { get; private set; }
+    public TimeSlot Time { get; private set; }
     public decimal Price { get; private set; }
 
     public int ParticipantLimit { get; private set; }
@@ -90,9 +90,9 @@ public class Booking : AggregateRoot
     {
         EnsureCanBeChanged();
 
-        TimeSlot oldTimeSlot = TimeSlot;
+        TimeSlot oldTimeSlot = Time;
 
-        TimeSlot = newTimeSlot;
+        Time = newTimeSlot;
 
         try
         {
@@ -100,7 +100,7 @@ public class Booking : AggregateRoot
         }
         catch (DomainException)
         {
-            TimeSlot = oldTimeSlot;
+            Time = oldTimeSlot;
             throw;
         }
     }
@@ -250,7 +250,7 @@ public class Booking : AggregateRoot
             throw new DomainException("Price cannot be negative.");
 
         Id = Guid.NewGuid();
-        TimeSlot = timeSlot;
+        Time = timeSlot;
         TreatmentId = treatmentId;
         TherapistId = therapistId;
         ClinicId = clinicId;
@@ -307,12 +307,12 @@ public class Booking : AggregateRoot
         bool customerOverlap = existingCustomerBookings.Any(cb =>
             cb.Id != booking.Id &&
             cb.IsActive == true &&
-            cb.TimeSlot.OverlapsWith(booking.TimeSlot));
+            cb.Time.OverlapsWith(booking.Time));
 
         bool therapistOverlap = existingTherapistBookings.Any(tb =>
             tb.Id != booking.Id &&
             tb.IsActive == true &&
-            tb.TimeSlot.OverlapsWith(booking.TimeSlot));
+            tb.Time.OverlapsWith(booking.Time));
 
         if (customerOverlap == true || therapistOverlap == true)
             throw new DomainException("Overlap in time.");

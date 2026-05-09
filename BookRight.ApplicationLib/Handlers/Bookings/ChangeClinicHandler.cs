@@ -27,7 +27,7 @@ public class ChangeClinicHandler(
 
         var clinicBookings = await bookingRepository.GetAllBookingsByIdAsync(clinic.Id);
 
-        if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, booking.TimeSlot) == false)
+        if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, booking.Time) == false)
             throw new Exceptions.ApplicationException("Clinic capacity was exceeded.");
 
         booking.ChangeClinic(clinic.Id);
