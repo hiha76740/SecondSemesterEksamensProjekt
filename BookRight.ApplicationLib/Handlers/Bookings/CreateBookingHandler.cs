@@ -14,21 +14,11 @@ public class CreateBookingHandler(
     ITherapistRepository therapistRepository,
     IClinicRepository clinicRepository,
     ITreatmentRepository treatmentRepository,
-    IBookingCapacityService bookingCapacityService) : ICreateBookingHandler
+    IBookingCapacityService bookingCapacityService,
+    IValidateOverlapService overlapService) : ICreateBookingHandler
 {
     async Task ICreateBookingHandler.Handle(CreateBookingCommand command)
     {
-        if (command.TreatmentId == Guid.Empty)
-            throw new Exceptions.ApplicationException("TreatmentId cannot be empty.");
-
-        if (command.TherapistId == Guid.Empty)
-            throw new Exceptions.ApplicationException("TherapistId cannot be empty.");
-
-        if (command.ClinicId == Guid.Empty)
-            throw new Exceptions.ApplicationException("ClinicId cannot be empty.");
-
-
-
         var therapist = await therapistRepository.GetByIdAsync(command.TherapistId)
             ?? throw new NotFoundException("Therapist could not be found.");
 
@@ -70,10 +60,11 @@ public class CreateBookingHandler(
             therapist.Id,
             clinic.Id,
             treatment.Price,
-            therapistBookings,
             treatment.MaxParticipants,
-            command.CustomerId,
-            customerBookings);
+            command.CustomerId);
+
+        overlapService.Validate(booking, customerBookings!);
+        overlapService.Validate(booking, therapistBookings);
 
         await bookingRepository.AddAsync(booking);
 
