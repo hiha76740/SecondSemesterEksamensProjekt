@@ -9,4 +9,6 @@ public sealed record ChangeTherapistInfoCommand(
     string City,
     string EmailAddress,
     string PhoneNumber,
-    List<string> Certifications);
+    List<Guid> AssociatedClinics,
+    List<string> Certifications
+    );
