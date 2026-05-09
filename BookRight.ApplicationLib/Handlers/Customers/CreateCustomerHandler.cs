@@ -13,7 +13,7 @@ public class CreateCustomerHandler(ICustomerRepository customerRepository, ITher
     async Task ICreateCustomerHandler.Handle(CreateCustomerCommand command)
     {
         
-        if (command.PreferredTherapist.HasValue)
+        if (command.PreferredTherapist.HasValue == true)
         {
             Guid preferredTherapist = command.PreferredTherapist.Value;
             _ = await therapistRepository.GetByIdAsync(preferredTherapist)
