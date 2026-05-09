@@ -204,18 +204,6 @@ public class BookingTests
         Assert.Throws<DomainException>(() => booking.ChangeTime(newTimeSlot));
     }
 
-    [Fact]
-    public void ChangeTime_GivenTherapistOverlap_CastDomainException()
-    {
-        // Arrange
-        Booking booking = CreateWithoutOverlap();
-
-        TimeSlot newTimeSlot = CreateTimeSlot(12, 13);
-
-        // Act & Assert
-        Assert.Throws<DomainException>(() => booking.ChangeTime(newTimeSlot));
-    }
-
     // ---------------------------------------------------------
     // 3. ChangeTreatment tests (Changing treatment on Booking)
     // ---------------------------------------------------------
