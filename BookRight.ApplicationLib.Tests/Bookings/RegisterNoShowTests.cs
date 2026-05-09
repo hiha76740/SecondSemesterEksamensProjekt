@@ -44,7 +44,7 @@ public class RegisterNoShowTests
         var bookingRepositoryMock = new Mock<IBookingRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         IRegisterNoShowHandler handler = new RegisterNoShowHandler(bookingRepositoryMock.Object);
@@ -55,7 +55,7 @@ public class RegisterNoShowTests
         await handler.Handle(command);
 
         // Assert
-        bookingRepositoryMock.Verify(repository => repository.SaveAsync(), Times.Once);
+        bookingRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class RegisterNoShowTests
         var bookingRepositoryMock = new Mock<IBookingRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Booking?)null);
 
         IRegisterNoShowHandler handler = new RegisterNoShowHandler(bookingRepositoryMock.Object);
