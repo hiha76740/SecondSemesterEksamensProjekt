@@ -27,6 +27,7 @@ public class Booking : AggregateRoot
     public int ParticipantLimit { get; private set; }
     public bool IsActive => Status != BookingStatus.Cancelled;
 
+
     private readonly List<Guid> _participants = new();
     public IReadOnlyList<Guid> Participants => _participants.AsReadOnly();
 
