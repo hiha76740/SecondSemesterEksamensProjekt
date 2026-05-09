@@ -4,7 +4,7 @@ using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Clinics;
 using BookRight.DomainLib.Entities.Customers;
 using BookRight.DomainLib.Entities.Therapists;
-using BookRight.DomainLib.Entities.Treatments.Physiotherapy;
+using BookRight.DomainLib.Entities.Treatments;
 using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.Services;
@@ -17,6 +17,11 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class CreateBookingTests
 {
+    private static Treatment CreateTreatment()
+    {
+        return Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
+    }
+
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -68,10 +73,10 @@ public class CreateBookingTests
     public async Task Handle_GivenValidData_CallsAddAndSave()
     {
         // Arrange
-        Customer customer = CreateCustomer();
-        Therapist therapist = CreateTherapist(CertificationTypes.Physiotherapy);
-        Clinic clinic = CreateClinic();
-        var treatment = new Physiotherapy30();
+        var customer = CreateCustomer();
+        var therapist = CreateTherapist(CertificationTypes.Physiotherapy);
+        var clinic = CreateClinic();
+        var treatment = CreateTreatment();
 
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
@@ -135,7 +140,7 @@ public class CreateBookingTests
         var mockBookingRepo = new Mock<IBookingRepository>();
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
 
-        TimeSlot timeSlot = CreateTimeSlot(9, 10);
+        var timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
             Guid.Empty,
@@ -166,7 +171,7 @@ public class CreateBookingTests
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Customer?)null);
 
-        TimeSlot timeSlot = CreateTimeSlot(9, 10);
+        var timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
             Guid.NewGuid(),
@@ -187,10 +192,10 @@ public class CreateBookingTests
     public async Task Handle_GivenTherapistWithoutRequiredCertification_CastApplicationException()
     {
         // Arrange
-        Customer customer = CreateCustomer();
-        Therapist therapist = CreateTherapist(CertificationTypes.Acupuncture);
-        Clinic clinic = CreateClinic();
-        var treatment = new Physiotherapy30();
+        var customer = CreateCustomer();
+        var therapist = CreateTherapist(CertificationTypes.Acupuncture);
+        var clinic = CreateClinic();
+        var treatment = CreateTreatment();
 
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
@@ -215,7 +220,7 @@ public class CreateBookingTests
             .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
-        TimeSlot timeSlot = CreateTimeSlot(9, 10);
+        var timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
             customer.Id,
@@ -236,10 +241,10 @@ public class CreateBookingTests
     public async Task Handle_GivenNoClinicCapacity_CastApplicationException()
     {
         // Arrange
-        Customer customer = CreateCustomer();
-        Therapist therapist = CreateTherapist(CertificationTypes.Physiotherapy);
-        Clinic clinic = CreateClinic();
-        var treatment = new Physiotherapy30();
+        var customer = CreateCustomer();
+        var therapist = CreateTherapist(CertificationTypes.Physiotherapy);
+        var clinic = CreateClinic();
+        var treatment = CreateTreatment();
 
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
@@ -272,7 +277,7 @@ public class CreateBookingTests
             .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), It.IsAny<TimeSlot>()))
             .Returns(false);
 
-        TimeSlot timeSlot = CreateTimeSlot(9, 10);
+        var timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
             customer.Id,
