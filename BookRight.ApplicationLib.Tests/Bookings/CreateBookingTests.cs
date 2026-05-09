@@ -81,27 +81,27 @@ public class CreateBookingTests
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
 
         mockCustomerRepo
-                .Setup(repository => repository.GetByIdAsync(customer.Id))
+                .Setup(r => r.GetByIdAsync(customer.Id))
                 .ReturnsAsync(customer);
 
         mockTherapistRepo
-            .Setup(repository => repository.GetByIdAsync(therapist.Id))
+            .Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         mockClinicRepo
-            .Setup(repository => repository.GetByIdAsync(clinic.Id))
+            .Setup(r => r.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
         mockTreatmentRepo
-            .Setup(repository => repository.GetByIdAsync(treatment.Id))
+            .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(repository => repository.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         mockBookingCapacityService
-            .Setup(service => service.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), It.IsAny<TimeSlot>()))
+            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), It.IsAny<TimeSlot>()))
             .Returns(true);
 
         TimeSlot timeSlot = CreateTimeSlot(9, 10);
@@ -120,8 +120,8 @@ public class CreateBookingTests
         await handler.Handle(command);
 
         // Assert
-        mockBookingRepo.Verify(repository => repository.AddAsync(It.IsAny<Booking>()), Times.Once);
-        mockBookingRepo.Verify(repository => repository.SaveAsync(), Times.Once);
+        mockBookingRepo.Verify(r => r.AddAsync(It.IsAny<Booking>()), Times.Once);
+        mockBookingRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -163,7 +163,7 @@ public class CreateBookingTests
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
 
         mockCustomerRepo
-            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Customer?)null);
 
         TimeSlot timeSlot = CreateTimeSlot(9, 10);
@@ -200,19 +200,19 @@ public class CreateBookingTests
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
 
         mockCustomerRepo
-            .Setup(repository => repository.GetByIdAsync(customer.Id))
+            .Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
         mockTherapistRepo
-            .Setup(repository => repository.GetByIdAsync(therapist.Id))
+            .Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         mockClinicRepo
-            .Setup(repository => repository.GetByIdAsync(clinic.Id))
+            .Setup(r => r.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
         mockTreatmentRepo
-            .Setup(repository => repository.GetByIdAsync(treatment.Id))
+            .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
         TimeSlot timeSlot = CreateTimeSlot(9, 10);
@@ -249,27 +249,27 @@ public class CreateBookingTests
         var mockBookingCapacityService = new Mock<IBookingCapacityService>();
 
         mockCustomerRepo
-            .Setup(repository => repository.GetByIdAsync(customer.Id))
+            .Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
         mockTherapistRepo
-            .Setup(repository => repository.GetByIdAsync(therapist.Id))
+            .Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         mockClinicRepo
-            .Setup(repository => repository.GetByIdAsync(clinic.Id))
+            .Setup(r => r.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
         mockTreatmentRepo
-            .Setup(repository => repository.GetByIdAsync(treatment.Id))
+            .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(repository => repository.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         mockBookingCapacityService
-            .Setup(service => service.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), It.IsAny<TimeSlot>()))
+            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), It.IsAny<TimeSlot>()))
             .Returns(false);
 
         TimeSlot timeSlot = CreateTimeSlot(9, 10);
