@@ -2,7 +2,7 @@
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Therapists;
-using BookRight.DomainLib.Entities.Treatments.Physiotherapy;
+using BookRight.DomainLib.Entities.Treatments;
 using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
@@ -14,6 +14,11 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class ChangeTreatmentTests
 {
+    private static Treatment CreateTreatment()
+    {
+        return Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
+    }
+
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -55,9 +60,9 @@ public class ChangeTreatmentTests
     public async Task Handle_GivenValidBookingId_CallsSave()
     {
         // Arrange
-        Booking booking = CreateBooking();
-        var treatment = new Physiotherapy30();
-        Therapist therapist = CreateTherapist(CertificationTypes.Physiotherapy);
+        var booking = CreateBooking();
+        var therapist = CreateTherapist(CertificationTypes.Physiotherapy);
+        var treatment = CreateTreatment();
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
@@ -174,7 +179,7 @@ public class ChangeTreatmentTests
 
         treatmentRepositoryMock
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Physiotherapy30?)null);
+            .ReturnsAsync((Treatment?)null);
 
         IChangeTreatmentHandler handler = new ChangeTreatmentHandler(
             bookingRepositoryMock.Object,
@@ -193,8 +198,8 @@ public class ChangeTreatmentTests
     public async Task Handle_GivenUnknownTherapistId_CastNotFoundException()
     {
         // Arrange
-        Booking booking = CreateBooking();
-        var treatment = new Physiotherapy30();
+        var booking = CreateBooking();
+        var treatment = CreateTreatment();
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
@@ -229,9 +234,9 @@ public class ChangeTreatmentTests
     public async Task Handle_GivenTherapistWithoutRequiredCertification_CastApplicationException()
     {
         // Arrange
-        Booking booking = CreateBooking();
-        var treatment = new Physiotherapy30();
-        Therapist therapist = CreateTherapist(CertificationTypes.Acupuncture);
+        var booking = CreateBooking();
+        var therapist = CreateTherapist(CertificationTypes.Acupuncture);
+        var treatment = CreateTreatment();
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
