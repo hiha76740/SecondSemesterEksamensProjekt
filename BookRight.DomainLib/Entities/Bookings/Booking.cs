@@ -202,6 +202,19 @@ public class Booking : AggregateRoot
         Status = BookingStatus.Arrived;
     }
 
+    public void AddParticipant(Guid customerId)
+    {
+        EnsureIsActive();
+
+        if (_participants.Count == ParticipantLimit)
+            throw new DomainException("Booking has reach limit for participants");
+
+        if (_participants.Contains(customerId) == true)
+            throw new DomainException("Customer is already added to this booking");
+
+        _participants.Add(customerId);
+    }
+
     /// <summary>
     /// Initializes a new instance of the Booking class with the specified time slot, customer, treatment, therapist,
     /// clinic, and price.
