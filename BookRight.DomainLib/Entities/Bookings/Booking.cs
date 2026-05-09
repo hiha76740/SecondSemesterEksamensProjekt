@@ -228,6 +228,12 @@ public class Booking : AggregateRoot
     }
 
 
+    private void EnsureIsActive()
+    {
+        if (IsActive == false)
+            throw new DomainException("Booking is no longer active");
+    }
+
 
     /// <summary>
     /// Ensures that the booking can be changed by validating its current status.
