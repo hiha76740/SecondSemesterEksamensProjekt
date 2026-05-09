@@ -14,7 +14,11 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class ChangeTherapistTests
 {
-    private static Treatment Treatment => Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
+    private static Treatment CreateTreatment()
+    {
+        return Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
+    }
+
 
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
@@ -23,16 +27,17 @@ public class ChangeTherapistTests
             DateTime.UtcNow.AddDays(1).Date.AddHours(toHour));
     }
 
-    private static Booking CreateBooking()
+    private static Booking CreateBooking(Guid treatmentId, int participantLimit)
     {
         return Booking.Create(
             CreateTimeSlot(9, 10),
-            Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"),
-            Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b693b80d"),
+            treatmentId,
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b993b80d"),
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m,
-            Array.Empty<Booking>(),
+            Array.Empty<Booking>(), 
+            participantLimit,
+            Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"),
             Array.Empty<Booking>());
     }
 
@@ -57,8 +62,9 @@ public class ChangeTherapistTests
     public async Task Handle_GivenValidBookingId_CallsSave()
     {
         // Arrange
-        Booking booking = CreateBooking();
-        Therapist therapist = CreateTherapist(CertificationTypes.Physiotherapy);;
+        var treatment = CreateTreatment();
+        var booking = CreateBooking(treatment.Id,treatment.MaxParticipants);
+        var therapist = CreateTherapist(CertificationTypes.Physiotherapy);
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -73,8 +79,8 @@ public class ChangeTherapistTests
             .ReturnsAsync(therapist);
 
         treatmentRepositoryMock
-            .Setup(r => r.GetByIdAsync(booking.TreatmentId))
-            .ReturnsAsync(Treatment);
+            .Setup(r => r.GetByIdAsync(treatment.Id))
+            .ReturnsAsync(treatment);
 
         bookingRepositoryMock
             .Setup(r => r.GetAllBookingsByIdAsync(therapist.Id))
@@ -167,7 +173,8 @@ public class ChangeTherapistTests
     public async Task Handle_GivenUnknownTherapistId_CastNotFoundException()
     {
         // Arrange
-        Booking booking = CreateBooking();
+        var treatment = CreateTreatment();
+        var booking = CreateBooking(treatment.Id,treatment.MaxParticipants);
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
