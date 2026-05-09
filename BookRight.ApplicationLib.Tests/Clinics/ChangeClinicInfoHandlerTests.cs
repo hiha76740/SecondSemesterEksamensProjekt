@@ -1,6 +1,7 @@
 ﻿using BookRight.ApplicationLib.Handlers.Clinics;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Clinics;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Clinics.DTOs;
 using BookRight.FacadeLib.Commands.Clinics.Interfaces;
@@ -43,7 +44,7 @@ public class ChangeClinicInfoHandlerTests
     }
 
     [Fact]
-    public void Handle_GivenDifferentInfo_CallsSave()
+    public async Task Handle_GivenDifferentInfo_CallsSave()
     {
         // Arrange
         var clinic = CreateClinic();
@@ -59,7 +60,7 @@ public class ChangeClinicInfoHandlerTests
         var command = CreateCommand(clinic.Id);
 
         // Act
-        handler.Handle(command);
+       await handler.Handle(command);
 
         // Assert
         mockClinicRepo.Verify(r => r.SaveAsync(), Times.Once);
@@ -67,7 +68,7 @@ public class ChangeClinicInfoHandlerTests
 
 
     [Fact]
-    public void Handle_GivenSameInfo_NeverCallsSave()
+    public async Task Handle_GivenSameInfo_NeverCallsSave()
     {
         // Arrange
         var clinic = CreateClinic();
@@ -91,14 +92,25 @@ public class ChangeClinicInfoHandlerTests
             );
 
         // Act
-        handler.Handle(command);
+        await handler.Handle(command);
 
         // Assert
         mockClinicRepo.Verify(r => r.SaveAsync(), Times.Never);
     }
+
+    public async Task Handle_GivenUnknownClinic_CastNotFoundException()
+    {
+        // Arrange
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockClinicRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
+             .ReturnsAsync((Clinic?)null);
+
+        var handler = new ChangeClinicInfoHandler(mockClinicRepo.Object) as IChangeClinicInfoHandler;
+
+        var command = CreateCommand(It.IsAny<Guid>());
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
+    }
 }
-
-
-/*
- * feature-DevOps-324-ChangeClinicInfoHandlerTests-Added-Tests-For-GivenDifferentInfo
- * */
