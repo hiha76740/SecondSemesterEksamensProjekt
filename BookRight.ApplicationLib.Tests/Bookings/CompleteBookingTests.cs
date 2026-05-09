@@ -44,7 +44,7 @@ public class CompleteBookingTests
         var bookingRepositoryMock = new Mock<IBookingRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         ICompleteBookingHandler handler = new CompleteBookingHandler(bookingRepositoryMock.Object);
@@ -79,7 +79,7 @@ public class CompleteBookingTests
         var bookingRepositoryMock = new Mock<IBookingRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Booking?)null);
 
         ICompleteBookingHandler handler = new CompleteBookingHandler(bookingRepositoryMock.Object);
