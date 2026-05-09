@@ -44,7 +44,7 @@ public class CancelBookingTests
         var bookingRepositoryMock = new Mock<IBookingRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         ICancelBookingHandler handler = new CancelBookingHandler(bookingRepositoryMock.Object);
@@ -55,7 +55,7 @@ public class CancelBookingTests
         await handler.Handle(command);
 
         // Assert
-        bookingRepositoryMock.Verify(repository => repository.SaveAsync(), Times.Once);
+        bookingRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
