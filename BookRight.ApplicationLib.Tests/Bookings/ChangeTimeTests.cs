@@ -5,6 +5,7 @@ using BookRight.DomainLib.Entities.Customers;
 using BookRight.DomainLib.Entities.Therapists;
 using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
+using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
@@ -25,12 +26,13 @@ public class ChangeTimeTests
     {
         return Booking.Create(
             timeSlot ?? CreateTimeSlot(9, 10),
-            Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"),
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b693b80d"),
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b993b80d"),
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m,
             Array.Empty<Booking>(),
+            1,
+            Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"),
             Array.Empty<Booking>());
     }
 
@@ -68,6 +70,7 @@ public class ChangeTimeTests
         // Arrange
         Booking booking = CreateBooking();
 
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var customerRepositoryMock = new Mock<ICustomerRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -91,7 +94,8 @@ public class ChangeTimeTests
         IChangeTimeHandler handler = new ChangeTimeHandler(
             bookingRepositoryMock.Object,
             customerRepositoryMock.Object,
-            therapistRepositoryMock.Object);
+            therapistRepositoryMock.Object,
+            mockValidateOverlapService.Object);
 
         TimeSlot newTimeSlot = CreateTimeSlot(12, 13);
 
@@ -111,6 +115,7 @@ public class ChangeTimeTests
     public async Task Handle_GivenEmptyBookingId_CastApplicationException()
     {
         // Arrange
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var customerRepositoryMock = new Mock<ICustomerRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -118,7 +123,8 @@ public class ChangeTimeTests
         IChangeTimeHandler handler = new ChangeTimeHandler(
             bookingRepositoryMock.Object,
             customerRepositoryMock.Object,
-            therapistRepositoryMock.Object);
+            therapistRepositoryMock.Object,
+            mockValidateOverlapService.Object);
 
         TimeSlot newTimeSlot = CreateTimeSlot(12, 13);
 
@@ -135,6 +141,7 @@ public class ChangeTimeTests
     public async Task Handle_GivenUnknownBookingId_CastNotFoundException()
     {
         // Arrange
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var customerRepositoryMock = new Mock<ICustomerRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -146,7 +153,8 @@ public class ChangeTimeTests
         IChangeTimeHandler handler = new ChangeTimeHandler(
             bookingRepositoryMock.Object,
             customerRepositoryMock.Object,
-            therapistRepositoryMock.Object);
+            therapistRepositoryMock.Object, 
+            mockValidateOverlapService.Object);
 
         TimeSlot newTimeSlot = CreateTimeSlot(12, 13);
 
@@ -168,6 +176,7 @@ public class ChangeTimeTests
         Booking booking = CreateBooking();
         Booking existingBooking = CreateBooking(newTimeSlot);
 
+        var mockValidateOverlapService = new Mock<IValidateOverlapService>();
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var customerRepositoryMock = new Mock<ICustomerRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -191,7 +200,8 @@ public class ChangeTimeTests
         IChangeTimeHandler handler = new ChangeTimeHandler(
             bookingRepositoryMock.Object,
             customerRepositoryMock.Object,
-            therapistRepositoryMock.Object);
+            therapistRepositoryMock.Object, 
+            mockValidateOverlapService.Object);
 
         var command = new ChangeTimeCommand(
             booking.Id,
