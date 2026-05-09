@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookRight.InfrastructureLib.QueryHandlers
+namespace BookRight.FacadeLib.Queries.Clinics
 {
     internal class Dummy
     {
