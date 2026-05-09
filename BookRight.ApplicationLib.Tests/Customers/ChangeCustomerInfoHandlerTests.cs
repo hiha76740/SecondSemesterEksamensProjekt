@@ -82,6 +82,24 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
+    public async Task Handle_GivenValidCommandNewLastname_ShallCallSaveAsync()
+    {
+        // Arrange
+        var newLastname = "Jensen";
+        var customer = CreateTestCustomerWithValidData();
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, lastName: newLastname);
+
+        _mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        // Act
+        await CreateSut().Handle(command);
+
+        // Assert
+        _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task Handle_GivenValidCommandNoChanges_ShallNotCallSaveAsync()
     {
         // Arrange
