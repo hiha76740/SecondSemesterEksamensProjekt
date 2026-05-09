@@ -12,17 +12,15 @@ namespace BookRight.ApplicationLib.Tests.Therapists;
 
 public class AddClinicToTherapistHandlerTests
 {
-    private static readonly Guid TherapistId = Guid.NewGuid();
-    private static readonly Guid ClinicId = Guid.NewGuid();
-
-    private static readonly Address Address =
-        new("Testvej 1", "6700", "Esbjerg");
-
-    private static readonly Email Email =
-        new("test@test.dk");
-
-    private static readonly PhoneNumber PhoneNumber =
-        new("12345678");
+    private static Clinic CreateClinic()
+    {
+        DateTime openingHour = new DateTime(2030, 5, 1, 8, 0, 0);
+        return Clinic.Create(
+            "Test Klinik 1",
+            5,
+            new OpeningHours(openingHour, openingHour.AddHours(8)),
+            new Address("Testvej 21","6000", "Kolding"));
+    }
 
     private static Therapist CreateTherapist()
     {
@@ -30,108 +28,86 @@ public class AddClinicToTherapistHandlerTests
             "AUTH123",
             "John Doe",
             550,
-            Address,
-            Email,
-            PhoneNumber,
-            new List<Guid>(),
+            new Address("Testvej 1", "6700", "Esbjerg"),
+            new Email("test@test.dk"),
+            new PhoneNumber("12345678"),
+            new List<Guid>() { Guid.NewGuid() },
             null);
     }
 
     [Fact]
-    public async Task GivenValidIds_WhenAddingClinic_ThenClinicIsAdded()
+    public async Task Handler_GivenValidIds_CallsSave()
     {
-
+        // Arrange
         var therapist = CreateTherapist();
+        var clinic = CreateClinic();
 
-        var therapistRepositoryMock =
-            new Mock<ITherapistRepository>();
-
-        var clinicRepositoryMock =
-            new Mock<IClinicRepository>();
+        var therapistRepositoryMock = new Mock<ITherapistRepository>();
+        var clinicRepositoryMock = new Mock<IClinicRepository>();
 
         therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
+            .Setup(x => x.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         clinicRepositoryMock
-            .Setup(x => x.GetByIdAsync(ClinicId))
-            .ReturnsAsync(Mock.Of<Clinic>());
+            .Setup(x => x.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
 
-        IAddClinicToTherapistHandler handler =
-            new AddClinicToTherapistHandler(
-                therapistRepositoryMock.Object,
-                clinicRepositoryMock.Object);
+        var handler = new AddClinicToTherapistHandler(therapistRepositoryMock.Object, clinicRepositoryMock.Object) as IAddClinicToTherapistHandler;
+        var command = new AddClinicToTherapistCommand(therapist.Id, clinic.Id);
 
-        var command = new AddClinicToTherapistCommand(
-            TherapistId,
-            ClinicId);
-
+        // Act
         await handler.Handle(command);
 
-
-
-        therapistRepositoryMock.Verify(
-            x => x.SaveAsync(),
-            Times.Once);
+        // Assert
+        therapistRepositoryMock.Verify(x => x.SaveAsync(), Times.Once);
     }
 
     [Fact]
-    public async Task GivenInvalidTherapistId_WhenAddingClinic_ThenCastNotFoundException()
+    public async Task Handler_GivenInvalidTherapistId_CastNotFoundException()
     {
+        // Arrange
+        var clinic = CreateClinic();
 
-        var therapistRepositoryMock =
-            new Mock<ITherapistRepository>();
-
-        var clinicRepositoryMock =
-            new Mock<IClinicRepository>();
+        var therapistRepositoryMock = new Mock<ITherapistRepository>();
+        var clinicRepositoryMock = new Mock<IClinicRepository>();
 
         therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
+            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Therapist?)null);
 
-        IAddClinicToTherapistHandler handler =
-            new AddClinicToTherapistHandler(
-                therapistRepositoryMock.Object,
-                clinicRepositoryMock.Object);
+        clinicRepositoryMock
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
 
-        var command = new AddClinicToTherapistCommand(
-            TherapistId,
-            ClinicId);
+        var handler = new AddClinicToTherapistHandler(therapistRepositoryMock.Object, clinicRepositoryMock.Object) as IAddClinicToTherapistHandler;
+        var command = new AddClinicToTherapistCommand(It.IsAny<Guid>(), clinic.Id);
 
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => handler.Handle(command));
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
     }
 
     [Fact]
-    public async Task GivenInvalidClinicId_WhenAddingClinic_ThenCastNotFoundException()
+    public async Task Handler_GivenInvalidClinicId_CastNotFoundException()
     {
-
+        // Arrange
         var therapist = CreateTherapist();
 
-        var therapistRepositoryMock =
-            new Mock<ITherapistRepository>();
-
-        var clinicRepositoryMock =
-            new Mock<IClinicRepository>();
+        var therapistRepositoryMock = new Mock<ITherapistRepository>();
+        var clinicRepositoryMock = new Mock<IClinicRepository>();
 
         therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
+            .Setup(x => x.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         clinicRepositoryMock
-            .Setup(x => x.GetByIdAsync(ClinicId))
+            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Clinic?)null);
 
-        IAddClinicToTherapistHandler handler =
-            new AddClinicToTherapistHandler(
-                therapistRepositoryMock.Object,
-                clinicRepositoryMock.Object);
+        var handler = new AddClinicToTherapistHandler(therapistRepositoryMock.Object, clinicRepositoryMock.Object) as IAddClinicToTherapistHandler;
+        var command = new AddClinicToTherapistCommand(therapist.Id, It.IsAny<Guid>());
 
-        var command = new AddClinicToTherapistCommand(
-            TherapistId,
-            ClinicId);
-
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => handler.Handle(command));
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
     }
 }
