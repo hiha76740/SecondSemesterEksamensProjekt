@@ -2,7 +2,7 @@
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Therapists;
-using BookRight.DomainLib.Entities.Treatments.Physiotherapy;
+using BookRight.DomainLib.Entities.Treatments;
 using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
@@ -14,6 +14,8 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class ChangeTherapistTests
 {
+    private static Treatment Treatment => Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
+
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -56,8 +58,7 @@ public class ChangeTherapistTests
     {
         // Arrange
         Booking booking = CreateBooking();
-        Therapist therapist = CreateTherapist(CertificationTypes.Physiotherapy);
-        var treatment = new Physiotherapy30();
+        Therapist therapist = CreateTherapist(CertificationTypes.Physiotherapy);;
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -73,7 +74,7 @@ public class ChangeTherapistTests
 
         treatmentRepositoryMock
             .Setup(r => r.GetByIdAsync(booking.TreatmentId))
-            .ReturnsAsync(treatment);
+            .ReturnsAsync(Treatment);
 
         bookingRepositoryMock
             .Setup(r => r.GetAllBookingsByIdAsync(therapist.Id))
@@ -199,7 +200,6 @@ public class ChangeTherapistTests
         // Arrange
         Booking booking = CreateBooking();
         Therapist therapist = CreateTherapist(CertificationTypes.Acupuncture);
-        var treatment = new Physiotherapy30();
 
         var bookingRepositoryMock = new Mock<IBookingRepository>();
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
@@ -215,7 +215,7 @@ public class ChangeTherapistTests
 
         treatmentRepositoryMock
             .Setup(r => r.GetByIdAsync(booking.TreatmentId))
-            .ReturnsAsync(treatment);
+            .ReturnsAsync(Treatment);
 
         IChangeTherapistHandler handler = new ChangeTherapistHandler(
             bookingRepositoryMock.Object,
