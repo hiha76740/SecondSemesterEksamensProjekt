@@ -98,6 +98,7 @@ public class ChangeClinicInfoHandlerTests
         mockClinicRepo.Verify(r => r.SaveAsync(), Times.Never);
     }
 
+    [Fact]
     public async Task Handle_GivenUnknownClinic_CastNotFoundException()
     {
         // Arrange
