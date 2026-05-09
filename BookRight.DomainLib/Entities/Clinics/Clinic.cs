@@ -83,7 +83,7 @@ public class Clinic : AggregateRoot
     /// <exception cref="DomainException">Thrown if openingTime is earlier than the current date and time.</exception>
     private static void EnsureValidTime(DateTime openingTime)
     {
-        if (openingTime < DateTime.Now)
+        if (openingTime < DateTime.UtcNow)
             throw new DomainException("Opening time must be in the future");
     }
 
