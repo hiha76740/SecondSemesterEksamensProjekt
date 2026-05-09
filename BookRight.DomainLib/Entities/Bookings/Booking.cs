@@ -215,6 +215,22 @@ public class Booking : AggregateRoot
         _participants.Add(customerId);
     }
 
+    public void RemoveParticipant(Guid customerId)
+    {
+        EnsureIsActive();
+
+        if (_participants.Contains(customerId) == false)
+            throw new DomainException("The customer you are trying to remove is not registeret to this booking");
+
+        _participants.Remove(customerId);
+
+        if (_participants.Count == 0)
+        {
+            Status = BookingStatus.Cancelled;
+        }
+
+    }
+
     /// <summary>
     /// Initializes a new instance of the Booking class with the specified time slot, customer, treatment, therapist,
     /// clinic, and price.
