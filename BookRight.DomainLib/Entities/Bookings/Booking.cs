@@ -54,25 +54,31 @@ public class Booking : AggregateRoot
         Guid therapistId,
         Guid clinicId,
         decimal price,
-        IEnumerable<Booking> existingCustomerBookings,
         IEnumerable<Booking> existingTherapistBookings,
         int participantLimit,
-        Guid? customerId = null)
+        Guid? customerId = null,
+        IEnumerable<Booking>? existingCustomerBookings = null)
     {
         if (participantLimit < 1)
             throw new DomainException("A booking must allow at least one participant.");
 
-        if (participantLimit == 1 && customerId == null)
+        if (participantLimit == 1 && customerId == null && existingCustomerBookings == null)
             throw new DomainException("Single-person bookings require a customer.");
 
 
         var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price, participantLimit);
 
-        ValidateNoOverlap(booking, existingCustomerBookings, existingTherapistBookings);
-
-        if (customerId != null)
+        
+        if (customerId != null && existingCustomerBookings != null)
+        {
+            ValidateNoOverlap(booking, existingCustomerBookings, existingTherapistBookings);
             booking.AddParticipant(customerId.Value);
-
+        }
+        else
+        {
+            ValidateNoOverlap(booking, existingTherapistBookings);
+        }
+            
         return booking;
     }
 
