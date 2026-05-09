@@ -53,7 +53,7 @@ public class Clinic : AggregateRoot
         Address = newAddress;
     }
 
-    public void ChangeTreatmentRoomCount(int newTreatmentRoomLimit)
+    public void ChangeTreatmentRoomLimit(int newTreatmentRoomLimit)
     {
         EnsureValidTreatmentRoomLimit(newTreatmentRoomLimit);
 
