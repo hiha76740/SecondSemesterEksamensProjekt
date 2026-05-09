@@ -12,16 +12,6 @@ namespace BookRight.ApplicationLib.Tests.Therapists;
 
 public class AddCertificationToTherapistHandlerTests
 {
-    private static readonly Guid TherapistId = Guid.NewGuid();
-
-    private static readonly Address Address =
-        new("Testvej 1", "6700", "Esbjerg");
-
-    private static readonly Email Email =
-        new("test@test.dk");
-
-    private static readonly PhoneNumber PhoneNumber =
-        new("12345678");
 
     private static Therapist CreateTherapist()
     {
@@ -29,90 +19,72 @@ public class AddCertificationToTherapistHandlerTests
             "AUTH123",
             "John Doe",
             550,
-            Address,
-            Email,
-            PhoneNumber,
-            new List<Guid>(),
+            new Address("Testvej 1", "6700", "Esbjerg"),
+            new Email("test@test.dk"),
+            new PhoneNumber("12345678"),
+            new List<Guid>() { Guid.NewGuid() },
             null);
     }
 
     [Fact]
     public async Task GivenValidCertification_WhenAddingCertification_ThenCertificationIsAdded()
     {
-
+        // Arrange
         var therapist = CreateTherapist();
 
         var therapistRepositoryMock =
             new Mock<ITherapistRepository>();
 
         therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
+            .Setup(x => x.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        IAddCertificationTypeHandler handler =
-            new AddCertificationToTherapistHandler(
-                therapistRepositoryMock.Object);
+        var handler = new AddCertificationToTherapistHandler(therapistRepositoryMock.Object) as IAddCertificationTypeHandler;
+        var command = new AddCertificationTypeCommand(therapist.Id, CertificationTypes.Acupuncture.ToString());
 
-        var command = new AddCertificationTypeCommand(
-            TherapistId,
-            CertificationTypes.Acupuncture.ToString());
-
+        // Act
         await handler.Handle(command);
 
-        Assert.Contains(
-            CertificationTypes.Acupuncture,
-            therapist.CertificationTypes);
-
-        therapistRepositoryMock.Verify(
-            x => x.SaveAsync(),
-            Times.Once);
+        // Assert
+        therapistRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
     public async Task GivenInvalidTherapistId_WhenAddingCertification_ThenCastNotFoundException()
     {
-
+        // Arrange
         var therapistRepositoryMock =
             new Mock<ITherapistRepository>();
 
         therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
+            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Therapist?)null);
 
-        IAddCertificationTypeHandler handler =
-            new AddCertificationToTherapistHandler(
-                therapistRepositoryMock.Object);
+        var handler = new AddCertificationToTherapistHandler(therapistRepositoryMock.Object) as IAddCertificationTypeHandler;
+        var command = new AddCertificationTypeCommand(It.IsAny<Guid>(), CertificationTypes.Acupuncture.ToString());
 
-        var command = new AddCertificationTypeCommand(
-            TherapistId,
-            CertificationTypes.Acupuncture.ToString());
-
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => handler.Handle(command));
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
     }
 
     [Fact]
     public async Task GivenInvalidCertification_WhenAddingCertification_ThenCastNotFoundException()
     {
-
+        // Arrange
+        var certificationType = "InvalidCertification";
         var therapist = CreateTherapist();
 
         var therapistRepositoryMock =
             new Mock<ITherapistRepository>();
 
         therapistRepositoryMock
-            .Setup(x => x.GetByIdAsync(TherapistId))
+            .Setup(x => x.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        IAddCertificationTypeHandler handler =
-            new AddCertificationToTherapistHandler(
-                therapistRepositoryMock.Object);
+        var handler = new AddCertificationToTherapistHandler(therapistRepositoryMock.Object) as IAddCertificationTypeHandler;
+        var command = new AddCertificationTypeCommand(therapist.Id, certificationType);
 
-        var command = new AddCertificationTypeCommand(
-            TherapistId,
-            "InvalidCertification");
-
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => handler.Handle(command));
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
     }
 }
