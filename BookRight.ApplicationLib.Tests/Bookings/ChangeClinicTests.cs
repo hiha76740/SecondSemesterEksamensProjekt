@@ -1,4 +1,4 @@
-﻿using BookRight.ApplicationLib.Handlers.Booking;
+﻿using BookRight.ApplicationLib.Handlers.Bookings;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Clinics;
@@ -60,19 +60,19 @@ public class ChangeClinicTests
         var bookingCapacityServiceMock = new Mock<IBookingCapacityService>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         clinicRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(clinic.Id))
+            .Setup(r => r.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetAllBookingsByIdAsync(clinic.Id))
+            .Setup(r => r.GetAllBookingsByIdAsync(clinic.Id))
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock
-            .Setup(service => service.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.TimeSlot))
+            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.TimeSlot))
             .Returns(true);
 
         IChangeClinicHandler handler = new ChangeClinicHandler(
@@ -88,7 +88,7 @@ public class ChangeClinicTests
         await handler.Handle(command);
 
         // Assert
-        bookingRepositoryMock.Verify(repository => repository.SaveAsync(), Times.Once);
+        bookingRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -201,19 +201,19 @@ public class ChangeClinicTests
         var bookingCapacityServiceMock = new Mock<IBookingCapacityService>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         clinicRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(clinic.Id))
+            .Setup(r => r.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetAllBookingsByIdAsync(clinic.Id))
+            .Setup(r => r.GetAllBookingsByIdAsync(clinic.Id))
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock
-            .Setup(service => service.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.TimeSlot))
+            .Setup(s => s.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), booking.TimeSlot))
             .Returns(false);
 
         IChangeClinicHandler handler = new ChangeClinicHandler(

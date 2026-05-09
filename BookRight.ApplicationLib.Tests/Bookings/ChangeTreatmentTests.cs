@@ -1,4 +1,4 @@
-﻿using BookRight.ApplicationLib.Handlers.Booking;
+﻿using BookRight.ApplicationLib.Handlers.Bookings;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Therapists;
@@ -64,15 +64,15 @@ public class ChangeTreatmentTests
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         treatmentRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(treatment.Id))
+            .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
         therapistRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.TherapistId))
+            .Setup(r => r.GetByIdAsync(booking.TherapistId))
             .ReturnsAsync(therapist);
 
         IChangeTreatmentHandler handler = new ChangeTreatmentHandler(
@@ -88,7 +88,7 @@ public class ChangeTreatmentTests
         await handler.Handle(command);
 
         // Assert
-        bookingRepositoryMock.Verify(repository => repository.SaveAsync(), Times.Once);
+        bookingRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class ChangeTreatmentTests
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Booking?)null);
 
         IChangeTreatmentHandler handler = new ChangeTreatmentHandler(
@@ -169,11 +169,11 @@ public class ChangeTreatmentTests
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         treatmentRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Physiotherapy30?)null);
 
         IChangeTreatmentHandler handler = new ChangeTreatmentHandler(
@@ -201,15 +201,15 @@ public class ChangeTreatmentTests
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         treatmentRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(treatment.Id))
+            .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
         therapistRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Therapist?)null);
 
         IChangeTreatmentHandler handler = new ChangeTreatmentHandler(
@@ -238,15 +238,15 @@ public class ChangeTreatmentTests
         var therapistRepositoryMock = new Mock<ITherapistRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.Id))
+            .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
         treatmentRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(treatment.Id))
+            .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
         therapistRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(booking.TherapistId))
+            .Setup(r => r.GetByIdAsync(booking.TherapistId))
             .ReturnsAsync(therapist);
 
         IChangeTreatmentHandler handler = new ChangeTreatmentHandler(

@@ -53,7 +53,7 @@ public class Clinic : AggregateRoot
         Address = newAddress;
     }
 
-    public void ChangeTreatmentRoomCount(int newTreatmentRoomLimit)
+    public void ChangeTreatmentRoomLimit(int newTreatmentRoomLimit)
     {
         EnsureValidTreatmentRoomLimit(newTreatmentRoomLimit);
 
@@ -83,7 +83,7 @@ public class Clinic : AggregateRoot
     /// <exception cref="DomainException">Thrown if openingTime is earlier than the current date and time.</exception>
     private static void EnsureValidTime(DateTime openingTime)
     {
-        if (openingTime < DateTime.Now)
+        if (openingTime < DateTime.UtcNow)
             throw new DomainException("Opening time must be in the future");
     }
 

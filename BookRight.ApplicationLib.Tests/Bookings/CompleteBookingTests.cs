@@ -9,7 +9,7 @@ using Moq;
 
 namespace BookRight.ApplicationLib.Tests.Bookings;
 
-public class CancelBookingTests
+public class CompleteBookingTests
 {
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
@@ -32,7 +32,7 @@ public class CancelBookingTests
     }
 
     // ---------------------------------------------------------
-    // 1. Handle tests (Cancelling a Booking through Application)
+    // 1. Handle tests (Completing a Booking through Application)
     // ---------------------------------------------------------
 
     [Fact]
@@ -47,9 +47,9 @@ public class CancelBookingTests
             .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
-        ICancelBookingHandler handler = new CancelBookingHandler(bookingRepositoryMock.Object);
+        ICompleteBookingHandler handler = new CompleteBookingHandler(bookingRepositoryMock.Object);
 
-        var command = new CancelBookingCommand(booking.Id);
+        var command = new CompleteBookingCommand(booking.Id);
 
         // Act
         await handler.Handle(command);
@@ -64,9 +64,9 @@ public class CancelBookingTests
         // Arrange
         var bookingRepositoryMock = new Mock<IBookingRepository>();
 
-        ICancelBookingHandler handler = new CancelBookingHandler(bookingRepositoryMock.Object);
+        ICompleteBookingHandler handler = new CompleteBookingHandler(bookingRepositoryMock.Object);
 
-        var command = new CancelBookingCommand(Guid.Empty);
+        var command = new CompleteBookingCommand(Guid.Empty);
 
         // Act & Assert
         await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
@@ -79,12 +79,12 @@ public class CancelBookingTests
         var bookingRepositoryMock = new Mock<IBookingRepository>();
 
         bookingRepositoryMock
-            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Booking?)null);
 
-        ICancelBookingHandler handler = new CancelBookingHandler(bookingRepositoryMock.Object);
+        ICompleteBookingHandler handler = new CompleteBookingHandler(bookingRepositoryMock.Object);
 
-        var command = new CancelBookingCommand(Guid.NewGuid());
+        var command = new CompleteBookingCommand(Guid.NewGuid());
 
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
