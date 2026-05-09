@@ -69,7 +69,8 @@ public class Booking : AggregateRoot
 
         ValidateNoOverlap(booking, existingCustomerBookings, existingTherapistBookings);
 
-
+        if (customerId != null)
+            booking.AddParticipant(customerId.Value);
 
         return booking;
     }
