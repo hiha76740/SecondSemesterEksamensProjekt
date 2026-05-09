@@ -66,7 +66,7 @@ public class Booking : AggregateRoot
             throw new DomainException("Single-person bookings require a customer.");
 
 
-        var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price);
+        var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price, participantLimit);
 
         ValidateNoOverlap(booking, existingCustomerBookings, existingTherapistBookings);
 
@@ -244,7 +244,7 @@ public class Booking : AggregateRoot
     /// <param name="clinicId">The unique identifier of the clinic where the booking takes place.</param>
     /// <param name="price">The price of the booking. Must be zero or positive.</param>
     /// <exception cref="DomainException">Thrown if price is negative.</exception>
-    private Booking(TimeSlot timeSlot, Guid treatmentId, Guid therapistId, Guid clinicId, decimal price)
+    private Booking(TimeSlot timeSlot, Guid treatmentId, Guid therapistId, Guid clinicId, decimal price, int participantLimit)
     {
         if (price < 0)
             throw new DomainException("Price cannot be negative.");
@@ -255,6 +255,7 @@ public class Booking : AggregateRoot
         TherapistId = therapistId;
         ClinicId = clinicId;
         Price = price;
+        ParticipantLimit = participantLimit;
         Status = BookingStatus.Created;
     }
 
