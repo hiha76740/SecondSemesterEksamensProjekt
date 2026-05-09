@@ -112,12 +112,12 @@ public class CreateBookingTests
         TimeSlot timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
-            customer.Id,
             treatment.Id,
             therapist.Id,
             clinic.Id,
             timeSlot.From,
-            timeSlot.To);
+            timeSlot.To,
+            customer.Id);
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object) as ICreateBookingHandler;
 
@@ -127,33 +127,6 @@ public class CreateBookingTests
         // Assert
         mockBookingRepo.Verify(r => r.AddAsync(It.IsAny<Booking>()), Times.Once);
         mockBookingRepo.Verify(r => r.SaveAsync(), Times.Once);
-    }
-
-    [Fact]
-    public async Task Handle_GivenEmptyCustomerId_CastApplicationException()
-    {
-        // Arrange
-        var mockCustomerRepo = new Mock<ICustomerRepository>();
-        var mockTherapistRepo = new Mock<ITherapistRepository>();
-        var mockClinicRepo = new Mock<IClinicRepository>();
-        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
-        var mockBookingRepo = new Mock<IBookingRepository>();
-        var mockBookingCapacityService = new Mock<IBookingCapacityService>();
-
-        var timeSlot = CreateTimeSlot(9, 10);
-
-        var command = new CreateBookingCommand(
-            Guid.Empty,
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            timeSlot.From,
-            timeSlot.To);
-
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object) as ICreateBookingHandler;
-
-        // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
 
     [Fact]
@@ -177,9 +150,9 @@ public class CreateBookingTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             Guid.NewGuid(),
-            Guid.NewGuid(),
             timeSlot.From,
-            timeSlot.To);
+            timeSlot.To,
+            Guid.NewGuid());
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
 
@@ -223,12 +196,12 @@ public class CreateBookingTests
         var timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
-            customer.Id,
             treatment.Id,
             therapist.Id,
             clinic.Id,
             timeSlot.From,
-            timeSlot.To);
+            timeSlot.To,
+            customer.Id);
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
 
@@ -280,12 +253,12 @@ public class CreateBookingTests
         var timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
-            customer.Id,
             treatment.Id,
             therapist.Id,
             clinic.Id,
             timeSlot.From,
-            timeSlot.To);
+            timeSlot.To,
+            customer.Id);
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
 
