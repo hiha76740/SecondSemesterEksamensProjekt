@@ -17,22 +17,6 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class CreateBookingTests
 {
-    private readonly Mock<IBookingRepository> _mockBookingRepo = new();
-    private readonly Mock<ICustomerRepository> _mockCustomerRepo = new();
-    private readonly Mock<ITherapistRepository> _mockTherapistRepo = new();
-    private readonly Mock<IClinicRepository> _mockClinicRepo = new();
-    private readonly Mock<ITreatmentRepository> _mockTreatmentRepo = new();
-    private readonly Mock<IBookingCapacityService> _mockBookingCapacityService = new();
-
-    private ICreateBookingHandler CreateSut() => new CreateBookingHandler(
-        _mockBookingRepo.Object,
-        _mockCustomerRepo.Object,
-        _mockTherapistRepo.Object,
-        _mockClinicRepo.Object,
-        _mockTreatmentRepo.Object,
-        _mockBookingCapacityService.Object);
-
-
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -75,7 +59,7 @@ public class CreateBookingTests
             new Address("Testvej 1", "7100", "Vejle"));
     }
 
-  
+
     // ---------------------------------------------------------
     // 1. Handle tests (Creating a Booking through Application)
     // ---------------------------------------------------------
@@ -89,27 +73,34 @@ public class CreateBookingTests
         Clinic clinic = CreateClinic();
         var treatment = new Physiotherapy30();
 
-        _mockCustomerRepo
-            .Setup(repository => repository.GetByIdAsync(customer.Id))
-            .ReturnsAsync(customer);
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockBookingCapacityService = new Mock<IBookingCapacityService>();
 
-        _mockTherapistRepo
+        mockCustomerRepo
+                .Setup(repository => repository.GetByIdAsync(customer.Id))
+                .ReturnsAsync(customer);
+
+        mockTherapistRepo
             .Setup(repository => repository.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        _mockClinicRepo
+        mockClinicRepo
             .Setup(repository => repository.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
-        _mockTreatmentRepo
+        mockTreatmentRepo
             .Setup(repository => repository.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
-        _mockBookingRepo
+        mockBookingRepo
             .Setup(repository => repository.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
-        _mockBookingCapacityService
+        mockBookingCapacityService
             .Setup(service => service.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), It.IsAny<TimeSlot>()))
             .Returns(true);
 
@@ -123,18 +114,27 @@ public class CreateBookingTests
             timeSlot.From,
             timeSlot.To);
 
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object) as ICreateBookingHandler;
+
         // Act
-        await CreateSut().Handle(command);
+        await handler.Handle(command);
 
         // Assert
-        _mockBookingRepo.Verify(repository => repository.AddAsync(It.IsAny<Booking>()), Times.Once);
-        _mockBookingRepo.Verify(repository => repository.SaveAsync(), Times.Once);
+        mockBookingRepo.Verify(repository => repository.AddAsync(It.IsAny<Booking>()), Times.Once);
+        mockBookingRepo.Verify(repository => repository.SaveAsync(), Times.Once);
     }
 
     [Fact]
     public async Task Handle_GivenEmptyCustomerId_CastApplicationException()
     {
         // Arrange
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+
         TimeSlot timeSlot = CreateTimeSlot(9, 10);
 
         var command = new CreateBookingCommand(
@@ -145,15 +145,24 @@ public class CreateBookingTests
             timeSlot.From,
             timeSlot.To);
 
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object) as ICreateBookingHandler;
+
         // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => CreateSut().Handle(command));
+        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
 
     [Fact]
     public async Task Handle_GivenUnknownCustomerId_CastNotFoundException()
     {
         // Arrange
-        _mockCustomerRepo
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+
+        mockCustomerRepo
             .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Customer?)null);
 
@@ -167,8 +176,11 @@ public class CreateBookingTests
             timeSlot.From,
             timeSlot.To);
 
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
+
+
         // Act & Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => CreateSut().Handle(command));
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
     }
 
     [Fact]
@@ -180,19 +192,26 @@ public class CreateBookingTests
         Clinic clinic = CreateClinic();
         var treatment = new Physiotherapy30();
 
-        _mockCustomerRepo
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+
+        mockCustomerRepo
             .Setup(repository => repository.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
-        _mockTherapistRepo
+        mockTherapistRepo
             .Setup(repository => repository.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        _mockClinicRepo
+        mockClinicRepo
             .Setup(repository => repository.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
-        _mockTreatmentRepo
+        mockTreatmentRepo
             .Setup(repository => repository.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
@@ -206,8 +225,11 @@ public class CreateBookingTests
             timeSlot.From,
             timeSlot.To);
 
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
+
+
         // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => CreateSut().Handle(command));
+        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
 
     [Fact]
@@ -219,27 +241,34 @@ public class CreateBookingTests
         Clinic clinic = CreateClinic();
         var treatment = new Physiotherapy30();
 
-        _mockCustomerRepo
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockBookingCapacityService = new Mock<IBookingCapacityService>();
+
+        mockCustomerRepo
             .Setup(repository => repository.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
-        _mockTherapistRepo
+        mockTherapistRepo
             .Setup(repository => repository.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        _mockClinicRepo
+        mockClinicRepo
             .Setup(repository => repository.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
-        _mockTreatmentRepo
+        mockTreatmentRepo
             .Setup(repository => repository.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
-        _mockBookingRepo
+        mockBookingRepo
             .Setup(repository => repository.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
-        _mockBookingCapacityService
+        mockBookingCapacityService
             .Setup(service => service.CanCreateBooking(clinic, It.IsAny<IEnumerable<Booking>>(), It.IsAny<TimeSlot>()))
             .Returns(false);
 
@@ -253,7 +282,10 @@ public class CreateBookingTests
             timeSlot.From,
             timeSlot.To);
 
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object) as ICreateBookingHandler;
+
+
         // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => CreateSut().Handle(command));
+        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
 }
