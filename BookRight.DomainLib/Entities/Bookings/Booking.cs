@@ -16,7 +16,6 @@ namespace BookRight.DomainLib.Entities.Bookings;
 public class Booking : AggregateRoot
 {
     // Other Aggregate Roots are referenced by ID - not object references.
-    public Guid CustomerId { get; init; }
     public Guid TreatmentId { get; private set; }
     public Guid TherapistId { get; private set; }
     public Guid ClinicId { get; private set; }
@@ -25,7 +24,12 @@ public class Booking : AggregateRoot
     public TimeSlot TimeSlot { get; private set; }
     public decimal Price { get; private set; }
 
+    public int ParticipantLimit { get; private set; }
     public bool IsActive => Status != BookingStatus.Cancelled;
+
+    private readonly List<Guid> _participants = new();
+    public IReadOnlyList<Guid> Participants => _participants.AsReadOnly();
+
 
     /// <summary>
     /// Creates a new booking for the specified time slot, customer, treatment, therapist, and clinic, ensuring there
@@ -45,17 +49,27 @@ public class Booking : AggregateRoot
     /// <returns>A new Booking instance representing the scheduled appointment.</returns>
     public static Booking Create(
         TimeSlot timeSlot,
-        Guid customerId,
         Guid treatmentId,
         Guid therapistId,
         Guid clinicId,
         decimal price,
         IEnumerable<Booking> existingCustomerBookings,
-        IEnumerable<Booking> existingTherapistBookings)
+        IEnumerable<Booking> existingTherapistBookings,
+        int participantLimit,
+        Guid? customerId = null)
     {
-        var booking = new Booking(timeSlot, customerId, treatmentId, therapistId, clinicId, price);
+        if (participantLimit < 1)
+            throw new DomainException("A booking must allow at least one participant.");
+
+        if (participantLimit == 1 && customerId == null)
+            throw new DomainException("Single-person bookings require a customer.");
+
+
+        var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price);
 
         ValidateNoOverlap(booking, existingCustomerBookings, existingTherapistBookings);
+
+
 
         return booking;
     }
@@ -199,20 +213,21 @@ public class Booking : AggregateRoot
     /// <param name="clinicId">The unique identifier of the clinic where the booking takes place.</param>
     /// <param name="price">The price of the booking. Must be zero or positive.</param>
     /// <exception cref="DomainException">Thrown if price is negative.</exception>
-    private Booking(TimeSlot timeSlot,Guid customerId, Guid treatmentId, Guid therapistId, Guid clinicId, decimal price)
+    private Booking(TimeSlot timeSlot, Guid treatmentId, Guid therapistId, Guid clinicId, decimal price)
     {
         if (price < 0)
             throw new DomainException("Price cannot be negative.");
 
         Id = Guid.NewGuid();
         TimeSlot = timeSlot;
-        CustomerId = customerId;
         TreatmentId = treatmentId;
         TherapistId = therapistId;
         ClinicId = clinicId;
         Price = price;
         Status = BookingStatus.Created;
     }
+
+
 
     /// <summary>
     /// Ensures that the booking can be changed by validating its current status.
