@@ -67,7 +67,7 @@ public class Booking : AggregateRoot
         var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price, participantLimit);
 
 
-        if (customerId != null)
+        if (customerId != null && participantLimit == 1)
             booking.AddParticipant(customerId.Value);
 
         return booking;
