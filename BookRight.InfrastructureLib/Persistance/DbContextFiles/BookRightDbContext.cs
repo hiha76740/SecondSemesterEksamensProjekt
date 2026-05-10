@@ -1,9 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BookRight.DomainLib.Entities.Bookings;
+using BookRight.DomainLib.Entities.Clinics;
+using BookRight.DomainLib.Entities.Customers;
+using BookRight.DomainLib.Entities.Therapists;
+using BookRight.DomainLib.Entities.Treatments;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookRight.InfrastructureLib.Persistance.DbContextFiles;
 
 public class BookRightDbContext : DbContext
 {
+    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<Clinic> Clinics { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Therapist> Therapists { get; set; }
+    public DbSet<Treatment> Treatments { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (optionsBuilder.IsConfigured != false)
