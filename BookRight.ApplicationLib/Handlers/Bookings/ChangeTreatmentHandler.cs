@@ -25,6 +25,7 @@ public class ChangeTreatmentHandler(
             throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
 
         // TODO: Tilføj Price Calculator så bookingen har den korrekte pris ud fra den nye treatment.
+        // TODO: Hvad med hvis varigheden ændre sig ?
 
         booking.ChangeTreatment(treatment.Id);
 
