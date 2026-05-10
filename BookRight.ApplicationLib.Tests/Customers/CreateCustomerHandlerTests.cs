@@ -42,13 +42,12 @@ public class CreateCustomerHandlerTests
         var handler = new CreateCustomerHandler(mockCustomerRepo.Object, mockTherapistRepo.Object ) as ICreateCustomerHandler;
 
         // Act
-
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
-        mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
+        mockCustomerRepo.Verify(r => r.AddAsync(It.IsAny<Customer>()), Times.Once);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+        mockTherapistRepo.Verify(r => r.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
     }
 
     [Fact]
@@ -69,7 +68,7 @@ public class CreateCustomerHandlerTests
                 therapistAssociatedClinicIds
                 );
 
-        mockTherapistRepo.Setup(c => c.GetByIdAsync(therapist.Id))
+        mockTherapistRepo.Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
         var command = CreateCustomerCommandWithValidData(therapist.Id);
@@ -79,9 +78,9 @@ public class CreateCustomerHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
-        mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
+        mockCustomerRepo.Verify(r => r.AddAsync(It.IsAny<Customer>()), Times.Once);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+        mockTherapistRepo.Verify(r => r.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
     }
 
     [Fact]
