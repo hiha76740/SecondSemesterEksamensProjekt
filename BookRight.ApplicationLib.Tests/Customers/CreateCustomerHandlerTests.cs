@@ -57,7 +57,6 @@ public class CreateCustomerHandlerTests
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
-        List<Guid> therapistAssociatedClinicIds = new List<Guid> { Guid.NewGuid() };
         var therapist = Therapist.Create(
                 "AUTH246",
                 "Pia Hansen",
@@ -65,7 +64,7 @@ public class CreateCustomerHandlerTests
                 new Address("Vestergade 4", "8765", "Testby"),
                 new Email("PiaH@test.dk"),
                 new PhoneNumber("67328954"),
-                therapistAssociatedClinicIds
+                associatedClinics: new List<Guid> { Guid.NewGuid() }
                 );
 
         mockTherapistRepo.Setup(r => r.GetByIdAsync(therapist.Id))
