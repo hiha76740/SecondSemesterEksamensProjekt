@@ -105,6 +105,31 @@ public class ChangeCustomerInfoHandlerTests
         mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
     }
 
+    [Fact]
+    public async Task Handle_GivenValidCommandNewAddress_CallsSave()
+    {
+        // Arrange
+        var newStreet = "Rapgade 24";
+        var newPostalCode = "8945";
+        var newCity = "Anderup";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, street: newStreet, postalCode: newPostalCode, city: newCity);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+    }
+
 
     [Fact]
     public async Task Handle_GivenValidCommandNoChanges_NeverCallsSave()
