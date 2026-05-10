@@ -201,6 +201,39 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
+    public async Task Handle_GivenValidCommandNewPreferredTherapist_CallsSave()
+    {
+        // Arrange
+        var newPreferredTherapist = Therapist.Create(
+                "AUTH789",
+                "Erik Mortensen",
+                400,
+                new Address("Baldersgade 5", "5465", "Testbjerg"),
+                new Email("ErikMortensen@mail.com"),
+                new PhoneNumber("67328954"),
+                associatedClinics: new List<Guid> { Guid.NewGuid() }
+                );
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+        mockTherapistRepo.Setup(r => r.GetByIdAsync(newPreferredTherapist.Id))
+            .ReturnsAsync(newPreferredTherapist);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, preferredTherapist: newPreferredTherapist.Id);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task Handle_GivenValidCommandNoChanges_NeverCallsSave()
     {
         // Arrange
