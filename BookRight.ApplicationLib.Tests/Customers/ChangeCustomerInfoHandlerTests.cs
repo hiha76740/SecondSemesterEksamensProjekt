@@ -178,6 +178,29 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
+    public async Task Handle_GivenValidCommandNewNote_CallsSave()
+    {
+        // Arrange
+        var newNote = "He catches the flu very easily.";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, note: newNote);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task Handle_GivenValidCommandNoChanges_NeverCallsSave()
     {
         // Arrange
