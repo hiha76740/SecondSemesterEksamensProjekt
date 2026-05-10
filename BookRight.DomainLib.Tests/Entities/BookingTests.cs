@@ -69,6 +69,7 @@ public class BookingTests
 
         // Assert
         Assert.Equal(BookingStatus.Created, booking.Status);
+        Assert.Contains<Guid>(CustomerId, booking.Participants);
     }
 
     [Fact]
