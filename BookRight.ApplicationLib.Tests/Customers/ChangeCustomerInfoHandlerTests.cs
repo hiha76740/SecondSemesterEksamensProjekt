@@ -260,8 +260,6 @@ public class ChangeCustomerInfoHandlerTests
     public async Task Handle_GivenInvalidCommandNonExsistingPreferredTherapist_CastNotFoundException()
     {
         // Arrange
-        var customerId = Guid.NewGuid();
-
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
@@ -269,7 +267,7 @@ public class ChangeCustomerInfoHandlerTests
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Therapist?)null);
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customerId, preferredTherapist: It.IsAny<Guid>());
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: Guid.NewGuid(), preferredTherapist: It.IsAny<Guid>());
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
 
