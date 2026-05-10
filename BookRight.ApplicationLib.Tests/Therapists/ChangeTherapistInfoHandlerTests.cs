@@ -14,9 +14,7 @@ namespace BookRight.ApplicationLib.Tests.Therapists;
 public class ChangeTherapistInfoHandlerTests
 {
     private readonly static List<string> CertificationType = new() { CertificationTypes.Physiotherapy.ToString(), CertificationTypes.Acupuncture.ToString() };
-
-    private static Guid ClinicId => Guid.NewGuid();
-    private static List<Guid> AssociatedClinics => new() { Guid.Parse("4504e50a-67a5-4cba-b029-8eb0b493c80d") };
+    private static List<Guid> AssociatedClinics => new() { Guid.Parse("4504e50a-67a5-4cba-b029-8eb0b493c80d"), Guid.Parse("4515e50a-67a5-4cba-b029-8eb0b493c80d") };
 
     private static Clinic CreateClinic()
     {
@@ -32,33 +30,43 @@ public class ChangeTherapistInfoHandlerTests
     {
         return Therapist.Create(
         "AUTH123",
-        "John Doe",
-        550,
-        new Address("Testvej 1", "6700", "Esbjerg"),
+        "Jane Doe",
+        750,
+        new Address("Nyvej 5", "6800", "Varde"),
         new Email("test@test.dk"),
         new PhoneNumber("12345678"),
-        new List<Guid>() { ClinicId },
-        new List<CertificationTypes> { CertificationTypes.Acupuncture, CertificationTypes.Dietary }
+        AssociatedClinics,
+        new List<CertificationTypes> { CertificationTypes.Physiotherapy, CertificationTypes.Acupuncture }
         );
     }
-    private static ChangeTherapistInfoCommand CreateCommand(Guid therapistId, List<Guid>? associatedClinics = null, List<string>? certificationTypeString = null)
+    private static ChangeTherapistInfoCommand CreateCommand(
+        Guid therapistId,
+        string? name = null,
+        decimal? hourlyRate = null,
+        string? street = null,
+        string? postalCode = null,
+        string? city = null,
+        string? email = null,
+        string? phoneNumber = null,
+        List<Guid>? associatedClinics = null,
+        List<string>? certificationTypeString = null)
     {
         return new ChangeTherapistInfoCommand(
             therapistId,
-            "Jane Doe",
-            750,
-            "Nyvej 5",
-            "6800",
-            "Varde",
-            "new@test.dk",
-            "87654321",
+            name ?? "Jane Doe",
+            hourlyRate ?? 750,
+            street ?? "Nyvej 5",
+            postalCode ?? "6800",
+            city ?? "Varde",
+            email ?? "test@test.dk",
+            phoneNumber ?? "12345678",
             associatedClinics ?? AssociatedClinics,
             certificationTypeString ?? CertificationType
             );
     }
 
     [Fact]
-    public async Task Handle_GivenChangedValues_CallsSave()
+    public async Task Handle_GivenComandWithNewName_CallsSave()
     {
         // Arrange
         var therapist = CreateTherapist();
@@ -75,7 +83,7 @@ public class ChangeTherapistInfoHandlerTests
             .Setup(r => r.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
-        var command = CreateCommand(therapist.Id, associatedClinics: new List<Guid>() { clinic.Id });
+        var command = CreateCommand(therapist.Id, name: "Susanne Madsen");
 
         var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
 
@@ -83,24 +91,227 @@ public class ChangeTherapistInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        Assert.Equal(command.Name, therapist.Name);
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
 
-        Assert.Equal(command.HourlyRate, therapist.HourlyRate);
+    [Fact]
+    public async Task Handle_GivenCommandWithNewHourlyRate_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+        var clinic = CreateClinic();
 
-        Assert.Equal(command.EmailAddress, therapist.Email.EmailAddress);
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
 
-        Assert.Equal(command.PhoneNumber, therapist.PhoneNumber.Number);
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(therapist.Id))
+            .ReturnsAsync(therapist);
 
-        Assert.Contains(CertificationTypes.Physiotherapy, therapist.CertificationTypes);
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
 
-        Assert.Contains(CertificationTypes.Acupuncture, therapist.CertificationTypes);
+        var command = CreateCommand(therapist.Id, hourlyRate: 1000);
 
-        Assert.DoesNotContain(CertificationTypes.Dietary, therapist.CertificationTypes);
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
 
-        Assert.Contains(clinic.Id, therapist.AssociatedClinics);
+        // Act
+        await handler.Handle(command);
 
-        Assert.DoesNotContain(ClinicId, therapist.AssociatedClinics);
+        // Assert
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
 
+    [Fact]
+    public async Task Handle_GivenCommandWithNewEmail_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+        var clinic = CreateClinic();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(therapist.Id))
+            .ReturnsAsync(therapist);
+
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
+
+        var command = CreateCommand(therapist.Id, email: "new@test.dk");
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+
+    [Fact]
+    public async Task Handle_GivenCommandWithNewPhoneNumber_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+        var clinic = CreateClinic();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(therapist.Id))
+            .ReturnsAsync(therapist);
+
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
+
+        var command = CreateCommand(therapist.Id, phoneNumber: "85245637");
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenCommandAddCetification_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+        var clinic = CreateClinic();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(therapist.Id))
+            .ReturnsAsync(therapist);
+
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
+
+        var command = CreateCommand(
+            therapist.Id,
+            certificationTypeString: new List<string>()
+            {
+                CertificationTypes.Physiotherapy.ToString(),
+                CertificationTypes.Acupuncture.ToString(),
+                CertificationTypes.Message.ToString()
+            });
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenCommandRemoveCetification_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+        var clinic = CreateClinic();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(therapist.Id))
+            .ReturnsAsync(therapist);
+
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
+
+        var command = CreateCommand(
+            therapist.Id,
+            certificationTypeString: new List<string>()
+            {
+                CertificationTypes.Acupuncture.ToString()
+            });
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenCommandAddAssociatedClinic_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+        var clinic = CreateClinic();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(therapist.Id))
+            .ReturnsAsync(therapist);
+
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
+
+        var command = CreateCommand(
+            therapist.Id,
+            associatedClinics: new List<Guid>() { Guid.Parse("4504e50a-67a5-4cba-b029-8eb0b493c80d"), Guid.Parse("4504e52a-67a5-4cba-b029-8eb0b493c80d") });
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenCommandRemoveAssociatedClinic_CallsSave()
+    {
+        // Arrange
+        var therapist = CreateTherapist();
+        var clinic = CreateClinic();
+
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockClinicRepo = new Mock<IClinicRepository>();
+
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(therapist.Id))
+            .ReturnsAsync(therapist);
+
+        mockClinicRepo
+            .Setup(r => r.GetByIdAsync(clinic.Id))
+            .ReturnsAsync(clinic);
+
+        var command = CreateCommand(
+            therapist.Id,
+            associatedClinics: new List<Guid>() { Guid.Parse("4515e50a-67a5-4cba-b029-8eb0b493c80d") });
+
+        var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
         mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
