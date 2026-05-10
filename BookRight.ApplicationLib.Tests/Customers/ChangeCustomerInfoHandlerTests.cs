@@ -7,6 +7,7 @@ using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Customers.DTOs;
 using BookRight.FacadeLib.Commands.Customers.Interfaces;
+using Castle.Core.Resource;
 using Moq;
 
 namespace BookRight.ApplicationLib.Tests.Customers;
@@ -130,6 +131,28 @@ public class ChangeCustomerInfoHandlerTests
         mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
+    [Fact]
+    public async Task Handle_GivenValidCommandNewEmail_CallsSave()
+    {
+        // Arrange
+        var newEmail = "TSvendsen@alias.com";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, email: newEmail);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
 
     [Fact]
     public async Task Handle_GivenValidCommandNoChanges_NeverCallsSave()
