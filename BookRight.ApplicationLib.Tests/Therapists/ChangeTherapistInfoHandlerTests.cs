@@ -355,19 +355,7 @@ public class ChangeTherapistInfoHandlerTests
             .Setup(r => r.GetByIdAsync(clinic.Id))
             .ReturnsAsync(clinic);
 
-        var command = new ChangeTherapistInfoCommand(
-        therapist.Id,
-        therapist.Name,
-        therapist.HourlyRate,
-        therapist.Address.Street,
-        therapist.Address.PostalCode,
-        therapist.Address.City,
-        therapist.Email.EmailAddress,
-        therapist.PhoneNumber.Number,
-        therapist.AssociatedClinics.ToList(),
-        therapist.CertificationTypes
-        .Select(ct => ct.ToString())
-        .ToList());
+        var command = CreateCommand(therapist.Id);
 
         var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;
 
