@@ -19,9 +19,6 @@ public class BookingTests
     private static decimal Price => 550m;
     private static decimal NegativePrice => -100m;
 
-    private static IEnumerable<Booking> ExistingCustomerBookings => Array.Empty<Booking>();
-    private static IEnumerable<Booking> ExistingTherapistBookings => Array.Empty<Booking>();
-
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -73,8 +70,6 @@ public class BookingTests
     public void Create_GivenNoOverlap_SetsStatusToCreated()
     {
         // Arrange
-        Booking existingBooking = CreateWithoutOverlap();
-
         TimeSlot newTimeSlot = CreateTimeSlot(10, 11);
 
         // Act
@@ -253,7 +248,7 @@ public class BookingTests
         booking.Complete();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() => booking.ChangeTherapist(NewTherapistId, ExistingTherapistBookings));
+        Assert.Throws<DomainException>(() => booking.ChangeTherapist(NewTherapistId));
     }
 
     [Fact]
@@ -263,7 +258,7 @@ public class BookingTests
         Booking booking = CreateWithoutOverlap();
 
         // Act
-        booking.ChangeTherapist(NewTherapistId, ExistingTherapistBookings);
+        booking.ChangeTherapist(NewTherapistId);
 
         // Assert
         Assert.Equal(NewTherapistId, booking.TherapistId);
