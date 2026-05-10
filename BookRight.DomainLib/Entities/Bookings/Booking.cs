@@ -105,7 +105,7 @@ public class Booking : AggregateRoot
     /// the new assignment.</param>
     /// <exception cref="DomainException">Thrown if the new therapist is the same as the current therapist, or if the change would result in overlapping
     /// bookings.</exception>
-    public void ChangeTherapist(Guid newTherapistId, IEnumerable<Booking> existsForNewTherapist)
+    public void ChangeTherapist(Guid newTherapistId)
     {
         EnsureCanBeChanged();
 
