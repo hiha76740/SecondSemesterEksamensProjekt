@@ -155,6 +155,29 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
+    public async Task Handle_GivenValidCommandNewPhoneNumber_CallsSave()
+    {
+        // Arrange
+        var newPhoneNumber = "78329234";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, phoneNumber: newPhoneNumber);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task Handle_GivenValidCommandNoChanges_NeverCallsSave()
     {
         // Arrange
