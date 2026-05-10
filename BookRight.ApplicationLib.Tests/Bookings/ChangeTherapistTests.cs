@@ -5,6 +5,7 @@ using BookRight.DomainLib.Entities.Therapists;
 using BookRight.DomainLib.Entities.Treatments;
 using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
+using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
@@ -64,30 +65,33 @@ public class ChangeTherapistTests
         var booking = CreateBooking(treatment.Id,treatment.MaxParticipants);
         var therapist = CreateTherapist(CertificationTypes.Physiotherapy);
 
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-        var therapistRepositoryMock = new Mock<ITherapistRepository>();
-        var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockOverlapService = new Mock<IValidateOverlapService>();
 
-        bookingRepositoryMock
+        mockBookingRepo
             .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
-        therapistRepositoryMock
+        mockTherapistRepo
             .Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        treatmentRepositoryMock
+        mockTreatmentRepo
             .Setup(r => r.GetByIdAsync(treatment.Id))
             .ReturnsAsync(treatment);
 
-        bookingRepositoryMock
+        mockBookingRepo
             .Setup(r => r.GetAllBookingsByIdAsync(therapist.Id))
             .ReturnsAsync(new List<Booking>());
 
+
         IChangeTherapistHandler handler = new ChangeTherapistHandler(
-            bookingRepositoryMock.Object,
-            therapistRepositoryMock.Object,
-            treatmentRepositoryMock.Object);
+            mockBookingRepo.Object,
+            mockTherapistRepo.Object,
+            mockTreatmentRepo.Object,
+            mockOverlapService.Object);
 
         var command = new ChangeTherapistCommand(
             booking.Id,
@@ -97,25 +101,27 @@ public class ChangeTherapistTests
         await handler.Handle(command);
 
         // Assert
-        bookingRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
+        mockBookingRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
     public async Task Handle_GivenUnknownBookingId_CastNotFoundException()
     {
         // Arrange
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-        var therapistRepositoryMock = new Mock<ITherapistRepository>();
-        var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockOverlapService = new Mock<IValidateOverlapService>();
 
-        bookingRepositoryMock
+        mockBookingRepo
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Booking?)null);
 
-        IChangeTherapistHandler handler = new ChangeTherapistHandler(
-            bookingRepositoryMock.Object,
-            therapistRepositoryMock.Object,
-            treatmentRepositoryMock.Object);
+        var handler = new ChangeTherapistHandler(
+            mockBookingRepo.Object,
+            mockTherapistRepo.Object,
+            mockTreatmentRepo.Object,
+            mockOverlapService.Object) as IChangeTherapistHandler;
 
         var command = new ChangeTherapistCommand(
             Guid.NewGuid(),
@@ -132,22 +138,24 @@ public class ChangeTherapistTests
         var treatment = CreateTreatment();
         var booking = CreateBooking(treatment.Id,treatment.MaxParticipants);
 
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-        var therapistRepositoryMock = new Mock<ITherapistRepository>();
-        var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockOverlapService = new Mock<IValidateOverlapService>();
 
-        bookingRepositoryMock
+        mockBookingRepo
             .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
-        therapistRepositoryMock
+        mockTherapistRepo
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Therapist?)null);
 
-        IChangeTherapistHandler handler = new ChangeTherapistHandler(
-            bookingRepositoryMock.Object,
-            therapistRepositoryMock.Object,
-            treatmentRepositoryMock.Object);
+        var handler = new ChangeTherapistHandler(
+            mockBookingRepo.Object,
+            mockTherapistRepo.Object,
+            mockTreatmentRepo.Object,
+            mockOverlapService.Object) as IChangeTherapistHandler;
 
         var command = new ChangeTherapistCommand(
             booking.Id,
@@ -165,26 +173,28 @@ public class ChangeTherapistTests
         var booking = CreateBooking(treatment.Id,treatment.MaxParticipants);
         var therapist = CreateTherapist(CertificationTypes.Acupuncture);
 
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-        var therapistRepositoryMock = new Mock<ITherapistRepository>();
-        var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
+        var mockBookingRepo = new Mock<IBookingRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+        var mockTreatmentRepo = new Mock<ITreatmentRepository>();
+        var mockOverlapService = new Mock<IValidateOverlapService>();
 
-        bookingRepositoryMock
+        mockBookingRepo
             .Setup(r => r.GetByIdAsync(booking.Id))
             .ReturnsAsync(booking);
 
-        therapistRepositoryMock
+        mockTherapistRepo
             .Setup(r => r.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        treatmentRepositoryMock
+        mockTreatmentRepo
             .Setup(r => r.GetByIdAsync(booking.TreatmentId))
             .ReturnsAsync(treatment);
 
-        IChangeTherapistHandler handler = new ChangeTherapistHandler(
-            bookingRepositoryMock.Object,
-            therapistRepositoryMock.Object,
-            treatmentRepositoryMock.Object);
+        var handler = new ChangeTherapistHandler(
+            mockBookingRepo.Object,
+            mockTherapistRepo.Object,
+            mockTreatmentRepo.Object,
+            mockOverlapService.Object) as IChangeTherapistHandler;
 
         var command = new ChangeTherapistCommand(
             booking.Id,
