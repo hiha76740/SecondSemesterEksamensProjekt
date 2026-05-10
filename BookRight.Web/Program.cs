@@ -6,6 +6,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Database
+
+// Repositories (Use Case-interfaces → Infrastructure-implementeringer)
+
+// Handlers (Facade-interfaces → Use Case-implementeringer)
+
+// Queries (Facade-interfaces → Infrastructure-implementeringer)
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
