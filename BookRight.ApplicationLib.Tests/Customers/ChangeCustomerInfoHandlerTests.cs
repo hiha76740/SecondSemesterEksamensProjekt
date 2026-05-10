@@ -82,7 +82,7 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
-    public async Task Handle_GivenValidCommandNewLastname_ShallCallSaveAsync()
+    public async Task Handle_GivenValidCommandNewLastname_CallsSave()
     {
         // Arrange
         var newLastname = "Jensen";
