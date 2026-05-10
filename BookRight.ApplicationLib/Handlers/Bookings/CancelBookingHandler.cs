@@ -9,9 +9,6 @@ public class CancelBookingHandler(IBookingRepository bookingRepository) : ICance
 {
     async Task ICancelBookingHandler.Handle(CancelBookingCommand command)
     {
-        if (command.BookingId == Guid.Empty)
-            throw new Exceptions.ApplicationException("BookingId cannot be empty.");
-
         var booking = await bookingRepository.GetByIdAsync(command.BookingId)
             ?? throw new NotFoundException("Booking could not be found.");
 

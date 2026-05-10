@@ -12,12 +12,6 @@ public class ChangeTreatmentHandler(
 {
     async Task IChangeTreatmentHandler.Handle(ChangeTreatmentCommand command)
     {
-        if (command.BookingId == Guid.Empty)
-            throw new Exceptions.ApplicationException("BookingId cannot be empty.");
-
-        if (command.TreatmentId == Guid.Empty)
-            throw new Exceptions.ApplicationException("TreatmentId cannot be empty.");
-
         var booking = await bookingRepository.GetByIdAsync(command.BookingId)
             ?? throw new NotFoundException("Booking could not be found.");
 

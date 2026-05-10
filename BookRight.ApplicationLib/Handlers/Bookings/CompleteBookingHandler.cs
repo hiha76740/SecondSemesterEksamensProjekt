@@ -10,9 +10,6 @@ public class CompleteBookingHandler(
 {
     async Task ICompleteBookingHandler.Handle(CompleteBookingCommand command)
     {
-        if (command.BookingId == Guid.Empty)
-            throw new Exceptions.ApplicationException("BookingId cannot be empty.");
-
         var booking = await bookingRepository.GetByIdAsync(command.BookingId)
             ?? throw new NotFoundException("Booking could not be found.");
 
