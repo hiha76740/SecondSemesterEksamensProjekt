@@ -105,6 +105,7 @@ public class ChangeCustomerInfoHandlerTests
         mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
     }
 
+
     [Fact]
     public async Task Handle_GivenValidCommandNoChanges_NeverCallsSave()
     {
@@ -129,7 +130,7 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
-    public async Task Handle_GivenInvalidCommandEmptyPreferredTherapist_CastNotFoundException()
+    public async Task Handle_GivenInvalidCommandNonExsistingPreferredTherapist_CastNotFoundException()
     {
         // Arrange
         var customerId = Guid.NewGuid();
@@ -150,7 +151,7 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
-    public async Task Handle_GivenInvalidCommandNoCustomer_CastNotFoundException()
+    public async Task Handle_GivenInvalidCommandNonExsistingCustomer_CastNotFoundException()
     {
         // Arrange
         var mockCustomerRepo = new Mock<ICustomerRepository>();
@@ -168,6 +169,5 @@ public class ChangeCustomerInfoHandlerTests
         await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
 
     }
-    // TODO: Reevaluate current tests and their naming, consider more tests and extra check to see if the appropriate Change-method is called.
 
 }
