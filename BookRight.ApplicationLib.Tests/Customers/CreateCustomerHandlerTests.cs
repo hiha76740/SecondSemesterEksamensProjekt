@@ -27,17 +27,6 @@ public class CreateCustomerHandlerTests
             therapistId
             );
 
-    //Mock of relevant repositories
-    private readonly Mock<ICustomerRepository> _mockCustomerRepo = new();
-    private readonly Mock<ITherapistRepository> _mockTherapistRepo = new();
-
-    //SystemUnderTest
-    private ICreateCustomerHandler CreateSut() => new CreateCustomerHandler(
-        _mockCustomerRepo.Object,
-        _mockTherapistRepo.Object
-        );
-
-
     // ---------------------------------------------------------
     // 1. Handle tests (Creates a Customer)
     // ---------------------------------------------------------
@@ -46,22 +35,29 @@ public class CreateCustomerHandlerTests
     public async Task Handle_GivenValidCommandWithoutTherapist_CallAddAndSave()
     {
         // Arrange
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
         var command = CreateCustomerCommandWithValidData();
+        var handler = new CreateCustomerHandler(mockCustomerRepo.Object, mockTherapistRepo.Object ) as ICreateCustomerHandler;
 
         // Act
-        await CreateSut().Handle(command);
+
+        await handler.Handle(command);
 
         // Assert
-        _mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
-        _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
-        _mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
+        mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
+        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
     }
 
     [Fact]
     public async Task Handle_GivenValidCommandWithTherapist_CallAddAndSave()
     {
         // Arrange
-        var therapistId = Guid.NewGuid();
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
         List<Guid> therapistAssociatedClinicIds = new List<Guid> { Guid.NewGuid() };
         var therapist = Therapist.Create(
                 "AUTH246",
@@ -73,28 +69,37 @@ public class CreateCustomerHandlerTests
                 therapistAssociatedClinicIds
                 );
 
-        _mockTherapistRepo.Setup(c => c.GetByIdAsync(therapistId))
+        mockTherapistRepo.Setup(c => c.GetByIdAsync(therapist.Id))
             .ReturnsAsync(therapist);
 
-        var command = CreateCustomerCommandWithValidData(therapistId: therapistId);
+        var command = CreateCustomerCommandWithValidData(therapist.Id);
+        var handler = new CreateCustomerHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as ICreateCustomerHandler;
 
         // Act
-        await CreateSut().Handle(command);
+        await handler.Handle(command);
 
         // Assert
-        _mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
-        _mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
-        _mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
+        mockCustomerRepo.Verify(c => c.AddAsync(It.IsAny<Customer>()), Times.Once);
+        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        mockTherapistRepo.Verify(c => c.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
     }
 
     [Fact]
     public async Task Handle_GivenInvalidCommandWithEmptyTherapist_CastNotFoundException()
     {
         // Arrange
-        var command = CreateCustomerCommandWithValidData(therapistId: Guid.Empty);
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockTherapistRepo
+            .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Therapist?)null);
+
+        var command = CreateCustomerCommandWithValidData(It.IsAny<Guid>());
+        var handler = new CreateCustomerHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as ICreateCustomerHandler;
 
         // Act & Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => CreateSut().Handle(command));
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
     }
 
 }
