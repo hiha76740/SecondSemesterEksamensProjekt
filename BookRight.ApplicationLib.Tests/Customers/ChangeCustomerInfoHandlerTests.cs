@@ -67,7 +67,7 @@ public class ChangeCustomerInfoHandlerTests
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
-        mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
 
@@ -78,7 +78,7 @@ public class ChangeCustomerInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class ChangeCustomerInfoHandlerTests
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
-        mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
         var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, lastName: newLastname);
@@ -102,7 +102,7 @@ public class ChangeCustomerInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -127,7 +127,7 @@ public class ChangeCustomerInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
 
@@ -140,7 +140,7 @@ public class ChangeCustomerInfoHandlerTests
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
-        mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
         var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id);
@@ -151,7 +151,7 @@ public class ChangeCustomerInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Never);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Never);
     }
 
     [Fact]
