@@ -1,5 +1,6 @@
 ﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Exceptions;
+using BookRight.DomainLib.Services;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
 using BookRight.FacadeLib.Commands.Booking.Interfaces;
 
@@ -8,7 +9,8 @@ namespace BookRight.ApplicationLib.Handlers.Bookings;
 public class ChangeTherapistHandler(
     IBookingRepository bookingRepository,
     ITherapistRepository therapistRepository,
-    ITreatmentRepository treatmentRepository) : IChangeTherapistHandler
+    ITreatmentRepository treatmentRepository,
+    IValidateOverlapService overlapService) : IChangeTherapistHandler
 {
     async Task IChangeTherapistHandler.Handle(ChangeTherapistCommand command)
     {
@@ -26,8 +28,9 @@ public class ChangeTherapistHandler(
 
         var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
 
+        overlapService.Validate(booking, therapistBookings);
 
-        booking.ChangeTherapist(therapist.Id, therapistBookings);
+        booking.ChangeTherapist(therapist.Id);
 
         await bookingRepository.SaveAsync();
     }
