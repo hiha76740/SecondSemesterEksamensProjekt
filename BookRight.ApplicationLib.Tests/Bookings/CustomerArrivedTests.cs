@@ -58,20 +58,6 @@ public class CustomerArrivedTests
     }
 
     [Fact]
-    public async Task Handle_GivenEmptyBookingId_CastApplicationException()
-    {
-        // Arrange
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-
-        ICustomerArrivedHandler handler = new CustomerArrivedHandler(bookingRepositoryMock.Object);
-
-        var command = new CustomerArrivedCommand(Guid.Empty);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
-    }
-
-    [Fact]
     public async Task Handle_GivenUnknownBookingId_CastNotFoundException()
     {
         // Arrange

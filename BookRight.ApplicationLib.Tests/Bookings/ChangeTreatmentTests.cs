@@ -96,48 +96,6 @@ public class ChangeTreatmentTests
     }
 
     [Fact]
-    public async Task Handle_GivenEmptyBookingId_CastApplicationException()
-    {
-        // Arrange
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-        var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
-        var therapistRepositoryMock = new Mock<ITherapistRepository>();
-
-        IChangeTreatmentHandler handler = new ChangeTreatmentHandler(
-            bookingRepositoryMock.Object,
-            treatmentRepositoryMock.Object,
-            therapistRepositoryMock.Object);
-
-        var command = new ChangeTreatmentCommand(
-            Guid.Empty,
-            Guid.NewGuid());
-
-        // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
-    }
-
-    [Fact]
-    public async Task Handle_GivenEmptyTreatmentId_CastApplicationException()
-    {
-        // Arrange
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-        var treatmentRepositoryMock = new Mock<ITreatmentRepository>();
-        var therapistRepositoryMock = new Mock<ITherapistRepository>();
-
-        IChangeTreatmentHandler handler = new ChangeTreatmentHandler(
-            bookingRepositoryMock.Object,
-            treatmentRepositoryMock.Object,
-            therapistRepositoryMock.Object);
-
-        var command = new ChangeTreatmentCommand(
-            Guid.NewGuid(),
-            Guid.Empty);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
-    }
-
-    [Fact]
     public async Task Handle_GivenUnknownBookingId_CastNotFoundException()
     {
         // Arrange

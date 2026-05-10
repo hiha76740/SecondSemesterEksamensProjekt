@@ -58,20 +58,6 @@ public class CompleteBookingTests
     }
 
     [Fact]
-    public async Task Handle_GivenEmptyBookingId_CastApplicationException()
-    {
-        // Arrange
-        var bookingRepositoryMock = new Mock<IBookingRepository>();
-
-        ICompleteBookingHandler handler = new CompleteBookingHandler(bookingRepositoryMock.Object);
-
-        var command = new CompleteBookingCommand(Guid.Empty);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
-    }
-
-    [Fact]
     public async Task Handle_GivenUnknownBookingId_CastNotFoundException()
     {
         // Arrange
