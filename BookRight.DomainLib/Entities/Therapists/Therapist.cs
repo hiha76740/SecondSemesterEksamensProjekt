@@ -17,9 +17,14 @@ public class Therapist : AggregateRoot
     private readonly List<CertificationTypes> _certificationTypes = new();
     public IReadOnlyCollection<CertificationTypes> CertificationTypes => _certificationTypes.AsReadOnly();
 
-    private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber)
+    private readonly List<Guid> _associatedclinics = new();
+    public IReadOnlyCollection<Guid> AssociatedClinics => _associatedclinics.AsReadOnly();
+
+    private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics, List<CertificationTypes>? certifications)
     {
         // Pre-condition
+        if (associatedClinics.Count == 0)
+            throw new DomainException("Therapist must be associated to atleast 1 clinic");
 
         if (string.IsNullOrWhiteSpace(authorizationNumber))
             throw new DomainException("Therapist must have an authorization number");
@@ -30,7 +35,6 @@ public class Therapist : AggregateRoot
 
 
         // Action
-
         Id = Guid.NewGuid();
 
         AuthorizationNumber = authorizationNumber;
@@ -40,24 +44,30 @@ public class Therapist : AggregateRoot
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
+        _associatedclinics = associatedClinics;
+
+        if (certifications != null)
+            _certificationTypes = certifications;
     }
 
 
-    public static Therapist Create(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber)
+    public static Therapist Create(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics, List<CertificationTypes>? certifications = null)
         => new(
             authorizationNumber,
             name,
             hourlyRate,
             address,
             email,
-            phoneNumber);
+            phoneNumber,
+            associatedClinics,
+            certifications);
 
 
     public void ChangeName(string newName)
     {
         // Pre-condition
         EnsureValidName(newName);
-        
+
 
         if (Name == newName)
             throw new DomainException("New name cannot be the same as current name");
@@ -154,15 +164,36 @@ public class Therapist : AggregateRoot
         _certificationTypes.Remove(certificationType);
     }
 
-    private void EnsureValidName(string name)
+    public void AddAssociatedClinic(Guid clinicId)
+    {
+        if (_associatedclinics.Contains(clinicId) == true)
+            throw new DomainException($"Clinic is already associated with therapist {Name}");
+
+        _associatedclinics.Add(clinicId);
+    }
+
+    public void RemoveAssociatedClinic(Guid clinicId)
+    {
+        if (_associatedclinics.Contains(clinicId) == false)
+            throw new DomainException($"Clinic is not associated with therapist {Name}");
+
+        if (_associatedclinics.Count == 1)
+            throw new DomainException("Therapist must be associated to atleast 1 clinic");
+
+        _associatedclinics.Remove(clinicId);
+    }
+
+    private static void EnsureValidName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException("Therapist must have a name");
     }
 
-    private void EnsureValidHourlyRate(decimal hourlyRate)
+    private static void EnsureValidHourlyRate(decimal hourlyRate)
     {
         if (hourlyRate <= 0)
             throw new DomainException("Hourly rate cannot be negative or 0");
     }
+
+
 }

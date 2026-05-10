@@ -1,12 +1,10 @@
-﻿
-namespace BookRight.DomainLib.Enums
+﻿namespace BookRight.DomainLib.Enums;
+
+public enum BookingStatus
 {
-    public enum BookingStatus
-    {
-        Created,
-        Arrived,
-        Completed,
-        Cancelled,
-        NoShow
-    }
+    Created,
+    Arrived,
+    Completed,
+    Cancelled,
+    NoShow
 }
