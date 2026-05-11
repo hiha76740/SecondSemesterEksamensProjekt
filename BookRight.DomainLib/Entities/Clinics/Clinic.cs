@@ -50,7 +50,15 @@ public class Clinic : AggregateRoot
     }
 
 
+    public void ChangeOpeningHour(Guid OpeningHourId,OpeningHourInput openingHourInput)
+    {
+        var exsist = _openingHours.FirstOrDefault(oh => oh.Id == OpeningHourId);
 
+        if (exsist == null)
+            throw new NotFoundException("OpeningHour was not found");
+
+        exsist.ChangeOpeningHourTime(openingHourInput.Open, openingHourInput.Close, openingHourInput.IsClosed); 
+    }
 
     public void ChangeAddress(Address newAddress)
     {
