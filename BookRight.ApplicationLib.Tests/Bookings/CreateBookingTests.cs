@@ -17,7 +17,53 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class CreateBookingTests
 {
-    /*
+    private static List<OpeningHourInput> OpeningHours = new()
+    {
+        new OpeningHourInput(
+                Weekdays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+       
+        new OpeningHourInput(
+                Weekdays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+       
+        new OpeningHourInput(
+                Weekdays.Friday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+        
+        new OpeningHourInput(
+                Weekdays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+        
+        new OpeningHourInput(
+                Weekdays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
+
+
     private static Treatment CreateTreatment()
     {
         return Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
@@ -59,9 +105,7 @@ public class CreateBookingTests
         return Clinic.Create(
             "Klinik Vejle",
             5,
-            new OpeningHours(
-                DateTime.Now.AddDays(1).Date.AddHours(8),
-                DateTime.Now.AddDays(1).Date.AddHours(16)),
+            OpeningHours,
             new Address("Testvej 1", "7100", "Vejle"));
     }
 
@@ -121,7 +165,7 @@ public class CreateBookingTests
             timeSlot.To,
             customer.Id);
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object,mockValidateOverlapService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
 
         // Act
         await handler.Handle(command);
@@ -207,7 +251,7 @@ public class CreateBookingTests
             timeSlot.To,
             customer.Id);
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object,mockValidateOverlapService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
 
 
         // Act & Assert
@@ -271,5 +315,5 @@ public class CreateBookingTests
         // Act & Assert
         await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
-    */
+
 }
