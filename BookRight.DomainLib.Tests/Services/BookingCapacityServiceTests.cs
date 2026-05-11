@@ -6,7 +6,7 @@ using BookRight.DomainLib.ValueObjects;
 
 namespace BookRight.DomainLib.Tests.Services;
 
-public class BookingCapasityServiceTests
+public class BookingCapacityServiceTests
 {
 
     private static List<OpeningHourInput> OpeningHours = new()
