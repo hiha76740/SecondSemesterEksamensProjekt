@@ -17,6 +17,7 @@ public class OpeningHour: Entity
 
     internal OpeningHour(Weekdays weekday, TimeOnly? openingTime, TimeOnly? closingTime, bool isClosed)
     {
+        Id = Guid.NewGuid();
         Weekday = weekday;
 
         ApplyClosedState(isClosed,openingTime, closingTime);        
