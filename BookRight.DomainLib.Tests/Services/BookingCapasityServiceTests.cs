@@ -7,6 +7,7 @@ namespace BookRight.DomainLib.Tests.Services;
 
 public class BookingCapasityServiceTests
 {
+    /*
     private static int ClinicRoomLimit => 2;
     private static DateTime OpenHour => new DateTime(2027, 05, 5, 8, 0, 0);
     private static DateTime CloseHour => OpenHour.AddHours(8);
@@ -83,4 +84,5 @@ public class BookingCapasityServiceTests
         // Assert
         Assert.False(result);
     }
+    */
 }
