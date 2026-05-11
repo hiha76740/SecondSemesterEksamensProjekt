@@ -1,4 +1,5 @@
 using BookRight.Web.Components;
+using BookRight.Web.DependencyInjections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,10 +8,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 // Database
+builder.Services.AddDatabaseDI(builder.Configuration);
+
+// Domain (Domain Services
 
 // Repositories (Use Case-interfaces → Infrastructure-implementeringer)
 
 // Handlers (Facade-interfaces → Use Case-implementeringer)
+builder.Services.AddDiscountStrategyDI();
 
 // Queries (Facade-interfaces → Infrastructure-implementeringer)
 
