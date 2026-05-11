@@ -2,6 +2,7 @@
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Clinics;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
@@ -13,7 +14,52 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class ChangeClinicTests
 {
-    /*
+    private static List<OpeningHourInput> OpeningHours = new()
+    {
+        new OpeningHourInput(
+                Weekdays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Friday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
+
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -38,9 +84,7 @@ public class ChangeClinicTests
         return Clinic.Create(
             "Klinik Vejle",
             5,
-            new OpeningHours(
-                DateTime.Now.AddDays(1).Date.AddHours(8),
-                DateTime.Now.AddDays(1).Date.AddHours(16)),
+            OpeningHours,
             new Address("Testvej 1", "7100", "Vejle"));
     }
 
@@ -186,5 +230,4 @@ public class ChangeClinicTests
         // Act & Assert
         await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
-    */
 }
