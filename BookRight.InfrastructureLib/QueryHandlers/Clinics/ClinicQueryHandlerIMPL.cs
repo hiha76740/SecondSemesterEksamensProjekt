@@ -9,11 +9,32 @@ public class ClinicQueryHandlerIMPL(BookRightDbContext db) : IClinicQueries
 {
     async Task<IReadOnlyList<ClinicDTO>> IClinicQueries.GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await db.Clinics
+            .AsNoTracking()
+            .Select(c => new ClinicDTO(
+            c.Id,
+            c.Name,
+            c.TreatmentRoomLimit,
+            c.OpeningHours
+                .Select(oh => new OpeningHourDTO(oh.Weekday.ToString(),oh.OpeningTime,oh.CloseingTime,oh.IsClosed)).ToList(),
+            c.Address.Street,
+            c.Address.PostalCode,
+            c.Address.City)).ToListAsync();
     }
 
     async Task<ClinicDTO?> IClinicQueries.GetByIdAsync(Guid Id)
     {
-        throw new NotImplementedException();
+        return await db.Clinics
+            .AsNoTracking()
+            .Where(c => c.Id == Id)
+            .Select(c => new ClinicDTO(
+                c.Id,
+                c.Name,
+                c.TreatmentRoomLimit,
+                c.OpeningHours
+                .Select(oh => new OpeningHourDTO(oh.Weekday.ToString(), oh.OpeningTime, oh.CloseingTime, oh.IsClosed)).ToList(),
+                c.Address.Street,
+                c.Address.PostalCode,
+                c.Address.City)).FirstOrDefaultAsync();
     }
 }
