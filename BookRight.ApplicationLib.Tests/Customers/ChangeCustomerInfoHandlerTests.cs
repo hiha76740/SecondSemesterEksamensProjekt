@@ -7,6 +7,7 @@ using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Customers.DTOs;
 using BookRight.FacadeLib.Commands.Customers.Interfaces;
+using Castle.Core.Resource;
 using Moq;
 
 namespace BookRight.ApplicationLib.Tests.Customers;
@@ -67,7 +68,7 @@ public class ChangeCustomerInfoHandlerTests
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
-        mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
 
@@ -78,7 +79,7 @@ public class ChangeCustomerInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -91,7 +92,7 @@ public class ChangeCustomerInfoHandlerTests
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
-        mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
         var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, lastName: newLastname);
@@ -102,9 +103,135 @@ public class ChangeCustomerInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Once);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
 
+    [Fact]
+    public async Task Handle_GivenValidCommandNewAddress_CallsSave()
+    {
+        // Arrange
+        var newStreet = "Rapgade 24";
+        var newPostalCode = "8945";
+        var newCity = "Anderup";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, street: newStreet, postalCode: newPostalCode, city: newCity);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidCommandNewEmail_CallsSave()
+    {
+        // Arrange
+        var newEmail = "TSvendsen@alias.com";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, email: newEmail);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidCommandNewPhoneNumber_CallsSave()
+    {
+        // Arrange
+        var newPhoneNumber = "78329234";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, phoneNumber: newPhoneNumber);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidCommandNewNote_CallsSave()
+    {
+        // Arrange
+        var newNote = "He catches the flu very easily.";
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, note: newNote);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidCommandNewPreferredTherapist_CallsSave()
+    {
+        // Arrange
+        var newPreferredTherapist = Therapist.Create(
+                "AUTH789",
+                "Erik Mortensen",
+                400,
+                new Address("Baldersgade 5", "5465", "Testbjerg"),
+                new Email("ErikMortensen@mail.com"),
+                new PhoneNumber("67328954"),
+                associatedClinics: new List<Guid> { Guid.NewGuid() }
+                );
+        var customer = CreateTestCustomerWithValidData();
+
+        var mockCustomerRepo = new Mock<ICustomerRepository>();
+        var mockTherapistRepo = new Mock<ITherapistRepository>();
+
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
+            .ReturnsAsync(customer);
+        mockTherapistRepo.Setup(r => r.GetByIdAsync(newPreferredTherapist.Id))
+            .ReturnsAsync(newPreferredTherapist);
+
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, preferredTherapist: newPreferredTherapist.Id);
+        var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
+
+        // Act
+        await handler.Handle(command);
+
+        // Assert
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Once);
+    }
 
     [Fact]
     public async Task Handle_GivenValidCommandNoChanges_NeverCallsSave()
@@ -115,7 +242,7 @@ public class ChangeCustomerInfoHandlerTests
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
-        mockCustomerRepo.Setup(c => c.GetByIdAsync(customer.Id))
+        mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
         var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id);
@@ -126,15 +253,13 @@ public class ChangeCustomerInfoHandlerTests
         await handler.Handle(command);
 
         // Assert
-        mockCustomerRepo.Verify(c => c.SaveAsync(), Times.Never);
+        mockCustomerRepo.Verify(r => r.SaveAsync(), Times.Never);
     }
 
     [Fact]
     public async Task Handle_GivenInvalidCommandNonExsistingPreferredTherapist_CastNotFoundException()
     {
         // Arrange
-        var customerId = Guid.NewGuid();
-
         var mockCustomerRepo = new Mock<ICustomerRepository>();
         var mockTherapistRepo = new Mock<ITherapistRepository>();
 
@@ -142,7 +267,7 @@ public class ChangeCustomerInfoHandlerTests
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Therapist?)null);
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customerId, preferredTherapist: It.IsAny<Guid>());
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: Guid.NewGuid(), preferredTherapist: It.IsAny<Guid>());
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
 
