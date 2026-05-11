@@ -200,11 +200,8 @@ public class Booking : AggregateRoot
 
         _participants.Remove(customerId);
 
-        if (_participants.Count == 0)
-        {
+        if (_participants.Count == 0 && ParticipantLimit == 1)
             Status = BookingStatus.Cancelled;
-        }
-
     }
 
     /// <summary>
