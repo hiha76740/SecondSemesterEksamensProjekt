@@ -4,11 +4,11 @@ namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
 public class CampaignDiscountStrategy : IDiscountStrategy
 {
-    private readonly DateOnly _campainStart;
-    private readonly DateOnly _campainEnd;
+    private readonly DateTime _campainStart;
+    private readonly DateTime _campainEnd;
     private readonly decimal _discountProcentage;
 
-    public CampaignDiscountStrategy(decimal discountProcentage, DateOnly campainStart, DateOnly campainEnd)
+    public CampaignDiscountStrategy(decimal discountProcentage, DateTime campainStart, DateTime campainEnd)
     {
         _campainStart = campainStart;
         _campainEnd = campainEnd;
