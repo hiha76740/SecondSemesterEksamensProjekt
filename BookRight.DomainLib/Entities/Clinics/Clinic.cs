@@ -1,4 +1,5 @@
-﻿using BookRight.DomainLib.Exceptions;
+﻿using BookRight.DomainLib.Enums;
+using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
 namespace BookRight.DomainLib.Entities.Clinics;
@@ -13,37 +14,43 @@ namespace BookRight.DomainLib.Entities.Clinics;
 public class Clinic : AggregateRoot
 {
     public string Name { get; private set; }
-
     public int TreatmentRoomLimit { get; private set; }
-
-    public OpeningHours OpeningHours { get; private set; }
 
     public Address Address { get; private set; }
 
-    /// <summary>
-    /// Creates a new instance of the Clinic class with the specified name, treatment room limit, and opening hours.
-    /// </summary>
-    /// <param name="name">The name of the clinic. Cannot be null or empty.</param>
-    /// <param name="treatmentRoomLimit">The maximum number of treatment rooms available in the clinic. Must be greater than zero.</param>
-    /// <param name="openingHours">The opening hours for the clinic. Specifies when the clinic is available for appointments.</param>
-    /// <returns>A Clinic instance initialized with the provided name, treatment room limit, and opening hours.</returns>
-    public static Clinic Create(string name, int treatmentRoomLimit, OpeningHours openingHours, Address address)
+    private readonly List<OpeningHour> _openingHours = new();
+    public IReadOnlyCollection<OpeningHour> OpeningHours => _openingHours.AsReadOnly();
+
+
+    public static Clinic Create(string name, int treatmentRoomLimit, List<OpeningHourInput> openingHoursInput, Address address)
     {
+        List<OpeningHour> openingHours = new List<OpeningHour>();
+        
+        foreach (var openingHour in openingHoursInput)
+        {
+            var oh = CreateOpeningHour(openingHour.Weekday, openingHour.Open, openingHour.Close, openingHour.IsClosed);
+
+            if (openingHours.Any(x => x.Weekday == openingHour.Weekday) == true)
+                throw new DomainException("Opening hours can't have 2 of the same day");
+
+            openingHours.Add(oh);
+        }
+
+        if (openingHours.Count != 7)
+            throw new DomainException("Clinic must have opening hour for each day of the week");
+
         var clinic = new Clinic(name, treatmentRoomLimit, openingHours, address);
 
         return clinic;
     }
 
-    /// <summary>
-    /// Updates the opening hours for the current instance.
-    /// </summary>
-    /// <param name="newOpeningHours">The new opening hours to apply. Must specify a valid opening time.</param>
-    public void ChangeOpeningHours(OpeningHours newOpeningHours)
+    public static OpeningHour CreateOpeningHour(Weekdays weekdays, TimeOnly? openingTime, TimeOnly? closeingTime, bool isClosed)
     {
-        EnsureValidTime(newOpeningHours.Open);
-
-        OpeningHours = newOpeningHours;
+        return new OpeningHour(weekdays, openingTime, closeingTime, isClosed);
     }
+
+
+
 
     public void ChangeAddress(Address newAddress)
     {
@@ -60,19 +67,19 @@ public class Clinic : AggregateRoot
         TreatmentRoomLimit = newTreatmentRoomLimit;
     }
 
+   
 
-    private Clinic(string name, int treatmentRoomLimit, OpeningHours openingHours, Address address)
+
+    private Clinic(string name, int treatmentRoomLimit, List<OpeningHour> openingHours, Address address)
     {
         if (string.IsNullOrEmpty(name))
             throw new DomainException("Clinic must have a name");
         EnsureValidTreatmentRoomLimit(treatmentRoomLimit);
 
-        EnsureValidTime(openingHours.Open);
-
         Id = Guid.NewGuid();
         Name = name;
         TreatmentRoomLimit = treatmentRoomLimit;
-        OpeningHours = openingHours;
+        _openingHours = openingHours;
         Address = address;
     }
 
