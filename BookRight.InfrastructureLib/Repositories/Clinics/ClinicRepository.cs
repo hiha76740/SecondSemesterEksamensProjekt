@@ -15,6 +15,7 @@ public class ClinicRepository(BookRightDbContext db) : IClinicRepository
     async Task<Clinic?> IClinicRepository.GetByIdAsync(Guid id)
     {
         return await db.Clinics
+            .Include(c => c.OpeningHours)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
