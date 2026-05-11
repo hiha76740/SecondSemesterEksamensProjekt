@@ -1,5 +1,6 @@
 ﻿using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Clinics;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
 
@@ -7,11 +8,54 @@ namespace BookRight.DomainLib.Tests.Services;
 
 public class BookingCapasityServiceTests
 {
-    /*
+
+    private static List<OpeningHourInput> OpeningHours = new()
+    {
+        new OpeningHourInput(
+                Weekdays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Friday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                Weekdays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
     private static int ClinicRoomLimit => 2;
-    private static DateTime OpenHour => new DateTime(2027, 05, 5, 8, 0, 0);
-    private static DateTime CloseHour => OpenHour.AddHours(8);
-    private static Clinic Clinic => Clinic.Create("TestKlinik", ClinicRoomLimit, new OpeningHours(OpenHour, CloseHour),new Address("Testvej 1","1234","FantasiBy"));
+    private static Clinic Clinic => Clinic.Create("TestKlinik", ClinicRoomLimit, OpeningHours, new Address("Testvej 1", "1234", "FantasiBy"));
 
     private static Booking CreateWithoutOverlap(DateTime from, DateTime to)
     {
@@ -84,5 +128,4 @@ public class BookingCapasityServiceTests
         // Assert
         Assert.False(result);
     }
-    */
 }
