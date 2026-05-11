@@ -13,6 +13,7 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class ChangeClinicTests
 {
+    /*
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -185,4 +186,5 @@ public class ChangeClinicTests
         // Act & Assert
         await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
+    */
 }

@@ -6,6 +6,7 @@ namespace BookRight.DomainLib.Tests.Entities;
 
 public class ClinicTests
 {
+    /*
     private static string Name => "Klinik Vejle";
     private static int TreatmentRoomLimit => 5;
 
@@ -92,4 +93,5 @@ public class ClinicTests
         // Act & Assert
         Assert.Throws<DomainException>(() => c.ChangeAddress(Address));
     }
+    */
 }

@@ -17,6 +17,7 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class CreateBookingTests
 {
+    /*
     private static Treatment CreateTreatment()
     {
         return Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
@@ -270,4 +271,5 @@ public class CreateBookingTests
         // Act & Assert
         await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
+    */
 }

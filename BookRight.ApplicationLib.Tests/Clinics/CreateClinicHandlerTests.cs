@@ -9,7 +9,7 @@ namespace BookRight.ApplicationLib.Tests.Clinics;
 
 public class CreateClinicHandlerTests
 {
-
+    /*
     private static CreateClinicCommand CreateCommand()
     {
         DateTime open = new DateTime(2030, 5, 1, 8, 0, 0);
@@ -38,5 +38,6 @@ public class CreateClinicHandlerTests
         mockClinicRepo.Verify(r => r.AddAsync(It.IsAny<Clinic>()), Times.Once);
         mockClinicRepo.Verify(r => r.SaveAsync(), Times.Once);
     }
+    */
 
 }

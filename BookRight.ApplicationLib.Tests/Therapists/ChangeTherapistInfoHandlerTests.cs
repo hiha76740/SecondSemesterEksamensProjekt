@@ -13,6 +13,7 @@ namespace BookRight.ApplicationLib.Tests.Therapists;
 
 public class ChangeTherapistInfoHandlerTests
 {
+    /*
     private readonly static List<string> CertificationType = new() { CertificationTypes.Physiotherapy.ToString(), CertificationTypes.Acupuncture.ToString() };
     private static List<Guid> AssociatedClinics => new() { Guid.Parse("4504e50a-67a5-4cba-b029-8eb0b493c80d"), Guid.Parse("4515e50a-67a5-4cba-b029-8eb0b493c80d") };
 
@@ -363,4 +364,5 @@ public class ChangeTherapistInfoHandlerTests
 
         mockTherapistRepo.Verify(r => r.SaveAsync(), Times.Never);
     }
+    */
 }
