@@ -1,28 +1,29 @@
 ﻿using BookRight.DomainLib.Enums;
+using System.Collections.Immutable;
 
 namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
 public class CampaignDiscountStrategy : IDiscountStrategy
 {
-    private readonly DateTime _campainStart;
-    private readonly DateTime _campainEnd;
-    private readonly decimal _discountProcentage;
-
-    public CampaignDiscountStrategy(decimal discountProcentage, DateTime campainStart, DateTime campainEnd)
-    {
-        _campainStart = campainStart;
-        _campainEnd = campainEnd;
-        _discountProcentage = discountProcentage;
-    }
-
     public DiscountTypes discountTypes => DiscountTypes.Campaign;
 
     public PriceCalculatorResult CalculatePrice(PriceCalculatorInput input)
     {
         decimal price = 0;
+        DateOnly bookingDate = DateOnly.FromDateTime(input.BookingDate);
 
-        if (input.BookingDate >= _campainStart && input.BookingDate <= _campainEnd)
-            price = input.NormalPrice * (1 - _discountProcentage / 100);
+        var bestCampaign = input.ActiveCampaigns
+            .Where(c => 
+            bookingDate >= c.CampaignPeriod.From && 
+            bookingDate <= c.CampaignPeriod.To &&
+            c.AssignedTreatments.Any(
+                at => at.Equals(
+                    input.Treatments.Select(t => t.Id))))
+            .OrderByDescending(c => c.DiscountProcentage)
+            .FirstOrDefault();
+
+        if (bestCampaign != null)
+            price = input.NormalPrice * (1 - bestCampaign.DiscountProcentage / 100);
 
         return new PriceCalculatorResult(input.NormalPrice, price, discountTypes);
     }
