@@ -15,6 +15,9 @@ builder.Services.AddDatabaseDI(builder.Configuration);
 // Repositories (Use Case-interfaces → Infrastructure-implementeringer)
 
 // Handlers (Facade-interfaces → Use Case-implementeringer)
+builder.Services.AddHandlerDI();
+
+// Discount strategies
 builder.Services.AddDiscountStrategyDI();
 
 // Queries (Facade-interfaces → Infrastructure-implementeringer)
