@@ -253,7 +253,7 @@ public class ChangeTherapistInfoHandlerTests
             {
                 CertificationTypes.Physiotherapy.ToString(),
                 CertificationTypes.Acupuncture.ToString(),
-                CertificationTypes.Message.ToString()
+                CertificationTypes.Massage.ToString()
             });
 
         var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;

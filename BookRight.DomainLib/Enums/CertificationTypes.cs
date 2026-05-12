@@ -5,7 +5,7 @@ public enum CertificationTypes
     Acupuncture,
     Dietary,
     Physiotherapy,
-    Message,
+    Massage,
     Rehabilitation,
     TeamTraining
 }

@@ -19,8 +19,8 @@ internal class TreatmentConfiguration : IEntityTypeConfiguration<Treatment>
             new { Id = Guid.Parse("2f1196bb-8d78-444c-bcdb-992806905c6e"), Name = "Physiotherapy", Price = 395m, Duration = TimeSpan.FromMinutes(30), CertificationRequired = CertificationTypes.Physiotherapy, MaxParticipants = 1 },
             new { Id = Guid.Parse("53bb0fec-b7ee-45c7-ae0e-0db7f508658d"), Name = "Physiotherapy", Price = 589m, Duration = TimeSpan.FromMinutes(45), CertificationRequired = CertificationTypes.Physiotherapy, MaxParticipants = 1 },
             new { Id = Guid.Parse("4ced2638-f883-42fa-ad82-24902b3b1ba4"), Name = "Physiotherapy", Price = 745m, Duration = TimeSpan.FromMinutes(60), CertificationRequired = CertificationTypes.Physiotherapy, MaxParticipants = 1 },
-            new { Id = Guid.Parse("b83d128e-f408-40f8-b4ad-25c31250cf2b"), Name = "Sports Massage", Price = 350m, Duration = TimeSpan.FromMinutes(30), CertificationRequired = CertificationTypes.Message, MaxParticipants = 1 },
-            new { Id = Guid.Parse("710cfebd-245c-410d-b63f-9e066f77de39"), Name = "Sports Massage", Price = 699m, Duration = TimeSpan.FromMinutes(60), CertificationRequired = CertificationTypes.Message, MaxParticipants = 1 },
+            new { Id = Guid.Parse("b83d128e-f408-40f8-b4ad-25c31250cf2b"), Name = "Sports Massage", Price = 350m, Duration = TimeSpan.FromMinutes(30), CertificationRequired = CertificationTypes.Massage, MaxParticipants = 1 },
+            new { Id = Guid.Parse("710cfebd-245c-410d-b63f-9e066f77de39"), Name = "Sports Massage", Price = 699m, Duration = TimeSpan.FromMinutes(60), CertificationRequired = CertificationTypes.Massage, MaxParticipants = 1 },
             new { Id = Guid.Parse("4401a516-76ba-497f-beba-aee749850ddd"), Name = "Team Training Rehabilitation", Price = 150m, Duration = TimeSpan.FromMinutes(60), CertificationRequired = CertificationTypes.Rehabilitation, MaxParticipants = 6 }
             );
     }
