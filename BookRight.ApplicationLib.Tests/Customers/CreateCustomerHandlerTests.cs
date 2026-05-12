@@ -17,7 +17,7 @@ public class CreateCustomerHandlerTests
         => new CreateCustomerCommand(
             "Anne",
             "Andersen",
-            new DateTime(1989, 2, 12),
+            new DateOnly(1989, 2, 12),
             "Milk-allergy",
             "Test Allé 28",
             "4321",

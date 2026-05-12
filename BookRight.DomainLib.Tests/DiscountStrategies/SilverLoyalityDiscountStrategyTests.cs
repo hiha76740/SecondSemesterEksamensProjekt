@@ -10,7 +10,7 @@ public class SilverLoyalityDiscountStrategyTests
 {
     private static decimal Price => 500m;
     private static int NumberOfBirthdayDiscountUsed => 0;
-    private static DateTime CustomerBirthdate => new DateTime(1990, 5, 5);
+    private static DateOnly CustomerBirthdate => new DateOnly(1990, 5, 5);
     private static DateTime BookingDate => new DateTime(2026, 6, 4);
     private static DiscountTypes DiscountTypes => DiscountTypes.LoyaltySilver;
     private static SilverLoyalityDiscountStrategy Strategy => new();

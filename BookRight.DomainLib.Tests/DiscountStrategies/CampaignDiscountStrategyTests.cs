@@ -9,7 +9,7 @@ namespace BookRight.DomainLib.Tests.DiscountStrategies;
 
 public class CampaignDiscountStrategyTests
 {
-    private static DateTime CustomerBirthdate => new DateTime(1990, 5, 5);
+    private static DateOnly CustomerBirthdate => new DateOnly(1990, 5, 5);
     private static DateTime BookingDate => DateTime.Today.AddDays(3);
     private static decimal Price => 30000;
     private static decimal CustomerBookingLast12Months => 0;

@@ -10,7 +10,7 @@ namespace BookRight.DomainLib.Tests.DiscountStrategies;
 public class BirthdateDiscountStrategyTests
 {
     private static decimal Price => 500m;
-    private static DateTime CustomerBirthdate => new DateTime(1990, 6, 5);
+    private static DateOnly CustomerBirthdate => new DateOnly(1990, 6, 5);
     private static decimal CustomerTotalPast12Months => 0;
 
     private static DiscountTypes DiscountTypes => DiscountTypes.BirthdayMonth;
