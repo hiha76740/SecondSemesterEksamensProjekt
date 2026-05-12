@@ -11,6 +11,7 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
     {
         return await db.Customers
             .AsNoTracking()
+            .Where(c => c.Id == Id)
             .Select(c => new CustomerDTO(
                 c.Id,
                 c.Firstname,
