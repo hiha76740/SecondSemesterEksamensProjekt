@@ -4,7 +4,7 @@ public record CustomerDTO(
     Guid CustomerId,
     string Firstname,
     string Lastname,
-    DateTime Birthdate,
+    DateOnly Birthdate,
     string Note,
     string Street,
     string PostalCode,
