@@ -10,43 +10,43 @@ public class ClinicTests
     private readonly static List<OpeningHourInput> OpeningHours = new()
     {
         new OpeningHourInput(
-                Weekdays.Monday,
+                WeekDays.Monday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Tuesday,
+                WeekDays.Tuesday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Wednesday,
+                WeekDays.Wednesday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Thursday,
+                WeekDays.Thursday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Friday,
+                WeekDays.Friday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Saturday,
+                WeekDays.Saturday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Sunday,
+                WeekDays.Sunday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false)
@@ -56,43 +56,43 @@ public class ClinicTests
     private readonly static List<OpeningHourInput> OpeningHoursChanged = new()
     {
          new OpeningHourInput(
-                Weekdays.Monday,
+                WeekDays.Monday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Tuesday,
+                WeekDays.Tuesday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Wednesday,
+                WeekDays.Wednesday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Thursday,
+                WeekDays.Thursday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Friday,
+                WeekDays.Friday,
                 null,
                 null,
                 true),
 
         new OpeningHourInput(
-                Weekdays.Saturday,
+                WeekDays.Saturday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Sunday,
+                WeekDays.Sunday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false)
@@ -161,11 +161,11 @@ public class ClinicTests
     {
         // Arrange
         var c = CreateWithValidData();
-        var openingHour = c.OpeningHours.Where(oh => oh.Weekday == Weekdays.Friday).FirstOrDefault();
+        var openingHour = c.OpeningHours.Where(oh => oh.WeekDay == WeekDays.Friday).FirstOrDefault();
         var expected = true;
 
 
-        var input = new OpeningHourInput(Weekdays.Friday, null, null, true);
+        var input = new OpeningHourInput(WeekDays.Friday, null, null, true);
 
         // Act
         c.ChangeOpeningHour(openingHour.Id,input);

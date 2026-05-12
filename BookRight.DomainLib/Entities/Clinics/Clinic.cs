@@ -28,9 +28,9 @@ public class Clinic : AggregateRoot
         
         foreach (var openingHour in openingHoursInput)
         {
-            var oh = CreateOpeningHour(openingHour.Weekday, openingHour.Open, openingHour.Close, openingHour.IsClosed);
+            var oh = CreateOpeningHour(openingHour.WeekDay, openingHour.Open, openingHour.Close, openingHour.IsClosed);
 
-            if (openingHours.Any(x => x.Weekday == openingHour.Weekday) == true)
+            if (openingHours.Any(x => x.WeekDay == openingHour.WeekDay) == true)
                 throw new DomainException("Opening hours can't have 2 of the same day");
 
             openingHours.Add(oh);
@@ -44,9 +44,9 @@ public class Clinic : AggregateRoot
         return clinic;
     }
 
-    public static OpeningHour CreateOpeningHour(Weekdays weekdays, TimeOnly? openingTime, TimeOnly? closingTime, bool isClosed)
+    public static OpeningHour CreateOpeningHour(WeekDays weekDays, TimeOnly? openingTime, TimeOnly? closingTime, bool isClosed)
     {
-        return new OpeningHour(weekdays, openingTime, closingTime, isClosed);
+        return new OpeningHour(weekDays, openingTime, closingTime, isClosed);
     }
 
 

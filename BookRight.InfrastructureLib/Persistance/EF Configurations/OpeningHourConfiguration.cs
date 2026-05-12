@@ -8,7 +8,7 @@ internal class OpeningHourConfiguration : IEntityTypeConfiguration<OpeningHour>
 {
     public void Configure(EntityTypeBuilder<OpeningHour> builder)
     {
-        builder.Property(oh => oh.Weekday)
+        builder.Property(oh => oh.WeekDay)
             .HasConversion<string>();
     }
 }
