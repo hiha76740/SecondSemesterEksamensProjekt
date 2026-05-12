@@ -11,12 +11,15 @@ public class CreateCampaignHandler(ICampaignRepository campaignRepository, ITrea
 {
     async Task ICreateCampaignHandler.Handle(CreateCampaignCommand command)
     {
-        _ = await treatmentRepository.GetByIdAsync(command.TreatmentId)
-           ?? throw new NotFoundException("Treatment not found");
+        foreach (var treatmentId in command.AssignedTreatments)
+        {
+            _ = await treatmentRepository.GetByIdAsync(treatmentId)
+           ?? throw new NotFoundException($"Treatment with id {treatmentId} not found");
+        }
 
         var campaignPeriod = new CampaignPeriod(command.StartDate, command.EndDate);
 
-        var campaign = Campaign.Create(command.Name, command.DiscountProcentage, campaignPeriod, command.TreatmentId);
+        var campaign = Campaign.Create(command.Name, command.DiscountProcentage, campaignPeriod, command.AssignedTreatments);
 
         await campaignRepository.AddAsync(campaign);
         await campaignRepository.SaveAsync();
