@@ -4,11 +4,11 @@ namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
 public class SilverLoyalityDiscountStrategy : IDiscountStrategy
 {
-    private readonly decimal _discountProcentage;
+    private readonly decimal _discountPercentage;
 
     public SilverLoyalityDiscountStrategy()
     {
-        _discountProcentage = 10;
+        _discountPercentage = 10;
     }
 
     public DiscountTypes DiscountTypes => DiscountTypes.LoyaltySilver;
@@ -21,7 +21,7 @@ public class SilverLoyalityDiscountStrategy : IDiscountStrategy
 
         if (input.CustomerBookingsLast12Months >= 10001 && input.CustomerBookingsLast12Months <= 25000)
         {
-            price = input.NormalPrice * (1 - _discountProcentage / 100);
+            price = input.NormalPrice * (1 - _discountPercentage / 100);
             IsApplicable = true;
         }
             

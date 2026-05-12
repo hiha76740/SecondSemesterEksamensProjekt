@@ -21,12 +21,12 @@ public class CampaignDiscountStrategy : IDiscountStrategy
             bookingDate <= c.CampaignPeriod.To &&
             c.AssignedTreatments.Any(
                 at => treatmentIds.Contains(at)))
-            .OrderByDescending(c => c.DiscountProcentage)
+            .OrderByDescending(c => c.DiscountPercentage)
             .FirstOrDefault();
 
         if (bestCampaign != null)
         {
-            price = input.NormalPrice * (1 - bestCampaign.DiscountProcentage / 100);
+            price = input.NormalPrice * (1 - bestCampaign.DiscountPercentage / 100);
             IsApplicable = true;
         }
 
