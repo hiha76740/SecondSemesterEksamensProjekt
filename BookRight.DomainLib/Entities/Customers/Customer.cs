@@ -7,7 +7,7 @@ public class Customer : AggregateRoot
 {
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
-    public DateOnly Birthdate { get; init; }
+    public DateOnly BirthDate { get; init; }
     public string Note { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
@@ -29,13 +29,13 @@ public class Customer : AggregateRoot
         EnsureValidLastName(lastName);
 
         if (birthDate > DateOnly.FromDateTime(DateTime.Today))
-            throw new DomainException("Birthdate cannot be in future");
+            throw new DomainException("Birth Date cannot be in future");
 
 
         Id = Guid.NewGuid();
         FirstName = firstName;
         LastName = lastName;
-        Birthdate = birthDate;
+        BirthDate = birthDate;
         Note = note;
         Address = address;
         Email = email;

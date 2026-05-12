@@ -8,7 +8,7 @@ public class CustomerTests
 {
     private static string FirstName => "Poul";
     private static string LastName => "Pedersen";
-    private static DateOnly Birthdate => new DateOnly(1965, 6, 18);
+    private static DateOnly BirthDate => new DateOnly(1965, 6, 18);
     private static string Note => "Peanutbutter-allergy";
     private static Address Address => new Address("Test Avenue 21", "1234", "Testville");
     private static Email Email => new Email("PoulP@testmail.com");
@@ -25,7 +25,7 @@ public class CustomerTests
         => Customer.Create(
             firstName ?? FirstName,
             lastName ?? LastName,
-            birthDate ?? Birthdate,
+            birthDate ?? BirthDate,
             address ?? Address,
             email ?? Email,
             phoneNumber ?? PhoneNumber,
@@ -58,13 +58,13 @@ public class CustomerTests
     }
 
     [Fact]
-    public void Create_WithInvalidBirthdate_ThrowDomainException()
+    public void Create_WithInvalidBirthDate_ThrowDomainException()
     {
         //Arrange
-        DateOnly birthdate = new DateOnly(2028, 08, 14);
+        DateOnly birthDate = new DateOnly(2028, 08, 14);
 
         //Act & Assert
-        Assert.Throws<DomainException>(() => CreateCustomerWithValidData(birthDate: birthdate));
+        Assert.Throws<DomainException>(() => CreateCustomerWithValidData(birthDate: birthDate));
     }
 
 

@@ -4,7 +4,7 @@
 public record CreateCustomerCommand(
     string FirstName,
     string LastName,
-    DateOnly Birthdate,
+    DateOnly BirthDate,
     string Note,
     string Street,
     string PostalCode,

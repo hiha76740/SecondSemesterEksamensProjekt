@@ -2,12 +2,12 @@
 
 namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
-public class BirthdateDiscountStrategy : IDiscountStrategy
+public class BirthDateDiscountStrategy : IDiscountStrategy
 {
     private readonly decimal _discountPercentage;
     private readonly int _maxUsePerYear;
 
-    public BirthdateDiscountStrategy()
+    public BirthDateDiscountStrategy()
     {
         _discountPercentage = 25;
         _maxUsePerYear = 1;
@@ -21,7 +21,7 @@ public class BirthdateDiscountStrategy : IDiscountStrategy
         decimal price = input.NormalPrice;
         bool IsApplicable = false;
 
-        if (input.BookingDate.Month == input.CustomerBirthdate.Month &&
+        if (input.BookingDate.Month == input.CustomerBirthDate.Month &&
             input.NumberOfBirthdayDiscountUsed < _maxUsePerYear)
         {
             price = input.NormalPrice * (1 - _discountPercentage / 100);

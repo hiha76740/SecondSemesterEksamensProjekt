@@ -10,7 +10,7 @@ public class GoldLoyalityDiscountStrategyTests
 {
     private static decimal Price => 500m;
     private static int NumberOfBirthdayDiscountUsed => 0;
-    private static DateOnly CustomerBirthdate => new DateOnly(1990, 5, 5);
+    private static DateOnly CustomerBirthDate => new DateOnly(1990, 5, 5);
     private static DateTime BookingDate => new DateTime(2026, 6, 4);
     private static DiscountTypes DiscountTypes => DiscountTypes.LoyaltyGold;
     private static GoldLoyalityDiscountStrategy Strategy => new();
@@ -31,7 +31,7 @@ public class GoldLoyalityDiscountStrategyTests
 
         var request = new PriceCalculatorInput(Price,
             BookingDate, 
-            CustomerBirthdate, 
+            CustomerBirthDate, 
             CustomerTotalPast12Months, 
             NumberOfBirthdayDiscountUsed,
             new List<Treatment>() { Treatment },
@@ -52,7 +52,7 @@ public class GoldLoyalityDiscountStrategyTests
     public void Create_GivenDataOutOfRange_ShallReturn0(decimal CustomerTotalPast12Months)
     {
         // Arrange
-        var request = new PriceCalculatorInput(Price, BookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
+        var request = new PriceCalculatorInput(Price, BookingDate, CustomerBirthDate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
         var expected = new PriceCalculatorResult(Price, Price, DiscountTypes,false);
 
         // Act
