@@ -91,20 +91,12 @@ public class Clinic : AggregateRoot
         Address = address;
     }
 
-    /// <summary>
-    /// Validates that the specified opening time is in the future.
-    /// </summary>
-    /// <param name="openingTime">The date and time to validate. Must represent a future point in time.</param>
-    /// <exception cref="DomainException">Thrown if openingTime is earlier than the current date and time.</exception>
-    private static void EnsureValidTime(DateTime openingTime)
-    {
-        if (openingTime < DateTime.UtcNow)
-            throw new DomainException("Opening time must be in the future");
-    }
-
     private static void EnsureValidTreatmentRoomLimit(int treatmentRoomLimit)
     {
         if (treatmentRoomLimit < 1)
             throw new DomainException("Clinic must have atleast 1 treatment room");
     }
+
+    // EF Constructor
+    private Clinic() { }
 }

@@ -196,4 +196,7 @@ public class Therapist : AggregateRoot
     }
 
 
+    // EF Constructor
+    private Therapist() { }
+
 }

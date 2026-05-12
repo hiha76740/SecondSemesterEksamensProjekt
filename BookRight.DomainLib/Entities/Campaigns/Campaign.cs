@@ -47,4 +47,7 @@ public class Campaign : AggregateRoot
         AssignedTreatments = assignedTreatments;
         Status = CampaignStatus.Active;
     }
+
+    // EF constructor
+    private Campaign() { }
 }

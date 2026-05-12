@@ -38,4 +38,7 @@ public class OpeningHour: Entity
             IsClosed = isClosed;
         }
     }
+
+    // EF Constructor
+    private OpeningHour() { }
 }
