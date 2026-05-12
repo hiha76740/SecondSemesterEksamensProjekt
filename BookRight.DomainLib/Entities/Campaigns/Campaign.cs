@@ -40,7 +40,7 @@ public class Campaign : AggregateRoot
         if (discountProcentage <= 0)
             throw new DomainException("Discount procentage can not be 0 or less");
 
-
+        Id = Guid.NewGuid();
         Name = name;
         DiscountProcentage = discountProcentage;
         CampaignPeriod = campaignPeriod;

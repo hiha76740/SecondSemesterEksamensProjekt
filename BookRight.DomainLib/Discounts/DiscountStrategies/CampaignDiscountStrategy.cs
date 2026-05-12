@@ -12,13 +12,14 @@ public class CampaignDiscountStrategy : IDiscountStrategy
         decimal price = 0;
         DateOnly bookingDate = DateOnly.FromDateTime(input.BookingDate);
 
+        var treatmentIds = input.Treatments.Select(t => t.Id).ToList();
+
         var bestCampaign = input.ActiveCampaigns
-            .Where(c => 
-            bookingDate >= c.CampaignPeriod.From && 
+            .Where(c =>
+            bookingDate >= c.CampaignPeriod.From &&
             bookingDate <= c.CampaignPeriod.To &&
             c.AssignedTreatments.Any(
-                at => at.Equals(
-                    input.Treatments.Select(t => t.Id))))
+                at => treatmentIds.Contains(at)))
             .OrderByDescending(c => c.DiscountProcentage)
             .FirstOrDefault();
 
