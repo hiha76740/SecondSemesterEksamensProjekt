@@ -8,6 +8,16 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
     public void Configure(EntityTypeBuilder<Customer> builder)
     {
-        throw new NotImplementedException();
+        builder.ComplexProperty(
+            c => c.Address,
+            a => a.ToJson());
+
+        builder.ComplexProperty(
+            c => c.Email,
+            e => e.ToJson());
+
+        builder.ComplexProperty(
+            c => c.PhoneNumber,
+            p => p.ToJson());
     }
 }
