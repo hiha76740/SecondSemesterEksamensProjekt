@@ -40,7 +40,7 @@ public class ChangeTimeTests
         return Customer.Create(
             "Test",
             "Customer",
-            new DateTime(1995, 1, 1),
+            new DateOnly(1995, 1, 1),
             new Address("Testvej 1", "7100", "Vejle"),
             new Email("test@test.dk"),
             new PhoneNumber("12345678"));

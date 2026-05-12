@@ -19,7 +19,7 @@ public class ChangeCustomerInfoHandlerTests
         => Customer.Create(
     "Torben",
     "Svendsen",
-    new DateTime(1956, 7, 16),
+    new DateOnly(1956, 7, 16),
     new Address("Niels Bohrs Gade 43", "6534", "Testlev"),
     new Email("TorbenS@testing.com"),
     new PhoneNumber("96538562"),

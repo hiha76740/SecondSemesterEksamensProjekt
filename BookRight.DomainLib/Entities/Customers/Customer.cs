@@ -7,7 +7,7 @@ public class Customer : AggregateRoot
 {
     public string Firstname { get; private set; }
     public string Lastname { get; private set; }
-    public DateTime Birthdate { get; init; }
+    public DateOnly Birthdate { get; init; }
     public string Note { get; private set; }
     public Address Address { get; private set; }
     public Email Email { get; private set; }
@@ -18,7 +18,7 @@ public class Customer : AggregateRoot
     private Customer(
             string firstName,
             string lastName,
-            DateTime birthDate,
+            DateOnly birthDate,
             Address address,
             Email email,
             PhoneNumber phoneNumber,
@@ -28,14 +28,14 @@ public class Customer : AggregateRoot
         EnsureValidFirstname(firstName);
         EnsureValidLastname(lastName);
 
-        if (birthDate.Date > DateTime.Today)
+        if (birthDate > DateOnly.FromDateTime(DateTime.Today))
             throw new DomainException("Birthdate cannot be in future");
 
 
         Id = Guid.NewGuid();
         Firstname = firstName;
         Lastname = lastName;
-        Birthdate = birthDate.Date;
+        Birthdate = birthDate;
         Note = note;
         Address = address;
         Email = email;
@@ -46,7 +46,7 @@ public class Customer : AggregateRoot
     public static Customer Create(
             string firstName,
             string lastName,
-            DateTime birthDate,
+            DateOnly birthDate,
             Address address,
             Email email,
             PhoneNumber phoneNumber,
@@ -132,5 +132,8 @@ public class Customer : AggregateRoot
         if (string.IsNullOrWhiteSpace(lastName))
             throw new DomainException("Customer must have a lastname");
     }
+
+    // EF Constructor
+    private Customer() { }
 
 }
