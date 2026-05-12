@@ -16,6 +16,7 @@ public class BookRightDbContext : DbContext
     public DbSet<Therapist> Therapists { get; set; }
     public DbSet<Treatment> Treatments { get; set; }
     public DbSet<Campaign> Campaigns  { get; set; }
+    private DbSet<OpeningHour> OpeningHours { get; set; }
 
     public BookRightDbContext(DbContextOptions<BookRightDbContext> options) : base(options) { }
 

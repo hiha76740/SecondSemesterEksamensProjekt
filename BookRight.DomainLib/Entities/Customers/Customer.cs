@@ -12,7 +12,7 @@ public class Customer : AggregateRoot
     public Address Address { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
     public PhoneNumber PhoneNumber { get; private set; } = null!;
-    public Guid? PreferredTherapist { get; private set; }
+    public Guid? PreferredTherapistId { get; private set; }
 
 
     private Customer(
@@ -23,7 +23,7 @@ public class Customer : AggregateRoot
             Email email,
             PhoneNumber phoneNumber,
             string note,
-            Guid? preferredTherapist)
+            Guid? preferredTherapistId)
     {
         EnsureValidFirstName(firstName);
         EnsureValidLastName(lastName);
@@ -40,7 +40,7 @@ public class Customer : AggregateRoot
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
-        PreferredTherapist = preferredTherapist;
+        PreferredTherapistId = preferredTherapistId;
     }
 
     public static Customer Create(
@@ -110,15 +110,15 @@ public class Customer : AggregateRoot
         Note = note;
     }
 
-    public void ChangePreferredTherapist(Guid? newPreferredTherapist)
+    public void ChangePreferredTherapist(Guid? newPreferredTherapistId)
     {
-        if (newPreferredTherapist.HasValue)
+        if (newPreferredTherapistId.HasValue)
         {
-            if (PreferredTherapist == newPreferredTherapist.Value)
+            if (PreferredTherapistId == newPreferredTherapistId.Value)
                 throw new DomainException("New preferred therapist is the same as current therapist"); 
         }
 
-        PreferredTherapist = newPreferredTherapist;
+        PreferredTherapistId = newPreferredTherapistId;
     }
 
     private static void EnsureValidFirstName(string firstName)

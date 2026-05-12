@@ -253,7 +253,7 @@ public class CustomerTests
         c.ChangePreferredTherapist(expected);
 
         //Assert
-        Assert.Equal(expected, c.PreferredTherapist);
+        Assert.Equal(expected, c.PreferredTherapistId);
     }
 
     [Fact]

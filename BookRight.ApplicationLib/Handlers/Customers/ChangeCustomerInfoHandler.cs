@@ -16,11 +16,11 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
         var customer = await customerRepository.GetByIdAsync(command.CustomerId)
             ?? throw new NotFoundException("Customer could not be found");
 
-        if (command.PreferredTherapist.HasValue)
+        if (command.PreferredTherapistId.HasValue)
         {
-            Guid preferredTherapist = command.PreferredTherapist.Value;
+            Guid preferredTherapistId = command.PreferredTherapistId.Value;
 
-            _ = await therapistRepository.GetByIdAsync(preferredTherapist)
+            _ = await therapistRepository.GetByIdAsync(preferredTherapistId)
                 ?? throw new NotFoundException("Therapist could not be found");
         }
 
@@ -65,9 +65,9 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
             changesMade = true;
         }
 
-        if (customer.PreferredTherapist != command.PreferredTherapist)
+        if (customer.PreferredTherapistId != command.PreferredTherapistId)
         {
-            customer.ChangePreferredTherapist(command.PreferredTherapist);
+            customer.ChangePreferredTherapist(command.PreferredTherapistId);
             changesMade = true;
         }
 

@@ -13,10 +13,10 @@ public class CreateCustomerHandler(ICustomerRepository customerRepository, ITher
     async Task ICreateCustomerHandler.Handle(CreateCustomerCommand command)
     {
         
-        if (command.PreferredTherapist.HasValue == true)
+        if (command.PreferredTherapistId.HasValue == true)
         {
-            Guid preferredTherapist = command.PreferredTherapist.Value;
-            _ = await therapistRepository.GetByIdAsync(preferredTherapist)
+            Guid preferredTherapistId = command.PreferredTherapistId.Value;
+            _ = await therapistRepository.GetByIdAsync(preferredTherapistId)
                 ?? throw new NotFoundException("Therapist could not be found");
         }
 
@@ -24,7 +24,7 @@ public class CreateCustomerHandler(ICustomerRepository customerRepository, ITher
         var email = new Email(command.EmailAddress);
         var phoneNumber = new PhoneNumber(command.PhoneNumber);
 
-        var customer = Customer.Create(command.FirstName, command.LastName, command.BirthDate, address, email, phoneNumber, command.Note, command.PreferredTherapist);
+        var customer = Customer.Create(command.FirstName, command.LastName, command.BirthDate, address, email, phoneNumber, command.Note, command.PreferredTherapistId);
 
         await customerRepository.AddAsync(customer);
         await customerRepository.SaveAsync();
