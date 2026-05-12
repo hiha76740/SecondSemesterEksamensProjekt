@@ -14,27 +14,32 @@ namespace BookRight.ApplicationLib.Services
         private readonly IBookingRepository _bookingRepository;
         private readonly ICustomerRepository _CustomerRepository;
         private readonly ITreatmentRepository _treatmentRepository;
+        private readonly ICampaignRepository _campaignRepository;
 
         public PriceCalculatorService(
             IEnumerable<IDiscountStrategy> strategies,
             ICustomerRepository CustomerRepository,
             ITreatmentRepository treatmentRepository,
-            IBookingRepository bookingRepository)
+            IBookingRepository bookingRepository,
+            ICampaignRepository campaignRepository)
         {
             ArgumentNullException.ThrowIfNull(strategies);
             ArgumentNullException.ThrowIfNull(CustomerRepository);
             ArgumentNullException.ThrowIfNull(treatmentRepository);
             ArgumentNullException.ThrowIfNull(bookingRepository);
+            ArgumentNullException.ThrowIfNull(campaignRepository);
+
 
             _strategies = strategies;
             _CustomerRepository = CustomerRepository;
             _treatmentRepository = treatmentRepository;
             _bookingRepository = bookingRepository;
+            _campaignRepository = campaignRepository;
+
 
             if (_strategies.Any() == false)
                 throw new ArgumentException(
                     "There has to be atleast 1 strategy.", nameof(strategies));
-
         }
 
 
@@ -52,14 +57,18 @@ namespace BookRight.ApplicationLib.Services
             var treatment = await _treatmentRepository.GetByIdAsync(command.TreatmentId)
             ?? throw new NotFoundException("Treatment not found");
 
-            var numberOfBirthdayDiscountUsed = await _bookingRepository.GetNumberOfBirthdayDiscountThisYearById(command.CustomerId, command.BookingDate.Year);
+            var numberOfBirthdayDiscountUsed = await _bookingRepository.GetNumberOfBirthdayDiscountThisYearByIdAsync(command.CustomerId, command.BookingDate.Year);
+
+            var activeCampaigns = await _campaignRepository.GetActiveCampaignsAsync()
+                ?? throw new NotFoundException("No active campaigns found");
 
             var PriceCalculatorDTO = new PriceCalculatorInput(
                 treatment.Price,
                 command.BookingDate,
                 Customer.Birthdate,
                 CustomerHistorySum,
-                numberOfBirthdayDiscountUsed);
+                numberOfBirthdayDiscountUsed,
+                activeCampaigns);
 
             PriceCalculatorResult bestDiscount = new PriceCalculatorResult(treatment.Price, 0, DiscountTypes.None);
 
