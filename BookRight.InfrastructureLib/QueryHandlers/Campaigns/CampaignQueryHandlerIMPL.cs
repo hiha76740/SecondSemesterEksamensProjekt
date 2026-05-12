@@ -16,7 +16,7 @@ public class CampaignQueryHandlerIMPL(BookRightDbContext db) : ICampaignQueries
                 c.DiscountProcentage,
                 c.CampaignPeriod.From,
                 c.CampaignPeriod.To,
-                c.TreatmentId,
+                c.AssignedTreatments,
                 c.Status.ToString()))
             .ToListAsync();
     }
@@ -31,7 +31,7 @@ public class CampaignQueryHandlerIMPL(BookRightDbContext db) : ICampaignQueries
                 c.DiscountProcentage,
                 c.CampaignPeriod.From,
                 c.CampaignPeriod.To,
-                c.TreatmentId,
+                c.AssignedTreatments,
                 c.Status.ToString()
                 ))
             .FirstOrDefaultAsync();
