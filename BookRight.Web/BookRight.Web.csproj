@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookRight.ApplicationLib\BookRight.ApplicationLib.csproj" />
     <ProjectReference Include="..\BookRight.FacadeLib\BookRight.FacadeLib.csproj" />
     <ProjectReference Include="..\BookRight.InfrastructureLib\BookRight.InfrastructureLib.csproj" />
