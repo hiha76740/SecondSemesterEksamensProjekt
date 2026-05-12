@@ -13,6 +13,7 @@ builder.Services.AddDatabaseDI(builder.Configuration);
 // Domain (Domain Services
 
 // Repositories (Use Case-interfaces → Infrastructure-implementeringer)
+builder.Services.AddRepositoryDI();
 
 // Handlers (Facade-interfaces → Use Case-implementeringer)
 builder.Services.AddHandlerDI();
