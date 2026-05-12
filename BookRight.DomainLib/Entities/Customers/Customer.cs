@@ -12,7 +12,7 @@ public class Customer : AggregateRoot
     public Address Address { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
     public PhoneNumber PhoneNumber { get; private set; } = null!;
-    public Guid? PrefferedTherapist { get; private set; }
+    public Guid? PreferredTherapist { get; private set; }
 
 
     private Customer(
@@ -23,7 +23,7 @@ public class Customer : AggregateRoot
             Email email,
             PhoneNumber phoneNumber,
             string note,
-            Guid? prefferedTherapist)
+            Guid? preferredTherapist)
     {
         EnsureValidFirstname(firstName);
         EnsureValidLastname(lastName);
@@ -40,7 +40,7 @@ public class Customer : AggregateRoot
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
-        PrefferedTherapist = prefferedTherapist;
+        PreferredTherapist = preferredTherapist;
     }
 
     public static Customer Create(
@@ -51,9 +51,9 @@ public class Customer : AggregateRoot
             Email email,
             PhoneNumber phoneNumber,
             string note = "",
-            Guid? prefferedTherapistId = null)
+            Guid? PreferredTherapistId = null)
     {
-        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, prefferedTherapistId);
+        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, PreferredTherapistId);
         return customer;
     }
 
@@ -114,11 +114,11 @@ public class Customer : AggregateRoot
     {
         if (newPreferredTherapist.HasValue)
         {
-            if (PrefferedTherapist == newPreferredTherapist.Value)
+            if (PreferredTherapist == newPreferredTherapist.Value)
                 throw new DomainException("New preferred therapist is the same as current therapist"); 
         }
 
-        PrefferedTherapist = newPreferredTherapist;
+        PreferredTherapist = newPreferredTherapist;
     }
 
     private static void EnsureValidFirstname(string firstName)

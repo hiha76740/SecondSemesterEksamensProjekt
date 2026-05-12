@@ -44,9 +44,9 @@ public class Clinic : AggregateRoot
         return clinic;
     }
 
-    public static OpeningHour CreateOpeningHour(Weekdays weekdays, TimeOnly? openingTime, TimeOnly? closeingTime, bool isClosed)
+    public static OpeningHour CreateOpeningHour(Weekdays weekdays, TimeOnly? openingTime, TimeOnly? closingTime, bool isClosed)
     {
-        return new OpeningHour(weekdays, openingTime, closeingTime, isClosed);
+        return new OpeningHour(weekdays, openingTime, closingTime, isClosed);
     }
 
 

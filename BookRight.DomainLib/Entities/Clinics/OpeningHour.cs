@@ -6,7 +6,7 @@ public class OpeningHour: Entity
 {
     public Weekdays Weekday { get; init; }
     public TimeOnly? OpeningTime { get; private set; }
-    public TimeOnly? CloseingTime { get; private set; }
+    public TimeOnly? ClosingTime { get; private set; }
     public bool IsClosed { get; private set; }
 
 
@@ -28,13 +28,13 @@ public class OpeningHour: Entity
         if (isClosed == true)
         {
             OpeningTime = null;
-            CloseingTime = null;
+            ClosingTime = null;
             IsClosed = isClosed;
         }
         else
         {
             OpeningTime = openingTime;
-            CloseingTime = closingTime;
+            ClosingTime = closingTime;
             IsClosed = isClosed;
         }
     }

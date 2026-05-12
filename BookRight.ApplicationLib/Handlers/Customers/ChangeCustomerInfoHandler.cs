@@ -65,7 +65,7 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
             changesMade = true;
         }
 
-        if (customer.PrefferedTherapist != command.PreferredTherapist)
+        if (customer.PreferredTherapist != command.PreferredTherapist)
         {
             customer.ChangePreferredTherapist(command.PreferredTherapist);
             changesMade = true;

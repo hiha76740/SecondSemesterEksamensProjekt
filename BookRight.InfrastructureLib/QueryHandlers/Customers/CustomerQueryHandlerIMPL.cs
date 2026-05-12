@@ -23,7 +23,7 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
                 c.Address.City,
                 c.Email.EmailAddress,
                 c.PhoneNumber.Number,
-                c.PrefferedTherapist))
+                c.PreferredTherapist))
             .FirstOrDefaultAsync();
     }
 
@@ -42,7 +42,7 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
                 c.Address.City,
                 c.Email.EmailAddress,
                 c.PhoneNumber.Number,
-                c.PrefferedTherapist))
+                c.PreferredTherapist))
             .ToListAsync();
     }
 }

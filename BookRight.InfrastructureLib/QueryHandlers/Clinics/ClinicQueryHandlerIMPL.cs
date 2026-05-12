@@ -16,7 +16,7 @@ public class ClinicQueryHandlerIMPL(BookRightDbContext db) : IClinicQueries
             c.Name,
             c.TreatmentRoomLimit,
             c.OpeningHours
-                .Select(oh => new OpeningHourDTO(oh.Weekday.ToString(),oh.OpeningTime,oh.CloseingTime,oh.IsClosed)).ToList(),
+                .Select(oh => new OpeningHourDTO(oh.Weekday.ToString(),oh.OpeningTime,oh.ClosingTime,oh.IsClosed)).ToList(),
             c.Address.Street,
             c.Address.PostalCode,
             c.Address.City)).ToListAsync();
@@ -32,7 +32,7 @@ public class ClinicQueryHandlerIMPL(BookRightDbContext db) : IClinicQueries
                 c.Name,
                 c.TreatmentRoomLimit,
                 c.OpeningHours
-                .Select(oh => new OpeningHourDTO(oh.Weekday.ToString(), oh.OpeningTime, oh.CloseingTime, oh.IsClosed)).ToList(),
+                .Select(oh => new OpeningHourDTO(oh.Weekday.ToString(), oh.OpeningTime, oh.ClosingTime, oh.IsClosed)).ToList(),
                 c.Address.Street,
                 c.Address.PostalCode,
                 c.Address.City)).FirstOrDefaultAsync();

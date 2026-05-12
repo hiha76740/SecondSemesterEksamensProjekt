@@ -31,7 +31,7 @@ public class ChangeClinicInfoHandler(IClinicRepository clinicRepository) : IChan
             var changed = clinic.OpeningHours
                 .Any(x => x.Weekday == weekday &&
                 x.OpeningTime != oh.OpeningTime ||
-                x.CloseingTime != oh.ClosingTime);
+                x.ClosingTime != oh.ClosingTime);
 
 
             if (changed == true)

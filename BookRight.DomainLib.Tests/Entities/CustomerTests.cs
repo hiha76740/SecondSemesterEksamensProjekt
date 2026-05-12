@@ -238,7 +238,7 @@ public class CustomerTests
 
 
     // ---------------------------------------------------------
-    // 8. ChangePrefferedTherapist tests (Change Customer Preffered Therapist)
+    // 8. ChangePreferredTherapist tests (Change Customer Preffered Therapist)
     // ---------------------------------------------------------
 
     [Fact]
@@ -253,11 +253,11 @@ public class CustomerTests
         c.ChangePreferredTherapist(expected);
 
         //Assert
-        Assert.Equal(expected, c.PrefferedTherapist);
+        Assert.Equal(expected, c.PreferredTherapist);
     }
 
     [Fact]
-    public void ChangePrefferedTherapist_GivenSameId_CastDomainException()
+    public void ChangePreferredTherapist_GivenSameId_CastDomainException()
     {
         //Arrange
         var therapistId = Guid.NewGuid();
