@@ -12,7 +12,6 @@ namespace BookRight.DomainLib.Tests.DiscountStrategies
         private static int NumberOfBirthdayDiscountUsed => 0;
         private static DateTime CustomerBirthdate => new DateTime(1990, 5, 5);
         private static DateTime BookingDate => new DateTime(2026, 6, 4);
-        private static decimal DiscountProcentage => 15;
         private static DiscountTypes DiscountTypes => DiscountTypes.LoyaltyGold;
         private static GoldLoyalityDiscountStrategy Strategy => new();
         private static Treatment Treatment => Treatment.Create("test", 500, TimeSpan.FromMinutes(45), CertificationTypes.Acupuncture, 5);
