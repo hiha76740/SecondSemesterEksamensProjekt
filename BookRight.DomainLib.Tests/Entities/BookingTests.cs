@@ -43,6 +43,7 @@ public class BookingTests
             clinicId ?? ClinicId,
             price ?? Price,
             participantLimit ?? 1,
+            DiscountTypes.None,
             customerId);
     }
 

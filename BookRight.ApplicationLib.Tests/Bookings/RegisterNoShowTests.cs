@@ -1,6 +1,7 @@
 ﻿using BookRight.ApplicationLib.Handlers.Bookings;
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Booking.DTOs;
@@ -27,6 +28,7 @@ public class RegisterNoShowTests
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m,
             1,
+            DiscountTypes.None,
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"));
     }
 

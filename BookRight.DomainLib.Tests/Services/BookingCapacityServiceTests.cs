@@ -66,6 +66,7 @@ public class BookingCapacityServiceTests
             Guid.NewGuid(),
             500,
             1,
+            DiscountTypes.None,
             Guid.NewGuid());
     }
 
