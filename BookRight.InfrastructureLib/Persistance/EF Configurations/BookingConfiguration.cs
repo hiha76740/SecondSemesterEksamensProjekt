@@ -8,6 +8,14 @@ internal class BookingConfiguration : IEntityTypeConfiguration<Booking>
 {
     public void Configure(EntityTypeBuilder<Booking> builder)
     {
-        throw new NotImplementedException();
+        builder.Property(b => b.Status)
+           .HasConversion<string>();
+
+        builder.Property(b => b.DiscountTypeUsed)
+           .HasConversion<string>();
+
+        builder.ComplexProperty(
+            b => b.Time,
+            t => t.ToJson());
     }
 }
