@@ -5,8 +5,8 @@ namespace BookRight.DomainLib.Entities.Customers;
 
 public class Customer : AggregateRoot
 {
-    public string Firstname { get; private set; } = null!;
-    public string Lastname { get; private set; } = null!;
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
     public DateOnly Birthdate { get; init; }
     public string Note { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
@@ -25,16 +25,16 @@ public class Customer : AggregateRoot
             string note,
             Guid? preferredTherapist)
     {
-        EnsureValidFirstname(firstName);
-        EnsureValidLastname(lastName);
+        EnsureValidFirstName(firstName);
+        EnsureValidLastName(lastName);
 
         if (birthDate > DateOnly.FromDateTime(DateTime.Today))
             throw new DomainException("Birthdate cannot be in future");
 
 
         Id = Guid.NewGuid();
-        Firstname = firstName;
-        Lastname = lastName;
+        FirstName = firstName;
+        LastName = lastName;
         Birthdate = birthDate;
         Note = note;
         Address = address;
@@ -58,24 +58,24 @@ public class Customer : AggregateRoot
     }
 
 
-    public void ChangeFirstname(string newFirstname)
+    public void ChangeFirstName(string newFirstName)
     {
-        EnsureValidFirstname(newFirstname);
+        EnsureValidFirstName(newFirstName);
 
-        if (Firstname == newFirstname)
+        if (FirstName == newFirstName)
             throw new DomainException("New firstname is the same as current firstname");
 
-        Firstname = newFirstname;
+        FirstName = newFirstName;
     }
 
-    public void ChangeLastname(string newLastname)
+    public void ChangeLastName(string newLastname)
     {
-        EnsureValidLastname(newLastname);
+        EnsureValidLastName(newLastname);
 
-        if (Lastname == newLastname)
+        if (LastName == newLastname)
             throw new DomainException("New lastname is the same as current lastname");
 
-        Lastname = newLastname;
+        LastName = newLastname;
     }
 
 
@@ -121,13 +121,13 @@ public class Customer : AggregateRoot
         PreferredTherapist = newPreferredTherapist;
     }
 
-    private static void EnsureValidFirstname(string firstName)
+    private static void EnsureValidFirstName(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             throw new DomainException("Customer must have a firstname");
     }
 
-    private static void EnsureValidLastname(string lastName)
+    private static void EnsureValidLastName(string lastName)
     {
         if (string.IsNullOrWhiteSpace(lastName))
             throw new DomainException("Customer must have a lastname");

@@ -14,8 +14,8 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
             .Where(c => c.Id == Id)
             .Select(c => new CustomerDTO(
                 c.Id,
-                c.Firstname,
-                c.Lastname,
+                c.FirstName,
+                c.LastName,
                 c.Birthdate,
                 c.Note,
                 c.Address.Street,
@@ -33,8 +33,8 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
             .AsNoTracking()
             .Select(c => new CustomerDTO(
                 c.Id,
-                c.Firstname,
-                c.Lastname,
+                c.FirstName,
+                c.LastName,
                 c.Birthdate,
                 c.Note,
                 c.Address.Street,

@@ -2,8 +2,8 @@
 
 // === Request DTOs for Handlers ===
 public record CreateCustomerCommand(
-    string Firstname,
-    string Lastname,
+    string FirstName,
+    string LastName,
     DateOnly Birthdate,
     string Note,
     string Street,

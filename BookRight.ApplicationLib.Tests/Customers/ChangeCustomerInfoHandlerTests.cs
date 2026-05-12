@@ -59,10 +59,10 @@ public class ChangeCustomerInfoHandlerTests
     // ---------------------------------------------------------
 
     [Fact]
-    public async Task Handle_GivenCommandWithNewFirstname_CallsSave()
+    public async Task Handle_GivenCommandWithNewFirstName_CallsSave()
     {
         // Arrange
-        var newFirstname = "Thomas";
+        var newFirstName = "Thomas";
         var customer = CreateTestCustomerWithValidData();
 
         var mockCustomerRepo = new Mock<ICustomerRepository>();
@@ -72,7 +72,7 @@ public class ChangeCustomerInfoHandlerTests
             .ReturnsAsync(customer);
 
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, firstName: newFirstname);
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, firstName: newFirstName);
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
         // Act
@@ -83,10 +83,10 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
-    public async Task Handle_GivenValidCommandNewLastname_CallsSave()
+    public async Task Handle_GivenValidCommandNewLastName_CallsSave()
     {
         // Arrange
-        var newLastname = "Jensen";
+        var newLastName = "Jensen";
         var customer = CreateTestCustomerWithValidData();
 
         var mockCustomerRepo = new Mock<ICustomerRepository>();
@@ -95,7 +95,7 @@ public class ChangeCustomerInfoHandlerTests
         mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, lastName: newLastname);
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, lastName: newLastName);
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
 

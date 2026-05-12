@@ -3,7 +3,7 @@
 public record CustomerDTO(
     Guid CustomerId,
     string Firstname,
-    string Lastname,
+    string LastName,
     DateOnly Birthdate,
     string Note,
     string Street,

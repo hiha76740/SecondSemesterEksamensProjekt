@@ -29,15 +29,15 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
         var phoneNumber = new PhoneNumber(command.PhoneNumber);
 
 
-        if (customer.Firstname != command.Firstname)
+        if (customer.FirstName != command.FirstName)
         {
-            customer.ChangeFirstname(command.Firstname);
+            customer.ChangeFirstName(command.FirstName);
             changesMade = true;
         }
 
-        if (customer.Lastname != command.Lastname)
+        if (customer.LastName != command.LastName)
         {
-            customer.ChangeLastname(command.Lastname);
+            customer.ChangeLastName(command.LastName);
             changesMade = true;
         }
 

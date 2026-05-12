@@ -4,8 +4,8 @@ namespace BookRight.FacadeLib.Commands.Customers.DTOs;
 // === Request DTO for ChangeCustomerInfoHandler ===
 public record ChangeCustomerInfoCommand(
     Guid CustomerId,
-    string Firstname,
-    string Lastname,
+    string FirstName,
+    string LastName,
     DateTime Birthdate,
     string Note,
     string Street,
