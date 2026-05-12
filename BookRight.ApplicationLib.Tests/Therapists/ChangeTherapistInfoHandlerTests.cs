@@ -16,43 +16,43 @@ public class ChangeTherapistInfoHandlerTests
     private static List<OpeningHourInput> OpeningHours = new()
     {
         new OpeningHourInput(
-                Weekdays.Monday,
+                WeekDays.Monday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Tuesday,
+                WeekDays.Tuesday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Wednesday,
+                WeekDays.Wednesday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Thursday,
+                WeekDays.Thursday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Friday,
+                WeekDays.Friday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Saturday,
+                WeekDays.Saturday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false),
 
         new OpeningHourInput(
-                Weekdays.Sunday,
+                WeekDays.Sunday,
                 new TimeOnly(8, 0, 0),
                 new TimeOnly(16, 0, 0),
                 false)
@@ -253,7 +253,7 @@ public class ChangeTherapistInfoHandlerTests
             {
                 CertificationTypes.Physiotherapy.ToString(),
                 CertificationTypes.Acupuncture.ToString(),
-                CertificationTypes.Message.ToString()
+                CertificationTypes.Massage.ToString()
             });
 
         var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;

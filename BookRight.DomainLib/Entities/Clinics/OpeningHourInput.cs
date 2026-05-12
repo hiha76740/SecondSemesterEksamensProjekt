@@ -2,4 +2,4 @@
 
 namespace BookRight.DomainLib.Entities.Clinics;
 
-public record OpeningHourInput(Weekdays Weekday, TimeOnly? Open, TimeOnly? Close, bool IsClosed);
+public record OpeningHourInput(WeekDays WeekDay, TimeOnly? Open, TimeOnly? Close, bool IsClosed);

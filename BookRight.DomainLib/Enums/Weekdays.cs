@@ -1,6 +1,6 @@
 ﻿namespace BookRight.DomainLib.Enums;
 
-public enum Weekdays
+public enum WeekDays
 {
     Monday = 1,
     Tuesday = 2,

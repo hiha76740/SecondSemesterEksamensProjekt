@@ -40,7 +40,7 @@ public class PriceCalculatorServiceTests
     { 
         new CampaignDiscountStrategy(), 
         new NoDiscountStrategy(), 
-        new BirthdateDiscountStrategy(),
+        new BirthDateDiscountStrategy(),
         new BronzeLoyalityDiscountStrategy(),
         new SilverLoyalityDiscountStrategy(), 
         new GoldLoyalityDiscountStrategy(),

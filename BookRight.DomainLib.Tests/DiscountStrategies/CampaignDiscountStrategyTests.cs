@@ -9,7 +9,7 @@ namespace BookRight.DomainLib.Tests.DiscountStrategies;
 
 public class CampaignDiscountStrategyTests
 {
-    private static DateOnly CustomerBirthdate => new DateOnly(1990, 5, 5);
+    private static DateOnly CustomerBirthDate => new DateOnly(1990, 5, 5);
     private static DateTime BookingDate => DateTime.Today.AddDays(3);
     private static decimal Price => 30000;
     private static decimal CustomerBookingLast12Months => 0;
@@ -55,7 +55,7 @@ public class CampaignDiscountStrategyTests
         var request = new PriceCalculatorInput(
             Price, 
             BookingDate,
-            CustomerBirthdate,
+            CustomerBirthDate,
             CustomerBookingLast12Months,
             NumberOfBirthdayDiscountUsed,
             new List<Treatment>() { treatment },
@@ -80,7 +80,7 @@ public class CampaignDiscountStrategyTests
         var request = new PriceCalculatorInput(
             Price,
             BookingDate,
-            CustomerBirthdate,
+            CustomerBirthDate,
             CustomerBookingLast12Months,
             NumberOfBirthdayDiscountUsed,
             new List<Treatment>() { treatment },

@@ -6,9 +6,9 @@ namespace BookRight.DomainLib.Tests.Entities;
 
 public class CustomerTests
 {
-    private static string Firstname => "Poul";
-    private static string Lastname => "Pedersen";
-    private static DateOnly Birthdate => new DateOnly(1965, 6, 18);
+    private static string FirstName => "Poul";
+    private static string LastName => "Pedersen";
+    private static DateOnly BirthDate => new DateOnly(1965, 6, 18);
     private static string Note => "Peanutbutter-allergy";
     private static Address Address => new Address("Test Avenue 21", "1234", "Testville");
     private static Email Email => new Email("PoulP@testmail.com");
@@ -23,9 +23,9 @@ public class CustomerTests
         PhoneNumber? phoneNumber = null,
         Guid? therapistId = null)
         => Customer.Create(
-            firstName ?? Firstname,
-            lastName ?? Lastname,
-            birthDate ?? Birthdate,
+            firstName ?? FirstName,
+            lastName ?? LastName,
+            birthDate ?? BirthDate,
             address ?? Address,
             email ?? Email,
             phoneNumber ?? PhoneNumber,
@@ -58,73 +58,73 @@ public class CustomerTests
     }
 
     [Fact]
-    public void Create_WithInvalidBirthdate_ThrowDomainException()
+    public void Create_WithInvalidBirthDate_ThrowDomainException()
     {
         //Arrange
-        DateOnly birthdate = new DateOnly(2028, 08, 14);
+        DateOnly birthDate = new DateOnly(2028, 08, 14);
 
         //Act & Assert
-        Assert.Throws<DomainException>(() => CreateCustomerWithValidData(birthDate: birthdate));
+        Assert.Throws<DomainException>(() => CreateCustomerWithValidData(birthDate: birthDate));
     }
 
 
     // ---------------------------------------------------------
-    // 2. ChangeFirstname tests (Change Customer Firstname)
+    // 2. ChangeFirstName tests (Change Customer FirstName)
     // ---------------------------------------------------------
 
     [Fact]
-    public void ChangeFirstname_GivenValidData_ShallSucceed()
+    public void ChangeFirstName_GivenValidData_ShallSucceed()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
-        string newFirstname = "Ian";
+        string newFirstName = "Ian";
 
         //Act
-        c.ChangeFirstname(newFirstname);
+        c.ChangeFirstName(newFirstName);
 
         //Assert
-        Assert.Equal(newFirstname, c.Firstname);
+        Assert.Equal(newFirstName, c.FirstName);
     }
 
     [Fact]
-    public void ChangeFirstname_GivenEmptyFirstname_CastDomainException()
+    public void ChangeFirstName_GivenEmptyFirstName_CastDomainException()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
-        string newFirstname = "";
+        string newFirstName = "";
 
         //Act & Assert
-        Assert.Throws<DomainException>(() => c.ChangeFirstname(newFirstname));
+        Assert.Throws<DomainException>(() => c.ChangeFirstName(newFirstName));
     }
 
 
     // ---------------------------------------------------------
-    // 3. ChangeLastname tests (Change Customer Lastname)
+    // 3. ChangeLastName tests (Change Customer LastName)
     // ---------------------------------------------------------
 
     [Fact]
-    public void ChangeLastname_GivenValidData_ShouldSucceed()
+    public void ChangeLastName_GivenValidData_ShouldSucceed()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
-        string newLastname = "Johnson";
+        string newLastName = "Johnson";
 
         //Act
-        c.ChangeLastname(newLastname);
+        c.ChangeLastName(newLastName);
 
         //Assert
-        Assert.Equal(newLastname, c.Lastname);
+        Assert.Equal(newLastName, c.LastName);
     }
 
     [Fact]
-    public void ChangeLastname_GivenEmptyLastname_CastDomainException()
+    public void ChangeLastName_GivenEmptyLastName_CastDomainException()
     {
         //Arrange
         var c = CreateCustomerWithValidData();
-        string newLastname = "";
+        string newLastName = "";
 
         //Act & Assert
-        Assert.Throws<DomainException>(() => c.ChangeLastname(newLastname));
+        Assert.Throws<DomainException>(() => c.ChangeLastName(newLastName));
     }
 
 
@@ -253,7 +253,7 @@ public class CustomerTests
         c.ChangePreferredTherapist(expected);
 
         //Assert
-        Assert.Equal(expected, c.PreferredTherapist);
+        Assert.Equal(expected, c.PreferredTherapistId);
     }
 
     [Fact]

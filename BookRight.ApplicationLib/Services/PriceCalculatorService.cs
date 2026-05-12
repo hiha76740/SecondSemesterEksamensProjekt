@@ -68,7 +68,7 @@ namespace BookRight.ApplicationLib.Services
             var PriceCalculatorDTO = new PriceCalculatorInput(
                 treatment.Price,
                 command.BookingDate,
-                Customer.Birthdate,
+                Customer.BirthDate,
                 CustomerHistorySum,
                 numberOfBirthdayDiscountUsed,
                 allTreatments,

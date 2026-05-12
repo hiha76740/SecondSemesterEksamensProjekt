@@ -6,7 +6,7 @@ namespace BookRight.DomainLib.Discounts;
 public record PriceCalculatorInput(
     decimal NormalPrice,
     DateTime BookingDate,
-    DateOnly CustomerBirthdate,
+    DateOnly CustomerBirthDate,
     decimal CustomerBookingsLast12Months,
     int NumberOfBirthdayDiscountUsed,
     IReadOnlyList<Treatment> Treatments,
