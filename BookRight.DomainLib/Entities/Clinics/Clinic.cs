@@ -13,10 +13,10 @@ namespace BookRight.DomainLib.Entities.Clinics;
 /// members.</remarks>
 public class Clinic : AggregateRoot
 {
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     public int TreatmentRoomLimit { get; private set; }
 
-    public Address Address { get; private set; }
+    public Address Address { get; private set; } = null!;
 
     private readonly List<OpeningHour> _openingHours = new();
     public IReadOnlyCollection<OpeningHour> OpeningHours => _openingHours.AsReadOnly();

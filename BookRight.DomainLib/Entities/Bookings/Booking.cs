@@ -21,7 +21,7 @@ public class Booking : AggregateRoot
     public Guid ClinicId { get; private set; }
 
     public BookingStatus Status { get; private set; }
-    public TimeSlot Time { get; private set; }
+    public TimeSlot Time { get; private set; } = null!;
     public decimal Price { get; private set; }
 
     public int ParticipantLimit { get; private set; }

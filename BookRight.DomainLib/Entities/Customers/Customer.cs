@@ -5,13 +5,13 @@ namespace BookRight.DomainLib.Entities.Customers;
 
 public class Customer : AggregateRoot
 {
-    public string Firstname { get; private set; }
-    public string Lastname { get; private set; }
+    public string Firstname { get; private set; } = null!;
+    public string Lastname { get; private set; } = null!;
     public DateOnly Birthdate { get; init; }
-    public string Note { get; private set; }
-    public Address Address { get; private set; }
-    public Email Email { get; private set; }
-    public PhoneNumber PhoneNumber { get; private set; }
+    public string Note { get; private set; } = null!;
+    public Address Address { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public PhoneNumber PhoneNumber { get; private set; } = null!;
     public Guid? PrefferedTherapist { get; private set; }
 
 

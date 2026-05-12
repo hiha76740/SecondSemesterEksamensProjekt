@@ -6,10 +6,10 @@ namespace BookRight.DomainLib.Entities.Campaigns;
 
 public class Campaign : AggregateRoot
 {
-    public string Name { get; init; }
+    public string Name { get; init; } = null!;
     public decimal DiscountProcentage { get; init; }
-    public CampaignPeriod CampaignPeriod { get; init; }
-    public IReadOnlyList<Guid> AssignedTreatments { get; init; }
+    public CampaignPeriod CampaignPeriod { get; init; } = null!;
+    public IReadOnlyList<Guid> AssignedTreatments { get; init; } = null!;
     public CampaignStatus Status { get; private set; }
 
 
