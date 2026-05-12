@@ -30,7 +30,7 @@ public class PriceCalculatorServiceTests
         Customer.Create(
             "Susan",
             "Bones",
-            new DateTime(1991, 1, 8),
+            new DateOnly(1991, 1, 8),
             new Address("testvej 2", "4321", "FantasiBy2"),
             new Email("test2@test.dk"),
             new PhoneNumber("87654321"),
