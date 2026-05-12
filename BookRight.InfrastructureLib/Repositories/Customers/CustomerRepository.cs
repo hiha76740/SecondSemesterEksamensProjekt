@@ -5,9 +5,9 @@ namespace BookRight.InfrastructureLib.Repositories.Customers;
 
 public class CustomerRepository(BookRightDbContext db) : ICustomerRepository
 {
-    Task<Customer?> ICustomerRepository.GetByIdAsync(Guid id)
+    async Task<Customer?> ICustomerRepository.GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+       return await db.Customers.FindAsync(id); 
     }
 
     Task ICustomerRepository.AddAsync(Customer customer)
