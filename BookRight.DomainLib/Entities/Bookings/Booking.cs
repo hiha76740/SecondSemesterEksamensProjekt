@@ -26,6 +26,7 @@ public class Booking : AggregateRoot
 
     public int ParticipantLimit { get; private set; }
     public bool IsActive => Status != BookingStatus.Cancelled;
+    public DiscountTypes DiscountTypeUsed { get; init; }
 
 
     private readonly List<Guid> _participants = new();
@@ -55,6 +56,7 @@ public class Booking : AggregateRoot
         Guid clinicId,
         decimal price,
         int participantLimit,
+        DiscountTypes discountTypeUsed,
         Guid? customerId = null)
     {
         if (participantLimit < 1)
@@ -64,7 +66,7 @@ public class Booking : AggregateRoot
             throw new DomainException("Single-person bookings require a customer.");
 
 
-        var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price, participantLimit);
+        var booking = new Booking(timeSlot, treatmentId, therapistId, clinicId, price, participantLimit, discountTypeUsed);
 
 
         if (customerId != null && participantLimit == 1)
@@ -215,7 +217,7 @@ public class Booking : AggregateRoot
     /// <param name="clinicId">The unique identifier of the clinic where the booking takes place.</param>
     /// <param name="price">The price of the booking. Must be zero or positive.</param>
     /// <exception cref="DomainException">Thrown if price is negative.</exception>
-    private Booking(TimeSlot timeSlot, Guid treatmentId, Guid therapistId, Guid clinicId, decimal price, int participantLimit)
+    private Booking(TimeSlot timeSlot, Guid treatmentId, Guid therapistId, Guid clinicId, decimal price, int participantLimit, DiscountTypes discountTypeUsed)
     {
         if (price < 0)
             throw new DomainException("Price cannot be negative.");
@@ -227,6 +229,7 @@ public class Booking : AggregateRoot
         ClinicId = clinicId;
         Price = price;
         ParticipantLimit = participantLimit;
+        DiscountTypeUsed = discountTypeUsed;
         Status = BookingStatus.Created;
     }
 
