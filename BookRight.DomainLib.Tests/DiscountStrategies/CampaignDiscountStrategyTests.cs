@@ -61,7 +61,7 @@ public class CampaignDiscountStrategyTests
             new List<Treatment>() { treatment },
             campaigns);
 
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes,true);
 
 
         // Act
@@ -72,12 +72,10 @@ public class CampaignDiscountStrategyTests
     }
 
     [Fact]
-    public void Create_GivenInValidData_ShallReturn0()
+    public void Create_GivenInValidData_ShallReturnNormalPrice()
     {
         // Arrange
         var treatment = CreateTreatment();
-
-        decimal finalPrice = 0;
        
         var request = new PriceCalculatorInput(
             Price,
@@ -88,7 +86,7 @@ public class CampaignDiscountStrategyTests
             new List<Treatment>() { treatment },
             new List<Campaign>());
 
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var expected = new PriceCalculatorResult(Price, Price, DiscountTypes,false);
 
 
 

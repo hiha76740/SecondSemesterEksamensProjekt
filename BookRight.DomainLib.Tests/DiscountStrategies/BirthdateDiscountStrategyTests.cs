@@ -35,7 +35,7 @@ public class BirthdateDiscountStrategyTests
         int NumberOfBirthdayDiscountUsed = 0;
 
         var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes,true);
 
         // Act
         var result = Strategy.CalculatePrice(request);
@@ -46,15 +46,14 @@ public class BirthdateDiscountStrategyTests
     [Theory]
     [InlineData("04-07-2026")]
     [InlineData("20-05-2026")]
-    public void Create_GivenInvalidDate_ShallReturn0(string stringBookingDate)
+    public void Create_GivenInvalidDate_ShallReturnNormalPrice(string stringBookingDate)
     {
         // Arrange
         DateTime.TryParseExact(stringBookingDate, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime bookingDate);
-        decimal finalPrice = 0;
         int NumberOfBirthdayDiscountUsed = 0;
 
         var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var expected = new PriceCalculatorResult(Price, Price, DiscountTypes, false);
 
         // Act
         var result = Strategy.CalculatePrice(request);
@@ -63,15 +62,14 @@ public class BirthdateDiscountStrategyTests
     }
 
     [Fact]
-    public void Create_GivenLimitForUses_ShallReturn0()
+    public void Create_GivenLimitForUses_ShallReturnNormalPrice()
     {
         // Arrange
         DateTime bookingDate = new DateTime(2026, 06, 04);
-        decimal finalPrice = 0;
         int NumberOfBirthdayDiscountUsed = 1;
 
         var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var expected = new PriceCalculatorResult(Price, Price, DiscountTypes, false);
 
         // Act
         var result = Strategy.CalculatePrice(request);
