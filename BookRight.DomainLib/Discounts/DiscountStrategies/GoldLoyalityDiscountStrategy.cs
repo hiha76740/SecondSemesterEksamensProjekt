@@ -17,7 +17,7 @@ public class GoldLoyalityDiscountStrategy : IDiscountStrategy
     {
         decimal price = 0;
 
-        if (input.CustomerBookingsLast12Months < 25000)
+        if (input.CustomerBookingsLast12Months > 25000)
             price = input.NormalPrice * (1 - _discountProcentage / 100);
 
         return new PriceCalculatorResult(input.NormalPrice, price, discountTypes);
