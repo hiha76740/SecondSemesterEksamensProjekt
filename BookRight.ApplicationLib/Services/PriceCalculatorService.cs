@@ -55,10 +55,10 @@ namespace BookRight.ApplicationLib.Services
             var CustomerHistorySum = await _bookingRepository.GetBookingHistorySumAsync(command.CustomerId, 12);
 
             var treatment = await _treatmentRepository.GetByIdAsync(command.TreatmentId)
-            ?? throw new NotFoundException( $"Treatment with id {command.TreatmentId} not found");
+            ?? throw new NotFoundException($"Treatment with id {command.TreatmentId} not found");
 
             var allTreatments = await _treatmentRepository.GetAllAsync()
-                ?? throw new NotFoundException("No treatments was foudn");
+                ?? throw new NotFoundException("No treatments was found");
 
             var numberOfBirthdayDiscountUsed = await _bookingRepository.GetNumberOfBirthdayDiscountThisYearByIdAsync(command.CustomerId, command.BookingDate.Year);
 
@@ -74,7 +74,7 @@ namespace BookRight.ApplicationLib.Services
                 allTreatments,
                 activeCampaigns);
 
-            PriceCalculatorResult bestDiscount = new PriceCalculatorResult(treatment.Price, 0, DiscountTypes.None);
+            PriceCalculatorResult? bestDiscount = null;
 
             Parallel.ForEach(_strategies, s =>
                 {
@@ -82,14 +82,25 @@ namespace BookRight.ApplicationLib.Services
 
                     lock (_lock)
                     {
-                        if (discountResult.FinalPrice > bestDiscount.FinalPrice)
+                        if (
+                            discountResult.IsApplicable == true &&
+                            (
+                                bestDiscount == null ||
+                                discountResult.FinalPrice < bestDiscount.FinalPrice
+                            )
+                        )
                         {
                             bestDiscount = discountResult;
                         }
-                    }    
+
+                    }
                 });
 
-            return new PriceCalculatorDTO(bestDiscount.NormalPrice, bestDiscount.FinalPrice, bestDiscount.DiscountType.ToString());
+            if (bestDiscount != null)
+                return new PriceCalculatorDTO(bestDiscount.NormalPrice, bestDiscount.FinalPrice, bestDiscount.DiscountType.ToString());
+
+
+            throw new Exceptions.ApplicationException("Error while calculating price");
         }
     }
 }
