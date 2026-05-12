@@ -17,7 +17,7 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class CreateBookingTests
 {
-    private static List<OpeningHourInput> OpeningHours = new()
+    private readonly static List<OpeningHourInput> OpeningHours = new()
     {
         new OpeningHourInput(
                 Weekdays.Monday,
@@ -163,6 +163,7 @@ public class CreateBookingTests
             clinic.Id,
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(),
             customer.Id);
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
@@ -199,6 +200,7 @@ public class CreateBookingTests
             Guid.NewGuid(),
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(),
             Guid.NewGuid());
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
@@ -307,6 +309,7 @@ public class CreateBookingTests
             clinic.Id,
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(), 
             customer.Id);
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
