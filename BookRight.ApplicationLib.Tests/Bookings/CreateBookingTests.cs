@@ -251,6 +251,7 @@ public class CreateBookingTests
             clinic.Id,
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(),
             customer.Id);
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
