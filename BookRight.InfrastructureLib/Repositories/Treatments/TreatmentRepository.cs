@@ -7,9 +7,13 @@ namespace BookRight.InfrastructureLib.Repositories.Treatments;
 
 public class TreatmentRepository(BookRightDbContext db) : ITreatmentRepository
 {
+    async Task<IReadOnlyList<Treatment>> ITreatmentRepository.GetAllAsync()
+    {
+        return await db.Treatments.ToListAsync();
+    }
+
     async Task<Treatment?> ITreatmentRepository.GetByIdAsync(Guid id)
     {
-        return await db.Treatments
-            .FirstOrDefaultAsync(t => t.Id == id);
+        return await db.Treatments.FirstOrDefaultAsync(t => t.Id == id);
     }
 }
