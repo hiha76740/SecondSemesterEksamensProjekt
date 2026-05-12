@@ -11,19 +11,24 @@ public class BirthdateDiscountStrategy : IDiscountStrategy
     {
         _discountProcentage = 25;
         _maxUsePerYear = 1;
-        
+
     }
 
-    public DiscountTypes discountTypes => DiscountTypes.BirthdayMonth;
+    public DiscountTypes DiscountTypes => DiscountTypes.BirthdayMonth;
 
     public PriceCalculatorResult CalculatePrice(PriceCalculatorInput input)
     {
-        decimal price = 0;
+        decimal price = input.NormalPrice;
+        bool IsApplicable = false;
 
         if (input.BookingDate.Month == input.CustomerBirthdate.Month &&
             input.NumberOfBirthdayDiscountUsed < _maxUsePerYear)
+        {
             price = input.NormalPrice * (1 - _discountProcentage / 100);
+            IsApplicable = true;
+        }
 
-        return new PriceCalculatorResult(input.NormalPrice, price, discountTypes);
+
+        return new PriceCalculatorResult(input.NormalPrice, price, DiscountTypes, IsApplicable);
     }
 }

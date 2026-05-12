@@ -11,15 +11,21 @@ public class SilverLoyalityDiscountStrategy : IDiscountStrategy
         _discountProcentage = 10;
     }
 
-    public DiscountTypes discountTypes => DiscountTypes.LoyaltySilver;
+    public DiscountTypes DiscountTypes => DiscountTypes.LoyaltySilver;
+
 
     public PriceCalculatorResult CalculatePrice(PriceCalculatorInput input)
     {
-        decimal price = 0;
+        decimal price = input.NormalPrice;
+        bool IsApplicable = false;
 
         if (input.CustomerBookingsLast12Months >= 10001 && input.CustomerBookingsLast12Months <= 25000)
+        {
             price = input.NormalPrice * (1 - _discountProcentage / 100);
+            IsApplicable = true;
+        }
+            
 
-        return new PriceCalculatorResult(input.NormalPrice, price, discountTypes);
+        return new PriceCalculatorResult(input.NormalPrice, price, DiscountTypes, IsApplicable);
     }
 }

@@ -11,15 +11,20 @@ public class GoldLoyalityDiscountStrategy : IDiscountStrategy
         _discountProcentage = 15;
     }
 
-    public DiscountTypes discountTypes => DiscountTypes.LoyaltyGold;
+    public DiscountTypes DiscountTypes => DiscountTypes.LoyaltyGold;
 
     public PriceCalculatorResult CalculatePrice(PriceCalculatorInput input)
     {
-        decimal price = 0;
+        decimal price = input.NormalPrice;
+        bool IsApplicable = false;
 
         if (input.CustomerBookingsLast12Months > 25000)
+        {
             price = input.NormalPrice * (1 - _discountProcentage / 100);
+            IsApplicable = true;
+        }
 
-        return new PriceCalculatorResult(input.NormalPrice, price, discountTypes);
+
+        return new PriceCalculatorResult(input.NormalPrice, price, DiscountTypes, IsApplicable);
     }
 }
