@@ -15,6 +15,8 @@ public class BookRightDbContext : DbContext
     public DbSet<Therapist> Therapists { get; set; }
     public DbSet<Treatment> Treatments { get; set; }
 
+    public BookRightDbContext(DbContextOptions<BookRightDbContext> options) : base(options) { }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (optionsBuilder.IsConfigured != false)
