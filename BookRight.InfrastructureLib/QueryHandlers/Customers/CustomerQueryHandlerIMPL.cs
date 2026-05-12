@@ -27,10 +27,22 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
             .FirstOrDefaultAsync();
     }
 
-    Task<IReadOnlyList<CustomerDTO>> ICustomerQueries.GetAllAsync()
+    async Task<IReadOnlyList<CustomerDTO>> ICustomerQueries.GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await db.Customers
+            .AsNoTracking()
+            .Select(c => new CustomerDTO(
+                c.Id,
+                c.Firstname,
+                c.Lastname,
+                c.Birthdate,
+                c.Note,
+                c.Address.Street,
+                c.Address.PostalCode,
+                c.Address.City,
+                c.Email.EmailAddress,
+                c.PhoneNumber.Number,
+                c.PrefferedTherapist))
+            .ToListAsync();
     }
-
-    // TODO: Consider also adding the name of PrefferedTherapist to CustomerDTO and finish the implementation.
 }
