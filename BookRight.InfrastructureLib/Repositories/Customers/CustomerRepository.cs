@@ -9,10 +9,9 @@ public class CustomerRepository(BookRightDbContext db) : ICustomerRepository
     {
        return await db.Customers.FindAsync(id); 
     }
-
-    Task ICustomerRepository.AddAsync(Customer customer)
+    async Task ICustomerRepository.AddAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        await db.Customers.AddAsync(customer);
     }
 
     Task ICustomerRepository.SaveAsync()
