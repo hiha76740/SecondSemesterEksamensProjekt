@@ -46,8 +46,6 @@ public class SilverLoyalityDiscountStrategyTests
     public void Create_GivenDataOutOfRange_ShallReturnNormalPrice(decimal CustomerTotalPast12Months)
     {
         // Arrange
-        decimal finalPrice = 0;
-
         var request = new PriceCalculatorInput(Price, BookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
         var expected = new PriceCalculatorResult(Price, Price, DiscountTypes, false);
 
