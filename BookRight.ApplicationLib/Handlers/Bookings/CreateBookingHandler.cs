@@ -1,5 +1,6 @@
 ﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
@@ -45,7 +46,10 @@ public class CreateBookingHandler(
 
         var time = new TimeSlot(command.From, command.To);
 
-        
+        bool exsists = Enum.TryParse<DiscountTypes>(command.DiscountTypeUsed, out var discountTypeUsed);
+
+        if (exsists == false)
+            throw new NotFoundException("Discount type was not found");
 
         var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
 
@@ -61,6 +65,7 @@ public class CreateBookingHandler(
             clinic.Id,
             treatment.Price,
             treatment.MaxParticipants,
+            discountTypeUsed,
             command.CustomerId);
 
         overlapService.Validate(booking, customerBookings!);
