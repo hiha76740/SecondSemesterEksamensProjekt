@@ -15,5 +15,5 @@ public interface IBookingRepository
 
     Task SaveAsync();
     Task<decimal> GetBookingHistorySumAsync(Guid customerId, int historyMonths);
-    Task<int> GetNumberOfBirthdayDiscountThisYearById(Guid customerId, int year);
+    Task<int> GetNumberOfBirthdayDiscountThisYearByIdAsync(Guid customerId, int year);
 }
