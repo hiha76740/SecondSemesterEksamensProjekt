@@ -22,23 +22,23 @@ public class ChangeClinicInfoHandler(IClinicRepository clinicRepository) : IChan
 
         foreach (var oh in command.OpeningHours)
         {
-            bool exsists = Enum.TryParse<Weekdays>(oh.Weekday, out var weekday);
+            bool exsists = Enum.TryParse<WeekDays>(oh.WeekDay, out var weekDay);
 
             if (exsists == false)
-                throw new NotFoundException($"Weekday {oh.Weekday} was not found");
+                throw new NotFoundException($"Weekday {oh.WeekDay} was not found");
 
 
             var changed = clinic.OpeningHours
-                .Any(x => x.Weekday == weekday &&
+                .Any(x => x.WeekDay == weekDay &&
                 x.OpeningTime != oh.OpeningTime ||
-                x.CloseingTime != oh.ClosingTime);
+                x.ClosingTime != oh.ClosingTime);
 
 
             if (changed == true)
             {
-                var id = clinic.OpeningHours.Where(x => x.Weekday == weekday).Select(x => x.Id).FirstOrDefault();
+                var id = clinic.OpeningHours.Where(x => x.WeekDay == weekDay).Select(x => x.Id).FirstOrDefault();
 
-                var opningHourInput = new OpeningHourInput(weekday, oh.OpeningTime, oh.ClosingTime, oh.IsClosed);
+                var opningHourInput = new OpeningHourInput(weekDay, oh.OpeningTime, oh.ClosingTime, oh.IsClosed);
 
                 clinic.ChangeOpeningHour(id, opningHourInput);
                 changesMade = true;

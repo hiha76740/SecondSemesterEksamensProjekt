@@ -10,7 +10,7 @@ public class BronzeLoyalityDiscountStrategyTests
 {
     private static decimal Price => 500m;
     private static int NumberOfBirthdayDiscountUsed => 0;
-    private static DateTime CustomerBirthdate => new DateTime(1990, 5, 5);
+    private static DateOnly CustomerBirthDate => new DateOnly(1990, 5, 5);
     private static DateTime BookingDate => new DateTime(2026, 6, 4);
     private static DiscountTypes DiscountTypes => DiscountTypes.LoyaltyBronze;
     private static BronzeLoyalityDiscountStrategy Strategy => new BronzeLoyalityDiscountStrategy();
@@ -31,8 +31,8 @@ public class BronzeLoyalityDiscountStrategyTests
         // Arrange
         decimal finalPrice = 475m;
 
-        var request = new PriceCalculatorInput(Price, BookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var request = new PriceCalculatorInput(Price, BookingDate, CustomerBirthDate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
+        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes,true);
 
         // Act
         var result = Strategy.CalculatePrice(request);
@@ -45,13 +45,11 @@ public class BronzeLoyalityDiscountStrategyTests
     [Theory]
     [InlineData(10001)]
     [InlineData(2999)]
-    public void Create_GivenDataOutOfRange_ShallReturn0(decimal CustomerTotalPast12Months)
+    public void Create_GivenDataOutOfRange_ShallReturnNormalPrice(decimal CustomerTotalPast12Months)
     {
         // Arrange
-        decimal finalPrice = 0;
-
-        var request = new PriceCalculatorInput(Price, BookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var request = new PriceCalculatorInput(Price, BookingDate, CustomerBirthDate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
+        var expected = new PriceCalculatorResult(Price, Price, DiscountTypes, false);
 
         // Act
         var result = Strategy.CalculatePrice(request);

@@ -10,7 +10,7 @@ namespace BookRight.Web.DependencyInjections
             services.AddTransient<IDiscountStrategy, BronzeLoyalityDiscountStrategy>();
             services.AddTransient<IDiscountStrategy, SilverLoyalityDiscountStrategy>();
             services.AddTransient<IDiscountStrategy, GoldLoyalityDiscountStrategy>();
-            services.AddTransient<IDiscountStrategy, BirthdateDiscountStrategy>();
+            services.AddTransient<IDiscountStrategy, BirthDateDiscountStrategy>();
             services.AddTransient<IDiscountStrategy, CampaignDiscountStrategy>();
 
             return services;

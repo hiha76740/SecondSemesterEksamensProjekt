@@ -4,22 +4,27 @@ namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
 public class GoldLoyalityDiscountStrategy : IDiscountStrategy
 {
-    private readonly decimal _discountProcentage;
+    private readonly decimal _discountPercentage;
 
     public GoldLoyalityDiscountStrategy()
     {
-        _discountProcentage = 15;
+        _discountPercentage = 15;
     }
 
-    public DiscountTypes discountTypes => DiscountTypes.LoyaltyGold;
+    public DiscountTypes DiscountTypes => DiscountTypes.LoyaltyGold;
 
     public PriceCalculatorResult CalculatePrice(PriceCalculatorInput input)
     {
-        decimal price = 0;
+        decimal price = input.NormalPrice;
+        bool IsApplicable = false;
 
         if (input.CustomerBookingsLast12Months > 25000)
-            price = input.NormalPrice * (1 - _discountProcentage / 100);
+        {
+            price = input.NormalPrice * (1 - _discountPercentage / 100);
+            IsApplicable = true;
+        }
 
-        return new PriceCalculatorResult(input.NormalPrice, price, discountTypes);
+
+        return new PriceCalculatorResult(input.NormalPrice, price, DiscountTypes, IsApplicable);
     }
 }

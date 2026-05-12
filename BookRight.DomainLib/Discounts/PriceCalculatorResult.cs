@@ -2,4 +2,4 @@
 
 namespace BookRight.DomainLib.Discounts;
 
-public record PriceCalculatorResult(decimal NormalPrice, decimal FinalPrice, DiscountTypes DiscountType);
+public record PriceCalculatorResult(decimal NormalPrice, decimal FinalPrice, DiscountTypes DiscountType, bool IsApplicable);

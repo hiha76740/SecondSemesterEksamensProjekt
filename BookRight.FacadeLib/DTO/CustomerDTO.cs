@@ -3,13 +3,13 @@
 public record CustomerDTO(
     Guid CustomerId,
     string Firstname,
-    string Lastname,
-    DateTime Birthdate,
+    string LastName,
+    DateOnly BirthDate,
     string Note,
     string Street,
     string PostalCode,
     string City,
     string EmailAddress,
     string PhoneNumber,
-    Guid? PreferredTherapist
+    Guid? PreferredTherapistId
     );

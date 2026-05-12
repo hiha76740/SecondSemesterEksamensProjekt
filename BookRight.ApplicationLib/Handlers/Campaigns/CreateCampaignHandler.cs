@@ -19,7 +19,7 @@ public class CreateCampaignHandler(ICampaignRepository campaignRepository, ITrea
 
         var campaignPeriod = new CampaignPeriod(command.StartDate, command.EndDate);
 
-        var campaign = Campaign.Create(command.Name, command.DiscountProcentage, campaignPeriod, command.AssignedTreatments);
+        var campaign = Campaign.Create(command.Name, command.DiscountPercentage, campaignPeriod, command.AssignedTreatments);
 
         await campaignRepository.AddAsync(campaign);
         await campaignRepository.SaveAsync();

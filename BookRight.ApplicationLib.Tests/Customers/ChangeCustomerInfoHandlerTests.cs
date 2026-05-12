@@ -15,16 +15,16 @@ namespace BookRight.ApplicationLib.Tests.Customers;
 public class ChangeCustomerInfoHandlerTests
 {
     // Helpermethod for instantiating a Customer-object for Mock-tests
-    private static Customer CreateTestCustomerWithValidData(Guid? preferredTherapist = null)
+    private static Customer CreateTestCustomerWithValidData(Guid? preferredTherapistId = null)
         => Customer.Create(
     "Torben",
     "Svendsen",
-    new DateTime(1956, 7, 16),
+    new DateOnly(1956, 7, 16),
     new Address("Niels Bohrs Gade 43", "6534", "Testlev"),
     new Email("TorbenS@testing.com"),
     new PhoneNumber("96538562"),
     "Gets easily confused",
-    preferredTherapist);
+    preferredTherapistId);
 
     // Helpermethod for instatiating a ChangeCustomerInfoCommand Dto
     private static ChangeCustomerInfoCommand CreateChangeCustomerInfoCommandWithValidData(
@@ -37,7 +37,7 @@ public class ChangeCustomerInfoHandlerTests
         string? city = null,
         string? email = null,
         string? phoneNumber = null,
-        Guid? preferredTherapist = null
+        Guid? preferredTherapistId = null
         )
         => new ChangeCustomerInfoCommand(
             customerId,
@@ -50,7 +50,7 @@ public class ChangeCustomerInfoHandlerTests
             city ?? "Testlev",
             email ?? "TorbenS@testing.com",
             phoneNumber ?? "96538562",
-            preferredTherapist
+            preferredTherapistId
             );
 
 
@@ -59,10 +59,10 @@ public class ChangeCustomerInfoHandlerTests
     // ---------------------------------------------------------
 
     [Fact]
-    public async Task Handle_GivenCommandWithNewFirstname_CallsSave()
+    public async Task Handle_GivenCommandWithNewFirstName_CallsSave()
     {
         // Arrange
-        var newFirstname = "Thomas";
+        var newFirstName = "Thomas";
         var customer = CreateTestCustomerWithValidData();
 
         var mockCustomerRepo = new Mock<ICustomerRepository>();
@@ -72,7 +72,7 @@ public class ChangeCustomerInfoHandlerTests
             .ReturnsAsync(customer);
 
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, firstName: newFirstname);
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, firstName: newFirstName);
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
         // Act
@@ -83,10 +83,10 @@ public class ChangeCustomerInfoHandlerTests
     }
 
     [Fact]
-    public async Task Handle_GivenValidCommandNewLastname_CallsSave()
+    public async Task Handle_GivenValidCommandNewLastName_CallsSave()
     {
         // Arrange
-        var newLastname = "Jensen";
+        var newLastName = "Jensen";
         var customer = CreateTestCustomerWithValidData();
 
         var mockCustomerRepo = new Mock<ICustomerRepository>();
@@ -95,7 +95,7 @@ public class ChangeCustomerInfoHandlerTests
         mockCustomerRepo.Setup(r => r.GetByIdAsync(customer.Id))
             .ReturnsAsync(customer);
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, lastName: newLastname);
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, lastName: newLastName);
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
 
@@ -223,7 +223,7 @@ public class ChangeCustomerInfoHandlerTests
         mockTherapistRepo.Setup(r => r.GetByIdAsync(newPreferredTherapist.Id))
             .ReturnsAsync(newPreferredTherapist);
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, preferredTherapist: newPreferredTherapist.Id);
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: customer.Id, preferredTherapistId: newPreferredTherapist.Id);
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
         // Act
@@ -267,7 +267,7 @@ public class ChangeCustomerInfoHandlerTests
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Therapist?)null);
 
-        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: Guid.NewGuid(), preferredTherapist: It.IsAny<Guid>());
+        var command = CreateChangeCustomerInfoCommandWithValidData(customerId: Guid.NewGuid(), preferredTherapistId: It.IsAny<Guid>());
         var handler = new ChangeCustomerInfoHandler(mockCustomerRepo.Object, mockTherapistRepo.Object) as IChangeCustomerInfoHandler;
 
 

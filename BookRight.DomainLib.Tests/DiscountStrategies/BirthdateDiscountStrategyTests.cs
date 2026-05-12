@@ -7,15 +7,15 @@ using System.Globalization;
 
 namespace BookRight.DomainLib.Tests.DiscountStrategies;
 
-public class BirthdateDiscountStrategyTests
+public class BirthDateDiscountStrategyTests
 {
     private static decimal Price => 500m;
-    private static DateTime CustomerBirthdate => new DateTime(1990, 6, 5);
+    private static DateOnly CustomerBirthDate => new DateOnly(1990, 6, 5);
     private static decimal CustomerTotalPast12Months => 0;
 
     private static DiscountTypes DiscountTypes => DiscountTypes.BirthdayMonth;
 
-    private static BirthdateDiscountStrategy Strategy => new BirthdateDiscountStrategy();
+    private static BirthDateDiscountStrategy Strategy => new BirthDateDiscountStrategy();
 
     private static Treatment Treatment => Treatment.Create("test", 500, TimeSpan.FromMinutes(45), CertificationTypes.Acupuncture, 5);
 
@@ -34,8 +34,8 @@ public class BirthdateDiscountStrategyTests
         decimal finalPrice = 375m;
         int NumberOfBirthdayDiscountUsed = 0;
 
-        var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthDate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
+        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes,true);
 
         // Act
         var result = Strategy.CalculatePrice(request);
@@ -46,15 +46,14 @@ public class BirthdateDiscountStrategyTests
     [Theory]
     [InlineData("04-07-2026")]
     [InlineData("20-05-2026")]
-    public void Create_GivenInvalidDate_ShallReturn0(string stringBookingDate)
+    public void Create_GivenInvalidDate_ShallReturnNormalPrice(string stringBookingDate)
     {
         // Arrange
         DateTime.TryParseExact(stringBookingDate, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime bookingDate);
-        decimal finalPrice = 0;
         int NumberOfBirthdayDiscountUsed = 0;
 
-        var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthDate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
+        var expected = new PriceCalculatorResult(Price, Price, DiscountTypes, false);
 
         // Act
         var result = Strategy.CalculatePrice(request);
@@ -63,15 +62,14 @@ public class BirthdateDiscountStrategyTests
     }
 
     [Fact]
-    public void Create_GivenLimitForUses_ShallReturn0()
+    public void Create_GivenLimitForUses_ShallReturnNormalPrice()
     {
         // Arrange
         DateTime bookingDate = new DateTime(2026, 06, 04);
-        decimal finalPrice = 0;
         int NumberOfBirthdayDiscountUsed = 1;
 
-        var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthdate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
-        var expected = new PriceCalculatorResult(Price, finalPrice, DiscountTypes);
+        var request = new PriceCalculatorInput(Price, bookingDate, CustomerBirthDate, CustomerTotalPast12Months, NumberOfBirthdayDiscountUsed, new List<Treatment>() { Treatment }, new List<Campaign>());
+        var expected = new PriceCalculatorResult(Price, Price, DiscountTypes, false);
 
         // Act
         var result = Strategy.CalculatePrice(request);

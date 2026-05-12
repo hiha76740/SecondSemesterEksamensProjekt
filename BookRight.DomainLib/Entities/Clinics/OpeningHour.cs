@@ -4,9 +4,9 @@ namespace BookRight.DomainLib.Entities.Clinics;
 
 public class OpeningHour: Entity
 {
-    public Weekdays Weekday { get; init; }
+    public WeekDays WeekDay { get; init; }
     public TimeOnly? OpeningTime { get; private set; }
-    public TimeOnly? CloseingTime { get; private set; }
+    public TimeOnly? ClosingTime { get; private set; }
     public bool IsClosed { get; private set; }
 
 
@@ -15,10 +15,10 @@ public class OpeningHour: Entity
         ApplyClosedState(isClosed, openingTime, closingTime);
     }
 
-    internal OpeningHour(Weekdays weekday, TimeOnly? openingTime, TimeOnly? closingTime, bool isClosed)
+    internal OpeningHour(WeekDays weekDay, TimeOnly? openingTime, TimeOnly? closingTime, bool isClosed)
     {
         Id = Guid.NewGuid();
-        Weekday = weekday;
+        WeekDay = weekDay;
 
         ApplyClosedState(isClosed,openingTime, closingTime);        
     }
@@ -28,14 +28,17 @@ public class OpeningHour: Entity
         if (isClosed == true)
         {
             OpeningTime = null;
-            CloseingTime = null;
+            ClosingTime = null;
             IsClosed = isClosed;
         }
         else
         {
             OpeningTime = openingTime;
-            CloseingTime = closingTime;
+            ClosingTime = closingTime;
             IsClosed = isClosed;
         }
     }
+
+    // EF Constructor
+    private OpeningHour() { }
 }

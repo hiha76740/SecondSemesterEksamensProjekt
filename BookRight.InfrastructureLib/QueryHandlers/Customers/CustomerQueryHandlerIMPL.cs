@@ -14,16 +14,16 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
             .Where(c => c.Id == Id)
             .Select(c => new CustomerDTO(
                 c.Id,
-                c.Firstname,
-                c.Lastname,
-                c.Birthdate,
+                c.FirstName,
+                c.LastName,
+                c.BirthDate,
                 c.Note,
                 c.Address.Street,
                 c.Address.PostalCode,
                 c.Address.City,
                 c.Email.EmailAddress,
                 c.PhoneNumber.Number,
-                c.PrefferedTherapist))
+                c.PreferredTherapistId))
             .FirstOrDefaultAsync();
     }
 
@@ -33,16 +33,16 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
             .AsNoTracking()
             .Select(c => new CustomerDTO(
                 c.Id,
-                c.Firstname,
-                c.Lastname,
-                c.Birthdate,
+                c.FirstName,
+                c.LastName,
+                c.BirthDate,
                 c.Note,
                 c.Address.Street,
                 c.Address.PostalCode,
                 c.Address.City,
                 c.Email.EmailAddress,
                 c.PhoneNumber.Number,
-                c.PrefferedTherapist))
+                c.PreferredTherapistId))
             .ToListAsync();
     }
 }

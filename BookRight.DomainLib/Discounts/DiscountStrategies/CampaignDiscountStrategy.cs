@@ -5,11 +5,12 @@ namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
 public class CampaignDiscountStrategy : IDiscountStrategy
 {
-    public DiscountTypes discountTypes => DiscountTypes.Campaign;
+    public DiscountTypes DiscountTypes => DiscountTypes.Campaign;
 
     public PriceCalculatorResult CalculatePrice(PriceCalculatorInput input)
     {
-        decimal price = 0;
+        decimal price = input.NormalPrice;
+        bool IsApplicable = false;
         DateOnly bookingDate = DateOnly.FromDateTime(input.BookingDate);
 
         var treatmentIds = input.Treatments.Select(t => t.Id).ToList();
@@ -20,12 +21,16 @@ public class CampaignDiscountStrategy : IDiscountStrategy
             bookingDate <= c.CampaignPeriod.To &&
             c.AssignedTreatments.Any(
                 at => treatmentIds.Contains(at)))
-            .OrderByDescending(c => c.DiscountProcentage)
+            .OrderByDescending(c => c.DiscountPercentage)
             .FirstOrDefault();
 
         if (bestCampaign != null)
-            price = input.NormalPrice * (1 - bestCampaign.DiscountProcentage / 100);
+        {
+            price = input.NormalPrice * (1 - bestCampaign.DiscountPercentage / 100);
+            IsApplicable = true;
+        }
 
-        return new PriceCalculatorResult(input.NormalPrice, price, discountTypes);
+
+        return new PriceCalculatorResult(input.NormalPrice, price, DiscountTypes, IsApplicable);
     }
 }

@@ -16,12 +16,13 @@ public class BookRightDbContext : DbContext
     public DbSet<Therapist> Therapists { get; set; }
     public DbSet<Treatment> Treatments { get; set; }
     public DbSet<Campaign> Campaigns  { get; set; }
+    private DbSet<OpeningHour> OpeningHours { get; set; }
 
     public BookRightDbContext(DbContextOptions<BookRightDbContext> options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (optionsBuilder.IsConfigured != false)
+        if (optionsBuilder.IsConfigured == true)
         {
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=BookRightDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30"); 
         }

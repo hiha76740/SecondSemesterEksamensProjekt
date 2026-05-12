@@ -4,6 +4,6 @@ namespace BookRight.DomainLib.Discounts;
 
 public interface IDiscountStrategy
 {
-    DiscountTypes discountTypes { get; }
+    DiscountTypes DiscountTypes { get; }
     PriceCalculatorResult CalculatePrice(PriceCalculatorInput input);
 }

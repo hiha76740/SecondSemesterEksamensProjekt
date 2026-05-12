@@ -6,16 +6,16 @@ namespace BookRight.DomainLib.Entities.Campaigns;
 
 public class Campaign : AggregateRoot
 {
-    public string Name { get; init; }
-    public decimal DiscountProcentage { get; init; }
-    public CampaignPeriod CampaignPeriod { get; init; }
-    public IReadOnlyList<Guid> AssignedTreatments { get; init; }
+    public string Name { get; init; } = null!;
+    public decimal DiscountPercentage { get; init; }
+    public CampaignPeriod CampaignPeriod { get; init; } = null!;
+    public IReadOnlyList<Guid> AssignedTreatments { get; init; } = null!;
     public CampaignStatus Status { get; private set; }
 
 
-    public static Campaign Create(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, IReadOnlyList<Guid> assignedTreatments)
+    public static Campaign Create(string name, decimal discountPercentage, CampaignPeriod campaignPeriod, IReadOnlyList<Guid> assignedTreatments)
     {
-        return new Campaign(name, discountProcentage, campaignPeriod, assignedTreatments);
+        return new Campaign(name, discountPercentage, campaignPeriod, assignedTreatments);
     }
 
     public void SetInaktive()
@@ -26,7 +26,7 @@ public class Campaign : AggregateRoot
         Status = CampaignStatus.Inactive;
     }
 
-    private Campaign(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, IReadOnlyList<Guid> assignedTreatments)
+    private Campaign(string name, decimal discountPercentage, CampaignPeriod campaignPeriod, IReadOnlyList<Guid> assignedTreatments)
     {
         if (assignedTreatments.Count < 1)
             throw new DomainException("Campaign must have atleast 1 treatment assigned");
@@ -37,14 +37,17 @@ public class Campaign : AggregateRoot
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException("Campain must have a name");
 
-        if (discountProcentage <= 0)
+        if (discountPercentage <= 0)
             throw new DomainException("Discount procentage can not be 0 or less");
 
         Id = Guid.NewGuid();
         Name = name;
-        DiscountProcentage = discountProcentage;
+        DiscountPercentage = discountPercentage;
         CampaignPeriod = campaignPeriod;
         AssignedTreatments = assignedTreatments;
         Status = CampaignStatus.Active;
     }
+
+    // EF constructor
+    private Campaign() { }
 }

@@ -18,12 +18,12 @@ public class CreateClinicHandler(IClinicRepository clinicRepository) : ICreateCl
 
         foreach (var openingHour in command.OpeningHours)
         {
-            bool exsists = Enum.TryParse<Weekdays>(openingHour.Weekday, out var weekday);
+            bool exsists = Enum.TryParse<WeekDays>(openingHour.WeekDay, out var weekDay);
 
             if (exsists == false)
-                throw new NotFoundException($"Weekday {openingHour.Weekday} was not found");
+                throw new NotFoundException($"Weekday {openingHour.WeekDay} was not found");
 
-            var openingHourInput = new OpeningHourInput(weekday, openingHour.OpeningTime, openingHour.ClosingTime, openingHour.IsClosed);
+            var openingHourInput = new OpeningHourInput(weekDay, openingHour.OpeningTime, openingHour.ClosingTime, openingHour.IsClosed);
 
             openingHourInputs.Add(openingHourInput);
         }

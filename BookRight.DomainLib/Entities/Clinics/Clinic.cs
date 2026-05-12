@@ -13,10 +13,10 @@ namespace BookRight.DomainLib.Entities.Clinics;
 /// members.</remarks>
 public class Clinic : AggregateRoot
 {
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     public int TreatmentRoomLimit { get; private set; }
 
-    public Address Address { get; private set; }
+    public Address Address { get; private set; } = null!;
 
     private readonly List<OpeningHour> _openingHours = new();
     public IReadOnlyCollection<OpeningHour> OpeningHours => _openingHours.AsReadOnly();
@@ -28,9 +28,9 @@ public class Clinic : AggregateRoot
         
         foreach (var openingHour in openingHoursInput)
         {
-            var oh = CreateOpeningHour(openingHour.Weekday, openingHour.Open, openingHour.Close, openingHour.IsClosed);
+            var oh = CreateOpeningHour(openingHour.WeekDay, openingHour.Open, openingHour.Close, openingHour.IsClosed);
 
-            if (openingHours.Any(x => x.Weekday == openingHour.Weekday) == true)
+            if (openingHours.Any(x => x.WeekDay == openingHour.WeekDay) == true)
                 throw new DomainException("Opening hours can't have 2 of the same day");
 
             openingHours.Add(oh);
@@ -44,9 +44,9 @@ public class Clinic : AggregateRoot
         return clinic;
     }
 
-    public static OpeningHour CreateOpeningHour(Weekdays weekdays, TimeOnly? openingTime, TimeOnly? closeingTime, bool isClosed)
+    public static OpeningHour CreateOpeningHour(WeekDays weekDays, TimeOnly? openingTime, TimeOnly? closingTime, bool isClosed)
     {
-        return new OpeningHour(weekdays, openingTime, closeingTime, isClosed);
+        return new OpeningHour(weekDays, openingTime, closingTime, isClosed);
     }
 
 
@@ -91,20 +91,12 @@ public class Clinic : AggregateRoot
         Address = address;
     }
 
-    /// <summary>
-    /// Validates that the specified opening time is in the future.
-    /// </summary>
-    /// <param name="openingTime">The date and time to validate. Must represent a future point in time.</param>
-    /// <exception cref="DomainException">Thrown if openingTime is earlier than the current date and time.</exception>
-    private static void EnsureValidTime(DateTime openingTime)
-    {
-        if (openingTime < DateTime.UtcNow)
-            throw new DomainException("Opening time must be in the future");
-    }
-
     private static void EnsureValidTreatmentRoomLimit(int treatmentRoomLimit)
     {
         if (treatmentRoomLimit < 1)
             throw new DomainException("Clinic must have atleast 1 treatment room");
     }
+
+    // EF Constructor
+    private Clinic() { }
 }

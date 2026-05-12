@@ -5,77 +5,77 @@ namespace BookRight.DomainLib.Entities.Customers;
 
 public class Customer : AggregateRoot
 {
-    public string Firstname { get; private set; }
-    public string Lastname { get; private set; }
-    public DateTime Birthdate { get; init; }
-    public string Note { get; private set; }
-    public Address Address { get; private set; }
-    public Email Email { get; private set; }
-    public PhoneNumber PhoneNumber { get; private set; }
-    public Guid? PrefferedTherapist { get; private set; }
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public DateOnly BirthDate { get; init; }
+    public string Note { get; private set; } = null!;
+    public Address Address { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public PhoneNumber PhoneNumber { get; private set; } = null!;
+    public Guid? PreferredTherapistId { get; private set; }
 
 
     private Customer(
             string firstName,
             string lastName,
-            DateTime birthDate,
+            DateOnly birthDate,
             Address address,
             Email email,
             PhoneNumber phoneNumber,
             string note,
-            Guid? prefferedTherapist)
+            Guid? preferredTherapistId)
     {
-        EnsureValidFirstname(firstName);
-        EnsureValidLastname(lastName);
+        EnsureValidFirstName(firstName);
+        EnsureValidLastName(lastName);
 
-        if (birthDate.Date > DateTime.Today)
-            throw new DomainException("Birthdate cannot be in future");
+        if (birthDate > DateOnly.FromDateTime(DateTime.Today))
+            throw new DomainException("Birth Date cannot be in future");
 
 
         Id = Guid.NewGuid();
-        Firstname = firstName;
-        Lastname = lastName;
-        Birthdate = birthDate.Date;
+        FirstName = firstName;
+        LastName = lastName;
+        BirthDate = birthDate;
         Note = note;
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
-        PrefferedTherapist = prefferedTherapist;
+        PreferredTherapistId = preferredTherapistId;
     }
 
     public static Customer Create(
             string firstName,
             string lastName,
-            DateTime birthDate,
+            DateOnly birthDate,
             Address address,
             Email email,
             PhoneNumber phoneNumber,
             string note = "",
-            Guid? prefferedTherapistId = null)
+            Guid? PreferredTherapistId = null)
     {
-        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, prefferedTherapistId);
+        var customer = new Customer(firstName, lastName, birthDate, address, email, phoneNumber, note, PreferredTherapistId);
         return customer;
     }
 
 
-    public void ChangeFirstname(string newFirstname)
+    public void ChangeFirstName(string newFirstName)
     {
-        EnsureValidFirstname(newFirstname);
+        EnsureValidFirstName(newFirstName);
 
-        if (Firstname == newFirstname)
+        if (FirstName == newFirstName)
             throw new DomainException("New firstname is the same as current firstname");
 
-        Firstname = newFirstname;
+        FirstName = newFirstName;
     }
 
-    public void ChangeLastname(string newLastname)
+    public void ChangeLastName(string newLastname)
     {
-        EnsureValidLastname(newLastname);
+        EnsureValidLastName(newLastname);
 
-        if (Lastname == newLastname)
+        if (LastName == newLastname)
             throw new DomainException("New lastname is the same as current lastname");
 
-        Lastname = newLastname;
+        LastName = newLastname;
     }
 
 
@@ -110,27 +110,30 @@ public class Customer : AggregateRoot
         Note = note;
     }
 
-    public void ChangePreferredTherapist(Guid? newPreferredTherapist)
+    public void ChangePreferredTherapist(Guid? newPreferredTherapistId)
     {
-        if (newPreferredTherapist.HasValue)
+        if (newPreferredTherapistId.HasValue)
         {
-            if (PrefferedTherapist == newPreferredTherapist.Value)
+            if (PreferredTherapistId == newPreferredTherapistId.Value)
                 throw new DomainException("New preferred therapist is the same as current therapist"); 
         }
 
-        PrefferedTherapist = newPreferredTherapist;
+        PreferredTherapistId = newPreferredTherapistId;
     }
 
-    private static void EnsureValidFirstname(string firstName)
+    private static void EnsureValidFirstName(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             throw new DomainException("Customer must have a firstname");
     }
 
-    private static void EnsureValidLastname(string lastName)
+    private static void EnsureValidLastName(string lastName)
     {
         if (string.IsNullOrWhiteSpace(lastName))
             throw new DomainException("Customer must have a lastname");
     }
+
+    // EF Constructor
+    private Customer() { }
 
 }
