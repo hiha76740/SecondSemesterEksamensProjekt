@@ -22,7 +22,7 @@ builder.Services.AddHandlerDI();
 builder.Services.AddDiscountStrategyDI();
 
 // Queries (Facade-interfaces → Infrastructure-implementeringer)
-
+builder.Services.AddQueriesDI();
 
 
 var app = builder.Build();
