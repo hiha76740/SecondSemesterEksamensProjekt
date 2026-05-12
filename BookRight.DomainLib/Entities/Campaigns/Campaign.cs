@@ -18,6 +18,14 @@ public class Campaign : AggregateRoot
         return new Campaign(name, discountProcentage, campaignPeriod, treatmentId);
     }
 
+    public void SetInaktive()
+    {
+        if (Status == CampaignStatus.Inactive)
+            throw new DomainException("Campain already set to Inactive");
+
+        Status = CampaignStatus.Inactive;
+    }
+
     private Campaign(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, Guid treatmentId)
     {
         if (campaignPeriod.From <= DateTime.Today)
