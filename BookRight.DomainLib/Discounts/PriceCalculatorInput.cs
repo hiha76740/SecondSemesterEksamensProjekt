@@ -1,4 +1,5 @@
 ﻿using BookRight.DomainLib.Entities.Campaigns;
+using BookRight.DomainLib.Entities.Treatments;
 
 namespace BookRight.DomainLib.Discounts;
 
@@ -8,5 +9,6 @@ public record PriceCalculatorInput(
     DateTime CustomerBirthdate,
     decimal CustomerBookingsLast12Months,
     int NumberOfBirthdayDiscountUsed,
+    IReadOnlyList<Treatment> Treatments,
     IReadOnlyList<Campaign> ActiveCampaigns
     );
