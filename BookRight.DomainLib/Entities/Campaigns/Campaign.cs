@@ -28,7 +28,7 @@ public class Campaign : AggregateRoot
 
     private Campaign(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, Guid treatmentId)
     {
-        if (campaignPeriod.From <= DateTime.Today)
+        if (campaignPeriod.From <= DateOnly.FromDateTime(DateTime.Today))
             throw new DomainException("Start date must be after todays date");
 
         if (string.IsNullOrWhiteSpace(name))
