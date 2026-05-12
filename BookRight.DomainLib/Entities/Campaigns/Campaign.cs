@@ -9,13 +9,13 @@ public class Campaign : AggregateRoot
     public string Name { get; init; }
     public decimal DiscountProcentage { get; init; }
     public CampaignPeriod CampaignPeriod { get; init; }
-    public Guid TreatmentId { get; init; }
+    public IReadOnlyList<Guid> AssignedTreatments { get; init; }
     public CampaignStatus Status { get; private set; }
 
 
-    public static Campaign Create(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, Guid treatmentId)
+    public static Campaign Create(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, IReadOnlyList<Guid> assignedTreatments)
     {
-        return new Campaign(name, discountProcentage, campaignPeriod, treatmentId);
+        return new Campaign(name, discountProcentage, campaignPeriod, assignedTreatments);
     }
 
     public void SetInaktive()
@@ -26,8 +26,11 @@ public class Campaign : AggregateRoot
         Status = CampaignStatus.Inactive;
     }
 
-    private Campaign(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, Guid treatmentId)
+    private Campaign(string name, decimal discountProcentage, CampaignPeriod campaignPeriod, IReadOnlyList<Guid> assignedTreatments)
     {
+        if (assignedTreatments.Count < 1)
+            throw new DomainException("Campaign must have atleast 1 treatment assigned");
+
         if (campaignPeriod.From <= DateOnly.FromDateTime(DateTime.Today))
             throw new DomainException("Start date must be after todays date");
 
@@ -41,7 +44,7 @@ public class Campaign : AggregateRoot
         Name = name;
         DiscountProcentage = discountProcentage;
         CampaignPeriod = campaignPeriod;
-        TreatmentId = treatmentId;
+        AssignedTreatments = assignedTreatments;
         Status = CampaignStatus.Active;
     }
 }
