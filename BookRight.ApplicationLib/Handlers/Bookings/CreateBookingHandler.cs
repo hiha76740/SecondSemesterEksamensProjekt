@@ -37,7 +37,7 @@ public class CreateBookingHandler(
             _ = await customerRepository.GetByIdAsync(command.CustomerId.Value)
             ?? throw new NotFoundException("Customer could not be found.");
 
-            customerBookings = await bookingRepository.GetAllBookingsByIdAsync(command.CustomerId.Value);
+            customerBookings = await bookingRepository.GetBookingsByCustomerIdAsync(command.CustomerId.Value);
         }
         
 
@@ -51,9 +51,9 @@ public class CreateBookingHandler(
         if (exsists == false)
             throw new NotFoundException("Discount type was not found");
 
-        var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
+        var therapistBookings = await bookingRepository.GetBookingsByTherapistIdAsync(therapist.Id);
 
-        var clinicBookings = await bookingRepository.GetAllBookingsByIdAsync(clinic.Id);
+        var clinicBookings = await bookingRepository.GetBookingsByClinicIdAsync(clinic.Id);
 
         if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, time) == false)
             throw new Exceptions.ApplicationException("Clinic capacity was exceeded.");

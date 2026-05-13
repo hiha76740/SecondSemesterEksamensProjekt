@@ -113,7 +113,7 @@ public class ChangeClinicTests
             .ReturnsAsync(clinic);
 
         bookingRepositoryMock
-            .Setup(r => r.GetAllBookingsByIdAsync(clinic.Id))
+            .Setup(r => r.GetBookingsByClinicIdAsync(clinic.Id))
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock
@@ -212,7 +212,7 @@ public class ChangeClinicTests
             .ReturnsAsync(clinic);
 
         bookingRepositoryMock
-            .Setup(r => r.GetAllBookingsByIdAsync(clinic.Id))
+            .Setup(r => r.GetBookingsByClinicIdAsync(clinic.Id))
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock

@@ -26,7 +26,7 @@ public class ChangeTherapistHandler(
         if (therapist.CertificationTypes.Contains(treatment.CertificationRequired) == false)
             throw new Exceptions.ApplicationException("Therapist is not qualified for this treatment.");
 
-        var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
+        var therapistBookings = await bookingRepository.GetBookingsByTherapistIdAsync(therapist.Id);
 
         overlapService.Validate(booking, therapistBookings);
 

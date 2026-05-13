@@ -84,7 +84,7 @@ public class ChangeTherapistTests
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(r => r.GetAllBookingsByIdAsync(therapist.Id))
+            .Setup(r => r.GetBookingsByTherapistIdAsync(therapist.Id))
             .ReturnsAsync(new List<Booking>());
 
 

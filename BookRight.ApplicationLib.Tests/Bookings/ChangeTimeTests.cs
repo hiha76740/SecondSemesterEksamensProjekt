@@ -79,7 +79,11 @@ public class ChangeTimeTests
             .ReturnsAsync(booking);
 
         bookingRepositoryMock
-            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetBookingsByTherapistIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        bookingRepositoryMock
+            .Setup(r => r.GetBookingsByCustomerIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         customerRepositoryMock

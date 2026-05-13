@@ -10,23 +10,31 @@ public class BookingRepository(BookRightDbContext db) : IBookingRepository
 {
     async Task<Booking?> IBookingRepository.GetByIdAsync(Guid id)
     {
-        return await db.Bookings
-            .FirstOrDefaultAsync(b => b.Id == id);
+        return await db.Bookings.FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    async Task<IReadOnlyList<Booking>> IBookingRepository.GetAllBookingsByIdAsync(Guid id)
+    async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByCustomerIdAsync(Guid customerId)
     {
-        var bookings = await db.Bookings
+        return await db.Bookings
             .AsNoTracking()
+            .Where(b => b.Participants.Contains(customerId))
             .ToListAsync();
+    }
 
-        return bookings
-            .Where(b =>
-                b.TherapistId == id ||
-                b.ClinicId == id ||
-                b.TreatmentId == id ||
-                b.Participants.Contains(id))
-            .ToList();
+    async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByTherapistIdAsync(Guid therapistId)
+    {
+        return await db.Bookings
+            .AsNoTracking()
+            .Where(b => b.TherapistId == therapistId)
+            .ToListAsync();
+    }
+
+    async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByClinicIdAsync(Guid clinicId)
+    {
+        return await db.Bookings
+            .AsNoTracking()
+            .Where(b => b.ClinicId == clinicId)
+            .ToListAsync();
     }
 
     async Task IBookingRepository.AddAsync(Booking booking)
@@ -41,30 +49,19 @@ public class BookingRepository(BookRightDbContext db) : IBookingRepository
 
     async Task<decimal> IBookingRepository.GetBookingHistorySumAsync(Guid customerId, int historyMonths)
     {
-        var fromDate = DateTime.Now.AddMonths(-historyMonths);
-
-        var bookings = await db.Bookings
-            .AsNoTracking()
-            .ToListAsync();
-
-        return bookings
+        return await db.Bookings
             .Where(b =>
                 b.Participants.Contains(customerId) &&
                 b.Status == BookingStatus.Completed &&
-                b.Time.From >= fromDate)
-            .Sum(b => b.Price);
+                b.Time.From >= DateTime.Now.AddMonths(-historyMonths))
+            .SumAsync(b => b.Price);
     }
 
     async Task<int> IBookingRepository.GetNumberOfBirthdayDiscountThisYearByIdAsync(Guid customerId, int year)
     {
-        var bookings = await db.Bookings
-            .AsNoTracking()
-            .ToListAsync();
-
-        return bookings
-            .Count(b =>
-                b.Participants.Contains(customerId) &&
-                b.DiscountTypeUsed == DiscountTypes.BirthdayMonth &&
-                b.Time.From.Year == year);
+        return await db.Bookings.CountAsync(b =>
+            b.Participants.Contains(customerId) &&
+            b.Time.From.Year == year &&
+            b.DiscountTypeUsed == DiscountTypes.BirthdayMonth);
     }
 }

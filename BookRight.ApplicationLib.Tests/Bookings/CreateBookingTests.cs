@@ -148,7 +148,15 @@ public class CreateBookingTests
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetBookingsByCustomerIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByTherapistIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByClinicIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         mockBookingCapacityService
@@ -295,7 +303,15 @@ public class CreateBookingTests
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetBookingsByCustomerIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByTherapistIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByClinicIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         mockBookingCapacityService
