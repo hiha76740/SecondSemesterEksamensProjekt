@@ -6,4 +6,6 @@ public interface ICustomerQueries
 {
     Task<CustomerDTO?> GetByIdAsync(Guid Id);
     Task<IReadOnlyList<CustomerDTO>> GetAllAsync();
+
+    Task<IReadOnlyList<CustomerDTO>> SearchCustomerAsync(string filter);
 }
