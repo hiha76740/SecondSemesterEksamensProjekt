@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDatabaseDI(builder.Configuration);
 
 // Domain (Domain Services
+builder.Services.AddDomainDI();
 
 // Repositories (Use Case-interfaces → Infrastructure-implementeringer)
 builder.Services.AddRepositoryDI();
