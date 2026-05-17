@@ -11,5 +11,4 @@ public record CustomerDTO(
     string City,
     string EmailAddress,
     string PhoneNumber,
-    Guid? PreferredTherapistId
-    );
+    Guid? PreferredTherapistId);

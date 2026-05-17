@@ -6,5 +6,4 @@ public record TreatmentDTO(
     decimal Price,
     TimeSpan Duration,
     string CertificationRequired,
-    int MaxParticipants
-    );
+    int MaxParticipants);

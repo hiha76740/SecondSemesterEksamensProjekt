@@ -11,5 +11,4 @@ public record TherapistDTO(
     string Email,
     string PhoneNumber,
     IReadOnlyList<string> CertificationTypes,
-    IReadOnlyList<Guid> AssociatedClinics
-    );
+    IReadOnlyList<Guid> AssociatedClinics);
