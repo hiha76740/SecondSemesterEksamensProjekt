@@ -35,9 +35,6 @@ public class Treatment : AggregateRoot
         if (price < 1)
             throw new DomainException("Price can not be 0 or negative");
 
-        if (duration.Minutes < 1)
-            throw new DomainException("Duration has to be atleast 1 minut");
-
         Id = Guid.NewGuid();
         Name = name;
         Price = price;
