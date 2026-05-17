@@ -3,6 +3,7 @@ using BookRight.InfrastructureLib.Repositories.Bookings;
 using BookRight.InfrastructureLib.Repositories.Campaigns;
 using BookRight.InfrastructureLib.Repositories.Clinics;
 using BookRight.InfrastructureLib.Repositories.Customers;
+using BookRight.InfrastructureLib.Repositories.Therapists;
 using BookRight.InfrastructureLib.Repositories.Treatments;
 
 namespace BookRight.Web.DependencyInjections;
@@ -15,7 +16,7 @@ public static class RepositoryDI
         services.AddScoped<ICampaignRepository, CampaignRepository>();
         services.AddScoped<IClinicRepository, ClinicRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
-        // TODO: Register TherapistRepository
+        services.AddScoped<ITherapistRepository, TherapistRepository>();
         services.AddScoped<ITreatmentRepository, TreatmentRepository>();
 
         return services;
