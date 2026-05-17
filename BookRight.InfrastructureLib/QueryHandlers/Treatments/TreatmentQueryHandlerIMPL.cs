@@ -12,6 +12,7 @@ public class TreatmentQueryHandlerIMPL(BookRightDbContext db) : ITreatmentQuerie
         return await db.Treatments
             .AsNoTracking()
             .Select(t => new TreatmentDTO(
+                t.Id,
                 t.Name,
                 t.Price,
                 t.Duration,
@@ -26,6 +27,7 @@ public class TreatmentQueryHandlerIMPL(BookRightDbContext db) : ITreatmentQuerie
             .AsNoTracking()
             .Where(t => t.Id == Id)
             .Select(t => new TreatmentDTO(
+                t.Id,
                 t.Name,
                 t.Price,
                 t.Duration,
