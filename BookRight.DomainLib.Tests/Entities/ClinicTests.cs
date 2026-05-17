@@ -53,52 +53,6 @@ public class ClinicTests
 
     };
 
-    private readonly static List<OpeningHourInput> OpeningHoursChanged = new()
-    {
-         new OpeningHourInput(
-                WeekDays.Monday,
-                new TimeOnly(8, 0, 0),
-                new TimeOnly(16, 0, 0),
-                false),
-
-        new OpeningHourInput(
-                WeekDays.Tuesday,
-                new TimeOnly(8, 0, 0),
-                new TimeOnly(16, 0, 0),
-                false),
-
-        new OpeningHourInput(
-                WeekDays.Wednesday,
-                new TimeOnly(8, 0, 0),
-                new TimeOnly(16, 0, 0),
-                false),
-
-        new OpeningHourInput(
-                WeekDays.Thursday,
-                new TimeOnly(8, 0, 0),
-                new TimeOnly(16, 0, 0),
-                false),
-
-        new OpeningHourInput(
-                WeekDays.Friday,
-                null,
-                null,
-                true),
-
-        new OpeningHourInput(
-                WeekDays.Saturday,
-                new TimeOnly(8, 0, 0),
-                new TimeOnly(16, 0, 0),
-                false),
-
-        new OpeningHourInput(
-                WeekDays.Sunday,
-                new TimeOnly(8, 0, 0),
-                new TimeOnly(16, 0, 0),
-                false)
-
-    };
-
 
     private static string Name => "Klinik Vejle";
     private static int TreatmentRoomLimit => 5;
@@ -138,20 +92,6 @@ public class ClinicTests
         Assert.Throws<DomainException>(() => CreateWithValidData(treatmentRoomLimit: roomLimit));
     }
 
-    // TODO: Lav tjek for dette i OpeningHour Entity
-    //[Fact]
-    //public void Create_GivenOpeningHoursInPast_CastDomainException()
-    //{
-    //    // Arrange
-    //    var open = new DateTime(2024, 01, 01, 8, 0, 0);
-    //    var close = new DateTime(2024, 01, 01, 16, 0, 0);
-    //    var openingHours = OpeningHours(open, close);
-
-    //    // Act & Assert
-    //    Assert.Throws<DomainException>(() => CreateWithValidData(openingHours: openingHours));
-    //}
-
-
     // ---------------------------------------------------------
     // 2. ChangeOpeningHours tests (Changing a Clinic Opening hours)
     // ---------------------------------------------------------
@@ -161,7 +101,7 @@ public class ClinicTests
     {
         // Arrange
         var c = CreateWithValidData();
-        var openingHour = c.OpeningHours.Where(oh => oh.WeekDay == WeekDays.Friday).FirstOrDefault();
+        var openingHour = c.OpeningHours.Where(oh => oh.WeekDay == WeekDays.Friday).First();
         var expected = true;
 
 

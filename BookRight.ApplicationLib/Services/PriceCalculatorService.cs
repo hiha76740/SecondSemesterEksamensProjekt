@@ -1,6 +1,5 @@
 ﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Discounts;
-using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.FacadeLib.Commands.Pricing.DTOs;
 using BookRight.FacadeLib.Commands.Pricing.Interfaces;
