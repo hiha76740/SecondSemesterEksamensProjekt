@@ -1,7 +1,7 @@
 ﻿namespace BookRight.FacadeLib.DTO;
 
 public record CustomerDTO(
-    Guid CustomerId,
+    Guid Id,
     string Firstname,
     string LastName,
     DateOnly BirthDate,
