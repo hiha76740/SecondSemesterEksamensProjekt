@@ -17,6 +17,53 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class CreateBookingTests
 {
+    private readonly static List<OpeningHourInput> OpeningHours = new()
+    {
+        new OpeningHourInput(
+                WeekDays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+       
+        new OpeningHourInput(
+                WeekDays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+       
+        new OpeningHourInput(
+                WeekDays.Friday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+        
+        new OpeningHourInput(
+                WeekDays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+        
+        new OpeningHourInput(
+                WeekDays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
+
+
     private static Treatment CreateTreatment()
     {
         return Treatment.Create("Physiotherapy", 395, TimeSpan.FromMinutes(30), CertificationTypes.Physiotherapy, 1);
@@ -34,7 +81,7 @@ public class CreateBookingTests
         return Customer.Create(
             "Test",
             "Customer",
-            new DateTime(1995, 1, 1),
+            new DateOnly(1995, 1, 1),
             new Address("Testvej 1", "7100", "Vejle"),
             new Email("test@test.dk"),
             new PhoneNumber("12345678"));
@@ -58,9 +105,7 @@ public class CreateBookingTests
         return Clinic.Create(
             "Klinik Vejle",
             5,
-            new OpeningHours(
-                DateTime.Now.AddDays(1).Date.AddHours(8),
-                DateTime.Now.AddDays(1).Date.AddHours(16)),
+            OpeningHours,
             new Address("Testvej 1", "7100", "Vejle"));
     }
 
@@ -103,7 +148,15 @@ public class CreateBookingTests
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetBookingsByCustomerIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByTherapistIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByClinicIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         mockBookingCapacityService
@@ -118,9 +171,10 @@ public class CreateBookingTests
             clinic.Id,
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(),
             customer.Id);
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object,mockTherapistRepo.Object,mockClinicRepo.Object,mockTreatmentRepo.Object,mockBookingCapacityService.Object,mockValidateOverlapService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
 
         // Act
         await handler.Handle(command);
@@ -154,6 +208,7 @@ public class CreateBookingTests
             Guid.NewGuid(),
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(),
             Guid.NewGuid());
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
@@ -204,9 +259,10 @@ public class CreateBookingTests
             clinic.Id,
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(),
             customer.Id);
 
-        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object,mockValidateOverlapService.Object) as ICreateBookingHandler;
+        var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
 
 
         // Act & Assert
@@ -247,7 +303,15 @@ public class CreateBookingTests
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetBookingsByCustomerIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByTherapistIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        mockBookingRepo
+            .Setup(r => r.GetBookingsByClinicIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         mockBookingCapacityService
@@ -262,6 +326,7 @@ public class CreateBookingTests
             clinic.Id,
             timeSlot.From,
             timeSlot.To,
+            DiscountTypes.None.ToString(), 
             customer.Id);
 
         var handler = new CreateBookingHandler(mockBookingRepo.Object, mockCustomerRepo.Object, mockTherapistRepo.Object, mockClinicRepo.Object, mockTreatmentRepo.Object, mockBookingCapacityService.Object, mockValidateOverlapService.Object) as ICreateBookingHandler;
@@ -270,4 +335,5 @@ public class CreateBookingTests
         // Act & Assert
         await Assert.ThrowsAsync<Exceptions.ApplicationException>(() => handler.Handle(command));
     }
+
 }

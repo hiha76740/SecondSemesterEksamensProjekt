@@ -1,4 +1,6 @@
 ﻿using BookRight.ApplicationLib.Repositories;
+using BookRight.DomainLib.Entities.Clinics;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 using BookRight.FacadeLib.Commands.Clinics.DTOs;
@@ -16,7 +18,32 @@ public class ChangeClinicInfoHandler(IClinicRepository clinicRepository) : IChan
             ?? throw new NotFoundException("Clinic not found");
 
         var address = new Address(command.Street, command.PostalCode, command.City);
-        var openingHours = new OpeningHours(command.OpenHour, command.CloseHour);
+
+
+        foreach (var oh in command.OpeningHours)
+        {
+            bool exsists = Enum.TryParse<WeekDays>(oh.WeekDay, out var weekDay);
+
+            if (exsists == false)
+                throw new NotFoundException($"Weekday {oh.WeekDay} was not found");
+
+
+            var changed = clinic.OpeningHours
+                .Any(x => x.WeekDay == weekDay &&
+                x.OpeningTime != oh.OpeningTime ||
+                x.ClosingTime != oh.ClosingTime);
+
+
+            if (changed == true)
+            {
+                var id = clinic.OpeningHours.Where(x => x.WeekDay == weekDay).Select(x => x.Id).FirstOrDefault();
+
+                var opningHourInput = new OpeningHourInput(weekDay, oh.OpeningTime, oh.ClosingTime, oh.IsClosed);
+
+                clinic.ChangeOpeningHour(id, opningHourInput);
+                changesMade = true;
+            }
+        }
 
         if (clinic.Address != address)
         {
@@ -27,12 +54,6 @@ public class ChangeClinicInfoHandler(IClinicRepository clinicRepository) : IChan
         if (clinic.TreatmentRoomLimit != command.TreatmentRoomLimit)
         {
             clinic.ChangeTreatmentRoomLimit(command.TreatmentRoomLimit);
-            changesMade = true;
-        }
-
-        if (clinic.OpeningHours != openingHours)
-        {
-            clinic.ChangeOpeningHours(openingHours);
             changesMade = true;
         }
 

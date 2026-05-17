@@ -9,9 +9,17 @@ public interface IBookingRepository
 {
     Task<Booking?> GetByIdAsync(Guid id);
 
-    Task<IReadOnlyList<Booking>> GetAllBookingsByIdAsync(Guid id);
+    Task<IReadOnlyList<Booking>> GetBookingsByCustomerIdAsync(Guid customerId);
+
+    Task<IReadOnlyList<Booking>> GetBookingsByTherapistIdAsync(Guid therapistId);
+
+    Task<IReadOnlyList<Booking>> GetBookingsByClinicIdAsync(Guid clinicId);
 
     Task AddAsync(Booking booking);
 
     Task SaveAsync();
+
+    Task<decimal> GetBookingHistorySumAsync(Guid customerId, int historyMonths);
+
+    Task<int> GetNumberOfBirthdayDiscountThisYearByIdAsync(Guid customerId, int year);
 }

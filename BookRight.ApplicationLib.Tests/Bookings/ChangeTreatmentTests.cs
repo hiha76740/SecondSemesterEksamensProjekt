@@ -35,6 +35,7 @@ public class ChangeTreatmentTests
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m,
             1,
+            DiscountTypes.None, 
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"));
     }
 

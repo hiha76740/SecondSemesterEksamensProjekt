@@ -1,4 +1,5 @@
 ﻿using BookRight.DomainLib.Entities.Clinics;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.ValueObjects;
 
@@ -6,21 +7,112 @@ namespace BookRight.DomainLib.Tests.Entities;
 
 public class ClinicTests
 {
+    private readonly static List<OpeningHourInput> OpeningHours = new()
+    {
+        new OpeningHourInput(
+                WeekDays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Friday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
+
+    private readonly static List<OpeningHourInput> OpeningHoursChanged = new()
+    {
+         new OpeningHourInput(
+                WeekDays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Friday,
+                null,
+                null,
+                true),
+
+        new OpeningHourInput(
+                WeekDays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
+
+
     private static string Name => "Klinik Vejle";
     private static int TreatmentRoomLimit => 5;
-
-    private static OpeningHours OpeningHours(DateTime open, DateTime close) => new(open, close);
     private static Address Address => new("Testvej 1", "1234", "FantasiBy");
 
     private static Clinic CreateWithValidData(
         string? name = null,
         int? treatmentRoomLimit = null,
-        OpeningHours? openingHours = null,
+        List<OpeningHourInput>? openingHours = null,
         Address? address = null)
         => Clinic.Create(
             name ?? Name,
             treatmentRoomLimit ?? TreatmentRoomLimit,
-            openingHours ?? OpeningHours(DateTime.Now.AddDays(1), DateTime.Now.AddDays(1)),
+            openingHours ?? OpeningHours,
             address ?? Address
             );
     // ---------------------------------------------------------
@@ -46,17 +138,18 @@ public class ClinicTests
         Assert.Throws<DomainException>(() => CreateWithValidData(treatmentRoomLimit: roomLimit));
     }
 
-    [Fact]
-    public void Create_GivenOpeningHoursInPast_CastDomainException()
-    {
-        // Arrange
-        var open = new DateTime(2024, 01, 01, 8, 0, 0);
-        var close = new DateTime(2024, 01, 01, 16, 0, 0);
-        var openingHours = OpeningHours(open, close);
+    // TODO: Lav tjek for dette i OpeningHour Entity
+    //[Fact]
+    //public void Create_GivenOpeningHoursInPast_CastDomainException()
+    //{
+    //    // Arrange
+    //    var open = new DateTime(2024, 01, 01, 8, 0, 0);
+    //    var close = new DateTime(2024, 01, 01, 16, 0, 0);
+    //    var openingHours = OpeningHours(open, close);
 
-        // Act & Assert
-        Assert.Throws<DomainException>(() => CreateWithValidData(openingHours: openingHours));
-    }
+    //    // Act & Assert
+    //    Assert.Throws<DomainException>(() => CreateWithValidData(openingHours: openingHours));
+    //}
 
 
     // ---------------------------------------------------------
@@ -68,15 +161,17 @@ public class ClinicTests
     {
         // Arrange
         var c = CreateWithValidData();
-        var open = new DateTime(2030, 01, 01, 8, 0, 0);
-        var close = new DateTime(2030, 01, 01, 16, 0, 0);
-        var expected = OpeningHours(open, close);
+        var openingHour = c.OpeningHours.Where(oh => oh.WeekDay == WeekDays.Friday).FirstOrDefault();
+        var expected = true;
+
+
+        var input = new OpeningHourInput(WeekDays.Friday, null, null, true);
 
         // Act
-        c.ChangeOpeningHours(expected);
+        c.ChangeOpeningHour(openingHour.Id,input);
 
         // Assert
-        Assert.Equal(expected, c.OpeningHours);
+        Assert.Equal(expected, openingHour.IsClosed);
     }
 
     // ---------------------------------------------------------

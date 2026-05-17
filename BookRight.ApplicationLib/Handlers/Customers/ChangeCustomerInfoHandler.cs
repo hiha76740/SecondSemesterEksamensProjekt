@@ -16,11 +16,11 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
         var customer = await customerRepository.GetByIdAsync(command.CustomerId)
             ?? throw new NotFoundException("Customer could not be found");
 
-        if (command.PreferredTherapist.HasValue)
+        if (command.PreferredTherapistId.HasValue)
         {
-            Guid preferredTherapist = command.PreferredTherapist.Value;
+            Guid preferredTherapistId = command.PreferredTherapistId.Value;
 
-            _ = await therapistRepository.GetByIdAsync(preferredTherapist)
+            _ = await therapistRepository.GetByIdAsync(preferredTherapistId)
                 ?? throw new NotFoundException("Therapist could not be found");
         }
 
@@ -29,15 +29,15 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
         var phoneNumber = new PhoneNumber(command.PhoneNumber);
 
 
-        if (customer.Firstname != command.Firstname)
+        if (customer.FirstName != command.FirstName)
         {
-            customer.ChangeFirstname(command.Firstname);
+            customer.ChangeFirstName(command.FirstName);
             changesMade = true;
         }
 
-        if (customer.Lastname != command.Lastname)
+        if (customer.LastName != command.LastName)
         {
-            customer.ChangeLastname(command.Lastname);
+            customer.ChangeLastName(command.LastName);
             changesMade = true;
         }
 
@@ -65,9 +65,9 @@ public class ChangeCustomerInfoHandler(ICustomerRepository customerRepository, I
             changesMade = true;
         }
 
-        if (customer.PrefferedTherapist != command.PreferredTherapist)
+        if (customer.PreferredTherapistId != command.PreferredTherapistId)
         {
-            customer.ChangePreferredTherapist(command.PreferredTherapist);
+            customer.ChangePreferredTherapist(command.PreferredTherapistId);
             changesMade = true;
         }
 

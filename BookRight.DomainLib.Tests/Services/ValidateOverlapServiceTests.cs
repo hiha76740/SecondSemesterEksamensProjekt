@@ -1,4 +1,5 @@
 ﻿using BookRight.DomainLib.Entities.Bookings;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
@@ -18,6 +19,7 @@ public class ValidateOverlapServiceTests
             Guid.NewGuid(),
             500,
             1,
+            DiscountTypes.None,
             Guid.NewGuid());
     }
 

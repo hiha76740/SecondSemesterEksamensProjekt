@@ -13,16 +13,62 @@ namespace BookRight.ApplicationLib.Tests.Therapists;
 
 public class ChangeTherapistInfoHandlerTests
 {
+    private static List<OpeningHourInput> OpeningHours = new()
+    {
+        new OpeningHourInput(
+                WeekDays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Friday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
+
+
     private readonly static List<string> CertificationType = new() { CertificationTypes.Physiotherapy.ToString(), CertificationTypes.Acupuncture.ToString() };
     private static List<Guid> AssociatedClinics => new() { Guid.Parse("4504e50a-67a5-4cba-b029-8eb0b493c80d"), Guid.Parse("4515e50a-67a5-4cba-b029-8eb0b493c80d") };
 
     private static Clinic CreateClinic()
     {
-        DateTime openingHour = new DateTime(2030, 5, 1, 8, 0, 0);
         return Clinic.Create(
             "Test Klinik 1",
             5,
-            new OpeningHours(openingHour, openingHour.AddHours(8)),
+            OpeningHours,
             new Address("Testvej 21", "6000", "Kolding"));
     }
 
@@ -207,7 +253,7 @@ public class ChangeTherapistInfoHandlerTests
             {
                 CertificationTypes.Physiotherapy.ToString(),
                 CertificationTypes.Acupuncture.ToString(),
-                CertificationTypes.Message.ToString()
+                CertificationTypes.Massage.ToString()
             });
 
         var handler = new ChangeTherapistInfoHandler(mockTherapistRepo.Object, mockClinicRepo.Object) as IChangeTherapistInfoHandler;

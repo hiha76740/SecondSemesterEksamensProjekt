@@ -1,3 +1,5 @@
-﻿namespace BookRight.FacadeLib.Commands.Clinics.DTOs;
+﻿using BookRight.FacadeLib.DTO;
 
-public record ChangeClinicInfoCommand(Guid ClinicId, string Street, string PostalCode, string City, int TreatmentRoomLimit, DateTime OpenHour, DateTime CloseHour);
+namespace BookRight.FacadeLib.Commands.Clinics.DTOs;
+
+public record ChangeClinicInfoCommand(Guid ClinicId, string Street, string PostalCode, string City, int TreatmentRoomLimit, List<OpeningHourDTO> OpeningHours);

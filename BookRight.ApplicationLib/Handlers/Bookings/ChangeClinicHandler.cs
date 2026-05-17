@@ -19,7 +19,7 @@ public class ChangeClinicHandler(
         var clinic = await clinicRepository.GetByIdAsync(command.ClinicId)
             ?? throw new NotFoundException("Clinic could not be found.");
 
-        var clinicBookings = await bookingRepository.GetAllBookingsByIdAsync(clinic.Id);
+        var clinicBookings = await bookingRepository.GetBookingsByClinicIdAsync(clinic.Id);
 
         if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, booking.Time) == false)
             throw new Exceptions.ApplicationException("Clinic capacity was exceeded.");

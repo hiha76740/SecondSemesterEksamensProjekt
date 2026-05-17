@@ -6,19 +6,19 @@ namespace BookRight.DomainLib.Entities.Therapists;
 
 public class Therapist : AggregateRoot
 {
-    public string AuthorizationNumber { get; init; }
-    public string Name { get; private set; }
+    public string AuthorizationNumber { get; init; } = null!;
+    public string Name { get; private set; } = null!;
     public decimal HourlyRate { get; private set; }
 
-    public Address Address { get; private set; }
-    public Email Email { get; private set; }
-    public PhoneNumber PhoneNumber { get; private set; }
+    public Address Address { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public PhoneNumber PhoneNumber { get; private set; } = null!;
 
     private readonly List<CertificationTypes> _certificationTypes = new();
     public IReadOnlyCollection<CertificationTypes> CertificationTypes => _certificationTypes.AsReadOnly();
 
-    private readonly List<Guid> _associatedclinics = new();
-    public IReadOnlyCollection<Guid> AssociatedClinics => _associatedclinics.AsReadOnly();
+    private readonly List<Guid> _associatedClinics = new();
+    public IReadOnlyCollection<Guid> AssociatedClinics => _associatedClinics.AsReadOnly();
 
     private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics, List<CertificationTypes>? certifications)
     {
@@ -44,7 +44,7 @@ public class Therapist : AggregateRoot
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
-        _associatedclinics = associatedClinics;
+        _associatedClinics = associatedClinics;
 
         if (certifications != null)
             _certificationTypes = certifications;
@@ -166,21 +166,21 @@ public class Therapist : AggregateRoot
 
     public void AddAssociatedClinic(Guid clinicId)
     {
-        if (_associatedclinics.Contains(clinicId) == true)
+        if (_associatedClinics.Contains(clinicId) == true)
             throw new DomainException($"Clinic is already associated with therapist {Name}");
 
-        _associatedclinics.Add(clinicId);
+        _associatedClinics.Add(clinicId);
     }
 
     public void RemoveAssociatedClinic(Guid clinicId)
     {
-        if (_associatedclinics.Contains(clinicId) == false)
+        if (_associatedClinics.Contains(clinicId) == false)
             throw new DomainException($"Clinic is not associated with therapist {Name}");
 
-        if (_associatedclinics.Count == 1)
+        if (_associatedClinics.Count == 1)
             throw new DomainException("Therapist must be associated to atleast 1 clinic");
 
-        _associatedclinics.Remove(clinicId);
+        _associatedClinics.Remove(clinicId);
     }
 
     private static void EnsureValidName(string name)
@@ -195,5 +195,8 @@ public class Therapist : AggregateRoot
             throw new DomainException("Hourly rate cannot be negative or 0");
     }
 
+
+    // EF Constructor
+    private Therapist() { }
 
 }

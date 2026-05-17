@@ -31,6 +31,7 @@ public class ChangeTimeTests
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m,
             1,
+            DiscountTypes.None, 
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"));
     }
 
@@ -39,7 +40,7 @@ public class ChangeTimeTests
         return Customer.Create(
             "Test",
             "Customer",
-            new DateTime(1995, 1, 1),
+            new DateOnly(1995, 1, 1),
             new Address("Testvej 1", "7100", "Vejle"),
             new Email("test@test.dk"),
             new PhoneNumber("12345678"));
@@ -78,7 +79,11 @@ public class ChangeTimeTests
             .ReturnsAsync(booking);
 
         bookingRepositoryMock
-            .Setup(r => r.GetAllBookingsByIdAsync(It.IsAny<Guid>()))
+            .Setup(r => r.GetBookingsByTherapistIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Booking>());
+
+        bookingRepositoryMock
+            .Setup(r => r.GetBookingsByCustomerIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(new List<Booking>());
 
         customerRepositoryMock

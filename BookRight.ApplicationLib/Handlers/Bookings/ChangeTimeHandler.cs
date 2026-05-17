@@ -21,7 +21,7 @@ public class ChangeTimeHandler(
         var therapist = await therapistRepository.GetByIdAsync(booking.TherapistId)
             ?? throw new NotFoundException("Therapist could not be found.");
 
-        var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
+        var therapistBookings = await bookingRepository.GetBookingsByTherapistIdAsync(therapist.Id);
 
 
         var newTimeSlot = new TimeSlot(command.From, command.To);
@@ -34,7 +34,7 @@ public class ChangeTimeHandler(
             var customer = await customerRepository.GetByIdAsync(p)
             ?? throw new NotFoundException("Customer could not be found.");
 
-            var customerBookings = await bookingRepository.GetAllBookingsByIdAsync(customer.Id);
+            var customerBookings = await bookingRepository.GetBookingsByCustomerIdAsync(customer.Id);
 
             overlapService.Validate(booking, customerBookings);
         }

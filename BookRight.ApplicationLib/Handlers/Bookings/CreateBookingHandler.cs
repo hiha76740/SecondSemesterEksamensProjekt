@@ -1,5 +1,6 @@
 ﻿using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
@@ -36,7 +37,7 @@ public class CreateBookingHandler(
             _ = await customerRepository.GetByIdAsync(command.CustomerId.Value)
             ?? throw new NotFoundException("Customer could not be found.");
 
-            customerBookings = await bookingRepository.GetAllBookingsByIdAsync(command.CustomerId.Value);
+            customerBookings = await bookingRepository.GetBookingsByCustomerIdAsync(command.CustomerId.Value);
         }
         
 
@@ -45,11 +46,14 @@ public class CreateBookingHandler(
 
         var time = new TimeSlot(command.From, command.To);
 
-        
+        bool exsists = Enum.TryParse<DiscountTypes>(command.DiscountTypeUsed, out var discountTypeUsed);
 
-        var therapistBookings = await bookingRepository.GetAllBookingsByIdAsync(therapist.Id);
+        if (exsists == false)
+            throw new NotFoundException("Discount type was not found");
 
-        var clinicBookings = await bookingRepository.GetAllBookingsByIdAsync(clinic.Id);
+        var therapistBookings = await bookingRepository.GetBookingsByTherapistIdAsync(therapist.Id);
+
+        var clinicBookings = await bookingRepository.GetBookingsByClinicIdAsync(clinic.Id);
 
         if (bookingCapacityService.CanCreateBooking(clinic, clinicBookings, time) == false)
             throw new Exceptions.ApplicationException("Clinic capacity was exceeded.");
@@ -61,6 +65,7 @@ public class CreateBookingHandler(
             clinic.Id,
             treatment.Price,
             treatment.MaxParticipants,
+            discountTypeUsed,
             command.CustomerId);
 
         overlapService.Validate(booking, customerBookings!);

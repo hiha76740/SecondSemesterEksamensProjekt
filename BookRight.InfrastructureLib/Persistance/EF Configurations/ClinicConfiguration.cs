@@ -8,6 +8,8 @@ internal class ClinicConfiguration : IEntityTypeConfiguration<Clinic>
 {
     public void Configure(EntityTypeBuilder<Clinic> builder)
     {
-        throw new NotImplementedException();
+        builder.ComplexProperty(
+             c => c.Address,
+             a => a.ToJson());
     }
 }

@@ -8,4 +8,5 @@ public record CreateBookingCommand(
     Guid ClinicId,
     DateTime From,
     DateTime To,
+    string DiscountTypeUsed,
     Guid? CustomerId = null);

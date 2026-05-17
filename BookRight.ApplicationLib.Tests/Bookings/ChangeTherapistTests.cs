@@ -37,6 +37,7 @@ public class ChangeTherapistTests
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m, 
             participantLimit,
+            DiscountTypes.None,
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"));
     }
 
@@ -83,7 +84,7 @@ public class ChangeTherapistTests
             .ReturnsAsync(treatment);
 
         mockBookingRepo
-            .Setup(r => r.GetAllBookingsByIdAsync(therapist.Id))
+            .Setup(r => r.GetBookingsByTherapistIdAsync(therapist.Id))
             .ReturnsAsync(new List<Booking>());
 
 

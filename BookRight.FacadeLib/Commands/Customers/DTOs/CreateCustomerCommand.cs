@@ -2,14 +2,14 @@
 
 // === Request DTOs for Handlers ===
 public record CreateCustomerCommand(
-    string Firstname,
-    string Lastname,
-    DateTime Birthdate,
+    string FirstName,
+    string LastName,
+    DateOnly BirthDate,
     string Note,
     string Street,
     string PostalCode,
     string City,
     string EmailAddress,
     string PhoneNumber,
-    Guid? PreferredTherapist
+    Guid? PreferredTherapistId
     );

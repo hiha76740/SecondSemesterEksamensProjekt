@@ -2,6 +2,7 @@
 using BookRight.ApplicationLib.Repositories;
 using BookRight.DomainLib.Entities.Bookings;
 using BookRight.DomainLib.Entities.Clinics;
+using BookRight.DomainLib.Enums;
 using BookRight.DomainLib.Exceptions;
 using BookRight.DomainLib.Services;
 using BookRight.DomainLib.ValueObjects;
@@ -13,6 +14,52 @@ namespace BookRight.ApplicationLib.Tests.Bookings;
 
 public class ChangeClinicTests
 {
+    private static List<OpeningHourInput> OpeningHours = new()
+    {
+        new OpeningHourInput(
+                WeekDays.Monday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Tuesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Wednesday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Thursday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Friday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Saturday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false),
+
+        new OpeningHourInput(
+                WeekDays.Sunday,
+                new TimeOnly(8, 0, 0),
+                new TimeOnly(16, 0, 0),
+                false)
+
+    };
+
     private static TimeSlot CreateTimeSlot(int fromHour, int toHour)
     {
         return new TimeSlot(
@@ -29,6 +76,7 @@ public class ChangeClinicTests
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b493c80d"),
             550m,
             1,
+            DiscountTypes.None,
             Guid.Parse("4504e34a-67a5-4cba-b029-8eb0b453b80d"));
     }
 
@@ -37,9 +85,7 @@ public class ChangeClinicTests
         return Clinic.Create(
             "Klinik Vejle",
             5,
-            new OpeningHours(
-                DateTime.Now.AddDays(1).Date.AddHours(8),
-                DateTime.Now.AddDays(1).Date.AddHours(16)),
+            OpeningHours,
             new Address("Testvej 1", "7100", "Vejle"));
     }
 
@@ -67,7 +113,7 @@ public class ChangeClinicTests
             .ReturnsAsync(clinic);
 
         bookingRepositoryMock
-            .Setup(r => r.GetAllBookingsByIdAsync(clinic.Id))
+            .Setup(r => r.GetBookingsByClinicIdAsync(clinic.Id))
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock
@@ -166,7 +212,7 @@ public class ChangeClinicTests
             .ReturnsAsync(clinic);
 
         bookingRepositoryMock
-            .Setup(r => r.GetAllBookingsByIdAsync(clinic.Id))
+            .Setup(r => r.GetBookingsByClinicIdAsync(clinic.Id))
             .ReturnsAsync(new List<Booking>());
 
         bookingCapacityServiceMock
