@@ -12,6 +12,7 @@ public class CampaignQueryHandlerIMPL(BookRightDbContext db) : ICampaignQueries
         return await db.Campaigns
             .AsNoTracking()
             .Select(c => new CampaignDTO(
+                c.Id,
                 c.Name,
                 c.DiscountPercentage,
                 c.CampaignPeriod.From,
@@ -27,6 +28,7 @@ public class CampaignQueryHandlerIMPL(BookRightDbContext db) : ICampaignQueries
             .AsNoTracking()
             .Where(c => c.Id == Id)
             .Select(c => new CampaignDTO(
+                c.Id,
                 c.Name,
                 c.DiscountPercentage,
                 c.CampaignPeriod.From,
