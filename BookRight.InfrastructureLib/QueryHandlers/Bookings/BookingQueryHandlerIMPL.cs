@@ -11,7 +11,6 @@ public class BookingQueryHandlerIMPL(BookRightDbContext db) : IBookingQueries
     {
         return await db.Bookings
             .AsNoTracking()
-            .OrderBy(b => b.Time.From)
             .Select(b => new BookingDTO(
                 b.Id,
                 b.TreatmentId,
