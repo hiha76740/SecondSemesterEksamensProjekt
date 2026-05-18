@@ -7,5 +7,4 @@ public record ClinicDTO(
     IReadOnlyList<OpeningHourDTO> OpeningHours,
     string Street,
     string PostalCode,
-    string City
-    );
+    string City);

@@ -16,7 +16,6 @@ public class BookingRepository(BookRightDbContext db) : IBookingRepository
     async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByCustomerIdAsync(Guid customerId)
     {
         return await db.Bookings
-            .AsNoTracking()
             .Where(b => b.Participants.Contains(customerId))
             .ToListAsync();
     }
@@ -24,7 +23,6 @@ public class BookingRepository(BookRightDbContext db) : IBookingRepository
     async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByTherapistIdAsync(Guid therapistId)
     {
         return await db.Bookings
-            .AsNoTracking()
             .Where(b => b.TherapistId == therapistId)
             .ToListAsync();
     }
@@ -32,7 +30,6 @@ public class BookingRepository(BookRightDbContext db) : IBookingRepository
     async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByClinicIdAsync(Guid clinicId)
     {
         return await db.Bookings
-            .AsNoTracking()
             .Where(b => b.ClinicId == clinicId)
             .ToListAsync();
     }

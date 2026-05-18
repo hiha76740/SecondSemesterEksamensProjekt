@@ -11,5 +11,4 @@ public record BookingDTO(
     int ParticipantLimit,
     IReadOnlyList<Guid> Participants,
     string Status,
-    string DiscountTypeUsed
-    );
+    string DiscountTypeUsed);
