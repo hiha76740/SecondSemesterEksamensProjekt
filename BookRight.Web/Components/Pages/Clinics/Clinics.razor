@@ -1,0 +1,44 @@
+﻿@page "/clinics"
+@attribute [StreamRendering]
+
+@inject IClinicQueries ClinicQueries
+
+
+<PageTitle>Klinikker</PageTitle>
+<h2>Klinikker</h2>
+
+<ErrorComponent ErrorMessage="@_error"/>
+<LoadingComponent Loading="@_loading" Element="Clinic"/>
+
+<br />
+<a href="/clinic/create" class="btn btn-primary">Opret Klinik</a>
+<br />
+<br />
+<section class="flex-container">
+    <ClinicOverviewComponent Clinics="ClinicList ?? []" Caption="Alle Klinikker" />
+</section>
+
+@code {
+    private bool _loading = true;
+    private string? _error;
+
+    [PersistentState]
+    public IReadOnlyList<ClinicDTO>? ClinicList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ClinicList ??= await ClinicQueries.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}
