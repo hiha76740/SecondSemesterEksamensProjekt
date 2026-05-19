@@ -1,0 +1,26 @@
+﻿@if (Clinics.Count == 0)
+{
+    <p>(ingen)</p>
+}
+else
+{
+    @foreach (var clinic in Clinics)
+    {
+        <section class="grid-container">
+            <ClinicOverviewHeaderComponent Clinic="clinic"/>
+            <ClinicOverviewAddressInfoComponent Clinic="clinic"/>
+            <ClinicOverviewTreatmentRoomComponent Clinic="clinic"/>
+            <ClinicOverviewOpeningHourComponent Clinic="clinic"/>
+            <a href="/clinic/@clinic.Id" class="btn btn-primary">Ændre</a>
+        </section>
+    }
+
+    
+}
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ClinicDTO> Clinics { get; set; } = [];
+
+    [Parameter]
+    public string Caption { get; set; } = "Clinics";
+}
