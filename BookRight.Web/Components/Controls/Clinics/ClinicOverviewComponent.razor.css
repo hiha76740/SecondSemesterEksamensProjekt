@@ -1,0 +1,12 @@
+﻿body {
+}
+
+.grid-container {
+    display: grid;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.item-main {
+    justify-items: center;
+}

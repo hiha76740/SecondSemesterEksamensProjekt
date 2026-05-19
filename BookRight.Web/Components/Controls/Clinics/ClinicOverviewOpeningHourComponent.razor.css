@@ -1,0 +1,18 @@
+﻿body {
+}
+
+.item-main {
+    justify-items: center;
+}
+
+.grid-container-openinghour {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1em;
+    justify-items: center;
+}
+
+.openinghour-item {
+    text-align: center;
+}
