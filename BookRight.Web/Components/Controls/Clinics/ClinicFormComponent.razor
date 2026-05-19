@@ -1,0 +1,78 @@
+﻿<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <section class="item-main">
+        <h4>Generelt</h4>
+        <article class="grid-container">
+            <label for="Name">Navn</label>
+            <InputText @bind-Value="Model.Name" class="form-control" id="Name"></InputText>
+            <br />
+            <label for="TreatmentRoomLimit">Antal Behandlingsrum</label>
+            <InputNumber @bind-Value="Model.TreatmentRoomLimit" class="form-control" id="TreatmentRoomLimit"></InputNumber>
+        </article>
+    </section>
+    <br />
+    <section class="item-main">
+        <h4>Adresse Oplysninger</h4>
+        <article class="grid-container">
+            <label for="Street">Adresse</label>
+            <InputText @bind-Value="Model.Street" class="form-control" id="Street"></InputText>
+            <br />
+            <label for="PostalCode">Postnr.</label>
+            <InputText @bind-Value="Model.PostalCode" class="form-control" id="PostalCode"></InputText>
+            <br />
+            <label for="City">By</label>
+            <InputText @bind-Value="Model.City" class="form-control" id="City"></InputText>
+        </article>
+    </section>
+    <br />
+    <section class="item-main">
+        <h4>Åbningstider</h4>
+        <article class="grid-container-openinghour">
+            @foreach (var openingHour in Model.OpeningHours)
+            {
+
+                <p class="item">
+                    @openingHour.WeekDay
+                    <br />
+                    Lukket:
+                    <InputCheckbox @bind-Value="openingHour.IsClosed" class="form-check-input" />
+                    <br />
+
+                    @if (openingHour.IsClosed == false)
+                    {
+
+                        <InputDate Type="InputDateType.Time" @bind-Value="openingHour.OpeningTime" class="form-control"></InputDate>
+                        <br />
+                        <InputDate Type="InputDateType.Time" @bind-Value="openingHour.ClosingTime" class="form-control"></InputDate>
+                    }
+                </p>
+
+            }
+        </article>
+    </section>
+    <br />
+    <button class="btn btn-primary" type="submit">@SubmitText</button>
+    &nbsp;
+    <a href="/clinics" class="btn btn-primary">Annuller</a>
+</EditForm>
+
+         
+
+@code {
+
+    [Parameter]
+    public ClinicInputModel Model { get; set; } = default!;
+
+    [Parameter]
+    public string SubmitText { get; set; } = "Save";
+
+    [Parameter]
+    public EventCallback<ClinicInputModel> ClinicCallback { get; set; }
+
+    private void HandleSubmit()
+    {
+        ClinicCallback.InvokeAsync(Model);
+    }
+}
