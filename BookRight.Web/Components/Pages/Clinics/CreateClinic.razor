@@ -1,0 +1,70 @@
+﻿@page "/clinic/create"
+@rendermode InteractiveServer
+
+@inject ICreateClinicHandler CreateHandler
+@inject NavigationManager NavigationManager
+
+<PageTitle>Opret Klinik</PageTitle>
+
+
+<ErrorComponent ErrorMessage="@_error" />
+<ClinicFormComponent Model="@_model"
+                     SubmitText="Opret"
+                     ClinicCallback="@Create" />
+
+
+@code {
+    private string? _error;
+    private ClinicInputModel _model = new()
+    {
+        OpeningHours = new List<OpeningHourInputModel>
+        {
+        new() { WeekDay = "Monday" },
+        new() { WeekDay = "Tuesday" },
+        new() { WeekDay = "Wednesday" },
+        new() { WeekDay = "Thursday" },
+        new() { WeekDay = "Friday" },
+        new() { WeekDay = "Saturday" },
+        new() { WeekDay = "Sunday" }
+        }
+    };
+
+    private async Task Create(ClinicInputModel model)
+    {
+        try
+        {
+            if (model != null)
+            {
+                var openingHourDtoList = new List<OpeningHourDTO>();
+
+                foreach (var openingHour in model.OpeningHours)
+                {
+
+                    var dto = new OpeningHourDTO(
+                        openingHour.WeekDay,
+                        openingHour.OpeningTime,
+                        openingHour.ClosingTime,
+                        openingHour.IsClosed);
+
+                    openingHourDtoList.Add(dto);
+                }
+
+                var command = new CreateClinicCommand(
+                    model.Name,
+                    model.Street,
+                    model.PostalCode,
+                    model.City,
+                    model.TreatmentRoomLimit,
+                    openingHourDtoList);
+
+                await CreateHandler.Handle(command);
+                NavigationManager.NavigateTo("/clinics");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+}
