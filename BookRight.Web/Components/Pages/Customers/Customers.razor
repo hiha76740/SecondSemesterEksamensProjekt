@@ -1,0 +1,53 @@
+﻿@page "/customers"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [StreamRendering]
+
+@inject ICustomerQueries CustomerQueries
+
+<PageTitle>@_targetElement</PageTitle>
+
+<h2>@_targetElement</h2>
+
+<ErrorComponent ErrorMessage="@_error"></ErrorComponent>
+<br />
+
+<SearchComponent Element="@_targetElement" SearchCallback="Search"></SearchComponent>
+<br />
+
+<LoadingComponent Loading="@_loading" Element="Kunder"></LoadingComponent>
+
+<CustomerTableComponent Customers="@CustomerList" Caption="Alle kunder"></CustomerTableComponent>
+
+@code {
+    private bool _loading;
+    private string? _error;
+    private string _targetElement = "Kunder";
+
+    private IReadOnlyList<CustomerDTO> CustomerList = [];
+
+    private async Task Search(string filter)
+    {
+        _loading = true;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(filter) == false)
+            {
+                CustomerList = await CustomerQueries.SearchCustomerAsync(filter);
+            }
+
+            else
+            {
+                CustomerList = await CustomerQueries.GetAllAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}
