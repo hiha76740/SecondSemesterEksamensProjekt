@@ -1,0 +1,42 @@
+﻿@if (Customers.Count == 0)
+{
+    <p>(ingen)</p>
+}
+
+else
+{
+    <section>
+        <table class="table table-striped">
+            <caption>@Caption</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Fornavn</th>
+                    <th scope="col">Efternavn</th>
+                    <th scope="col">Telefonnr.</th>
+                    <th scope="col">Email</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in Customers)
+                {
+                    <tr>
+                        <td>@customer.Firstname</td>
+                        <td>@customer.LastName</td>
+                        <td>@customer.PhoneNumber</td>
+                        <td>@customer.EmailAddress</td>
+                        <td><a href="/customers/@customer.Id" class="btn btn-primary">Ændre</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CustomerDTO> Customers { get; set; } = [];
+
+    [Parameter]
+    public string Caption { get; set; } = "Kunder";
+}
