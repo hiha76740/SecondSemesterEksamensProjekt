@@ -1,0 +1,64 @@
+@page "/therapist/create"
+
+<PageTitle>Opret Behandler</PageTitle>
+
+<h2>Opret Behandler</h2>
+
+<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+
+    <DataAnnotationsValidator />
+
+    <ValidationSummary />
+
+    <section class="item-main">
+
+        <h4>Generelt</h4>
+
+        <article class="grid-container">
+
+            <label for="Name">Navn</label>
+
+            <InputText @bind-Value="Model.Name"
+                       class="form-control"
+                       id="Name">
+            </InputText>
+
+            <label for="AuthorizationNumber">
+                Autorisationsnummer
+            </label>
+
+            <InputText @bind-Value="Model.AuthorizationNumber"
+                       class="form-control"
+                       id="AuthorizationNumber">
+            </InputText>
+
+            <label for="HourlyRate">
+                Timepris
+            </label>
+
+            <InputNumber @bind-Value="Model.HourlyRate"
+                         class="form-control"
+                         id="HourlyRate">
+            </InputNumber>
+
+        </article>
+
+    </section>
+
+    <br />
+
+    <button class="btn btn-primary" type="submit">
+        Opret
+    </button>
+
+</EditForm>
+
+@code {
+
+    private TherapistInputModel Model = new();
+
+    private void HandleSubmit()
+    {
+
+    }
+}

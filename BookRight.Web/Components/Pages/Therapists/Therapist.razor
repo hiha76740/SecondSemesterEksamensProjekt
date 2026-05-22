@@ -1,0 +1,63 @@
+@page "/therapists"
+@attribute [StreamRendering]
+
+@inject ITherapistQueries TherapistQueries
+
+
+<PageTitle>Behandlere</PageTitle>
+
+<h2>Behandlere</h2>
+
+<ErrorComponent ErrorMessage="@_error" />
+
+<LoadingComponent
+    Loading="@_loading"
+    Element="Therapist" />
+
+<br />
+
+<a href="/therapist/create"
+   class="btn btn-primary">
+
+    Opret Behandler
+
+</a>
+
+<br />
+<br />
+
+<section class="flex-container">
+
+    <TherapistOverviewComponent
+        Therapists="TherapistList ?? []"
+        Caption="Alle Behandlere" />
+
+</section>
+
+@code {
+
+    private bool _loading = true;
+
+    private string? _error;
+
+    [PersistentState]
+    public IReadOnlyList<TherapistDTO>?
+        TherapistList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            TherapistList ??=
+                await TherapistQueries.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

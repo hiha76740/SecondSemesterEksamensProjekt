@@ -1,0 +1,66 @@
+@page "/therapist/edit/{Id:guid}"
+
+<PageTitle>Rediger Behandler</PageTitle>
+
+<h2>Rediger Behandler</h2>
+
+@if (Model != null)
+{
+    <EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+
+        <DataAnnotationsValidator />
+
+        <ValidationSummary />
+
+        <section class="item-main">
+
+            <h4>Generelt</h4>
+
+            <article class="grid-container">
+
+                <label for="Name">Navn</label>
+
+                <InputText @bind-Value="Model.Name"
+                           class="form-control"
+                           id="Name">
+                </InputText>
+
+                <label for="HourlyRate">
+                    Timepris
+                </label>
+
+                <InputNumber @bind-Value="Model.HourlyRate"
+                             class="form-control"
+                             id="HourlyRate">
+                </InputNumber>
+
+            </article>
+
+        </section>
+
+        <br />
+
+        <button class="btn btn-primary" type="submit">
+            Gem Ændringer
+        </button>
+
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private TherapistInputModel? Model;
+
+    protected override void OnInitialized()
+    {
+        Model = new();
+    }
+
+    private void HandleSubmit()
+    {
+
+    }
+}

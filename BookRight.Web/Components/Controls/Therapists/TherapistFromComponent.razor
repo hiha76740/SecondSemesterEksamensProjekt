@@ -1,0 +1,201 @@
+<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <section class="item-main">
+
+        <h4>Generelt</h4>
+
+        <article class="grid-container">
+
+            <label for="Name">Navn</label>
+
+            <InputText
+                @bind-Value="Model.Name"
+                class="form-control"
+                id="Name">
+            </InputText>
+
+            <label for="AuthorizationNumber">
+                Autorisationsnummer
+            </label>
+
+            <InputText
+                @bind-Value="Model.AuthorizationNumber"
+                class="form-control"
+                id="AuthorizationNumber">
+            </InputText>
+
+            <label for="HourlyRate">
+                Timepris
+            </label>
+
+            <InputNumber
+                @bind-Value="Model.HourlyRate"
+                class="form-control"
+                id="HourlyRate">
+            </InputNumber>
+
+        </article>
+
+    </section>
+
+    <br />
+
+    <section class="item-main">
+
+        <h4>Kontaktoplysninger</h4>
+
+        <article class="grid-container">
+
+            <label for="EmailAddress">Email</label>
+
+            <InputText
+                @bind-Value="Model.EmailAddress"
+                class="form-control"
+                id="EmailAddress">
+            </InputText>
+
+            <label for="PhoneNumber">
+                Telefonnummer
+            </label>
+
+            <InputText
+                @bind-Value="Model.PhoneNumber"
+                class="form-control"
+                id="PhoneNumber">
+            </InputText>
+
+        </article>
+
+    </section>
+
+    <br />
+
+    <section class="item-main">
+
+        <h4>Adresse Oplysninger</h4>
+
+        <article class="grid-container">
+
+            <label for="Street">Adresse</label>
+
+            <InputText
+                @bind-Value="Model.Street"
+                class="form-control"
+                id="Street">
+            </InputText>
+
+            <label for="PostalCode">
+                Postnr.
+            </label>
+
+            <InputText
+                @bind-Value="Model.PostalCode"
+                class="form-control"
+                id="PostalCode">
+            </InputText>
+
+            <label for="City">By</label>
+
+            <InputText
+                @bind-Value="Model.City"
+                class="form-control"
+                id="City">
+            </InputText>
+
+        </article>
+
+    </section>
+
+    <br />
+
+    <section class="item-main">
+
+        <h4>Certificeringer</h4>
+
+        <article class="grid-container">
+
+            @foreach (var certification
+                in AllCertificationTypes)
+            {
+                <p class="item">
+
+                    <InputCheckbox
+                        Value="@(Model.Certifications.Contains(certification))"
+                        ValueChanged="@(checkedValue =>
+                            HandleCertificationChanged(
+                                certification,
+                                checkedValue))" />
+
+                    @certification
+
+                </p>
+            }
+
+        </article>
+
+    </section>
+
+    <br />
+
+    <button class="btn btn-primary"
+            type="submit">
+
+        @SubmitText
+
+    </button>
+
+    &nbsp;
+
+    <a href="/therapists"
+       class="btn btn-secondary">
+
+        Annuller
+
+    </a>
+
+</EditForm>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public TherapistInputModel Model { get; set; }
+        = default!;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<string>
+        AllCertificationTypes { get; set; }
+        = [];
+
+    [Parameter]
+    public string SubmitText { get; set; }
+        = "Gem";
+
+    [Parameter]
+    public EventCallback<TherapistInputModel>
+        TherapistCallback { get; set; }
+
+    private void HandleSubmit()
+    {
+        TherapistCallback.InvokeAsync(Model);
+    }
+
+    private void HandleCertificationChanged(
+        string certification,
+        bool isChecked)
+    {
+        if (isChecked)
+        {
+            if (Model.Certifications.Contains(certification) == false)
+            {
+                Model.Certifications.Add(certification);
+            }
+        }
+        else
+        {
+            Model.Certifications.Remove(certification);
+        }
+    }
+}
