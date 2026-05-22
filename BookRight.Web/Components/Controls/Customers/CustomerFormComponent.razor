@@ -1,0 +1,90 @@
+﻿<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <section class="item-main">
+        <h4>Generelt</h4>
+        <article class="grid-container">
+            <label for ="FirstName">Fornavn</label>
+            <InputText id="FirstName" class="form-control" @bind-Value="Model.FirstName"/>
+            <br />
+            <label for="LastName">Efternavn</label>
+            <InputText id="LastName" class="form-control" @bind-Value="Model.LastName"/>
+            <br />
+            <label for="BirthDate">Fødselsdato</label>
+            <InputDate id="BirthDate" class="form-control" @bind-Value="Model.BirthDate"/>
+            <br />
+            <label for="Note">Note</label>
+            <InputText id="Note" class="form-control" @bind-Value="Model.Note"/>
+            <br />
+            <label for="PreferredTherapist">Foretrukken behandler</label>
+            <InputSelect id="PreferredTherapist" class="form-control" @bind-Value="Model.PreferredTherapist">
+              
+                <option value=""></option>
+                @if(AllTherapists != null)
+                {
+                    foreach (var therapist in AllTherapists)
+                    {
+                        <option value="@therapist.Id">@therapist.Name</option>
+                    }
+                }
+
+            </InputSelect>
+        </article>
+    </section>
+    <br />
+    <br />
+    <section class="item-main">
+        <h4>Adresse</h4>
+        <article>
+            <label for="Street">Adresse</label>
+            <InputText id="Street" class="form-control" @bind-Value="Model.Street"/>
+            <br />
+            <label for="PostalCode">Postnr.</label>
+            <InputText id="PostalCode" class="form-control" @bind-Value="Model.PostalCode"/>
+            <br />
+            <label for="City">By</label>
+            <InputText id="City" class="form-control" @bind-Value="Model.City"/>
+        </article>
+    </section>
+    <br />
+    <br />
+    <section class="item-main">
+        <h4>Kontaktinformation</h4>
+        <article>
+            <label for="Email">Email</label>
+            <InputText id="Email" class="form-control" @bind-Value="Model.EmailAddress"/>
+            <br />
+            <label for="PhoneNumber">Telefonnr.</label>
+            <InputText id="PhoneNumber" class="form-control" @bind-Value="Model.PhoneNumber"/>
+        </article>
+    </section>
+    <br />
+    <button type="submit" class="btn btn-primary">@SubmitText</button>
+    &nbsp;
+    <a href="/customers" class="btn btn-secondary">Annullér</a>
+</EditForm>
+<br />
+<br />
+
+@code {
+
+    [Parameter]
+    public string SubmitText { get; set; } = "Save";
+
+    [Parameter, EditorRequired]
+    public CustomerInputModel Model { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TherapistDTO> AllTherapists { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<CustomerInputModel> CustomerCallback { get; set; }
+
+
+    private void HandleSubmit()
+    {
+        CustomerCallback.InvokeAsync(Model);
+    }
+
+}
