@@ -1,0 +1,56 @@
+﻿@page "/campaign/create"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ICreateCampaignHandler CreateHandler
+@inject ITreatmentQueries TreatmentQueries
+@inject NavigationManager NavigationManager
+
+<PageTitle>@_element</PageTitle>
+
+<h3>@_element</h3>
+<br />
+
+<ErrorComponent ErrorMessage="@_error" />
+<CampaignFormComponent Model="@Campaign"
+                       AllTreatments="@AllTreatments"
+                       CampaignCallback="@Create"
+                       SubmitText="Opret" />
+
+@code {
+    private string? _element = "Opret Kampagne";
+    private string? _error;
+
+    private CampaignInputModel Campaign = new();
+    private IReadOnlyList<TreatmentDTO> AllTreatments = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllTreatments = await TreatmentQueries.GetAllAsync();
+    }
+
+    private async Task Create()
+    {
+        try
+        {
+            if (Campaign != null)
+            {
+                var command = new CreateCampaignCommand(
+                    Campaign.Name,
+                    Campaign.DiscountProcentage,
+                    Campaign.CampaignStart,
+                    Campaign.CampaignEnd,
+                    Campaign.AssignedTreatments
+                );
+
+                await CreateHandler.Handle(command);
+                NavigationManager.NavigateTo("/campaigns");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+
+}
