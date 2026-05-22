@@ -8,4 +8,6 @@ public interface ICustomerQueries
     Task<IReadOnlyList<CustomerDTO>> GetAllAsync();
 
     Task<IReadOnlyList<CustomerDTO>> SearchCustomerAsync(string filter);
+
+    Task<CustomerDTO?> GetByPhoneNumberAsync(string phoneNumber);
 }
