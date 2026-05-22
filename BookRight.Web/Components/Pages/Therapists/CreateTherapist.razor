@@ -1,64 +1,62 @@
 @page "/therapist/create"
+@rendermode InteractiveServer
 
-<PageTitle>Opret Behandler</PageTitle>
+@inject ICreateTherapistHandler CreateHandler
+@inject IClinicQueries ClinicQueries
+@inject ICertificationTypeQueries CertificationTypeQueries
+@inject NavigationManager NavigationManager
 
-<h2>Opret Behandler</h2>
+<h3>@_element</h3>
 
-<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
-
-    <DataAnnotationsValidator />
-
-    <ValidationSummary />
-
-    <section class="item-main">
-
-        <h4>Generelt</h4>
-
-        <article class="grid-container">
-
-            <label for="Name">Navn</label>
-
-            <InputText @bind-Value="Model.Name"
-                       class="form-control"
-                       id="Name">
-            </InputText>
-
-            <label for="AuthorizationNumber">
-                Autorisationsnummer
-            </label>
-
-            <InputText @bind-Value="Model.AuthorizationNumber"
-                       class="form-control"
-                       id="AuthorizationNumber">
-            </InputText>
-
-            <label for="HourlyRate">
-                Timepris
-            </label>
-
-            <InputNumber @bind-Value="Model.HourlyRate"
-                         class="form-control"
-                         id="HourlyRate">
-            </InputNumber>
-
-        </article>
-
-    </section>
-
-    <br />
-
-    <button class="btn btn-primary" type="submit">
-        Opret
-    </button>
-
-</EditForm>
+<ErrorComponent ErrorMessage="@_error" />
+<TherapistFormComponent AllClinics="@AllClinics"
+                        AllCertifications="@AllCertifications"
+                        Model="@_model"
+                        SubmitText="Create"
+                        TherapistCallback="@Create" />
 
 @code {
+    private string? _element = "Opret behandler";
+    private string? _error;
 
-    private TherapistInputModel Model = new();
+    private TherapistInputModel _model = new();
+    private IReadOnlyList<ClinicDTO> AllClinics = [];
+    private IReadOnlyList<CertificationTypeDTO> AllCertifications = [];
 
-    private void HandleSubmit()
+    protected override async Task OnInitializedAsync()
     {
+        AllCertifications = CertificationTypeQueries.GetAll();
+        AllClinics = await ClinicQueries.GetAllAsync();
 
+    }
+
+    private async Task Create()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                var command = new CreateTherapistCommand(
+                    _model.AuthorizationNumber,
+                    _model.Name,
+                    _model.HourlyRate,
+                    _model.Street,
+                    _model.PostalCode,
+                    _model.City,
+                    _model.EmailAddress,
+                    _model.PhoneNumber,
+                    _model.AssociatedClinics,
+                    _model.Certifications
+                );
+
+                await CreateHandler.Handle(command);
+                NavigationManager.NavigateTo("/therapists");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
     }
 }
