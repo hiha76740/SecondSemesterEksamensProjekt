@@ -30,12 +30,12 @@ namespace BookRight.Web.DependencyInjections
             services.AddScoped<IAddParticipantHandler, AddParticipantHandler>();
             services.AddScoped<IRemoveParticipantHandler, RemoveParticipantHandler>();
 
-            // Price Calculator
-            services.AddScoped<IPriceCalculatorService, PriceCalculatorService>();
-
             // Customer
             services.AddScoped<ICreateCustomerHandler, CreateCustomerHandler>();
             services.AddScoped<IChangeCustomerInfoHandler, ChangeCustomerInfoHandler>();
+
+            // Price Calculator
+            services.AddScoped<IPriceCalculatorService, PriceCalculatorService>();
 
             // Therapist
             services.AddScoped<ICreateTherapistHandler, CreateTherapistHandler>();
@@ -47,6 +47,7 @@ namespace BookRight.Web.DependencyInjections
 
             // Campaign
             services.AddScoped<ICreateCampaignHandler, CreateCampaignHandler>();
+            services.AddScoped<ISetCampaignInActiveHandler, SetCampaignInActiveHandler>();
 
             return services;
         }
