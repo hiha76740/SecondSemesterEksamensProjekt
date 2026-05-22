@@ -83,7 +83,7 @@ public class Customer : AggregateRoot
     {
         if (Address == newAddress)
             throw new DomainException("New address is the same as the current address");
-        
+
         Address = newAddress;
     }
 
@@ -115,7 +115,7 @@ public class Customer : AggregateRoot
         if (newPreferredTherapistId.HasValue)
         {
             if (PreferredTherapistId == newPreferredTherapistId.Value)
-                throw new DomainException("New preferred therapist is the same as current therapist"); 
+                throw new DomainException("New preferred therapist is the same as current therapist");
         }
 
         PreferredTherapistId = newPreferredTherapistId;

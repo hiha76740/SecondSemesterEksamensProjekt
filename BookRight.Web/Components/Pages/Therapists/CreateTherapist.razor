@@ -1,0 +1,62 @@
+@page "/therapist/create"
+@rendermode InteractiveServer
+
+@inject ICreateTherapistHandler CreateHandler
+@inject IClinicQueries ClinicQueries
+@inject ICertificationTypeQueries CertificationTypeQueries
+@inject NavigationManager NavigationManager
+
+<h3>@_element</h3>
+
+<ErrorComponent ErrorMessage="@_error" />
+<TherapistFormComponent AllClinics="@AllClinics"
+                        AllCertifications="@AllCertifications"
+                        Model="@_model"
+                        SubmitText="Create"
+                        TherapistCallback="@Create" />
+
+@code {
+    private string? _element = "Opret behandler";
+    private string? _error;
+
+    private TherapistInputModel _model = new();
+    private IReadOnlyList<ClinicDTO> AllClinics = [];
+    private IReadOnlyList<CertificationTypeDTO> AllCertifications = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllCertifications = CertificationTypeQueries.GetAll();
+        AllClinics = await ClinicQueries.GetAllAsync();
+
+    }
+
+    private async Task Create()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                var command = new CreateTherapistCommand(
+                    _model.AuthorizationNumber,
+                    _model.Name,
+                    _model.HourlyRate,
+                    _model.Street,
+                    _model.PostalCode,
+                    _model.City,
+                    _model.EmailAddress,
+                    _model.PhoneNumber,
+                    _model.AssociatedClinics,
+                    _model.Certifications
+                );
+
+                await CreateHandler.Handle(command);
+                NavigationManager.NavigateTo("/therapists");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+}

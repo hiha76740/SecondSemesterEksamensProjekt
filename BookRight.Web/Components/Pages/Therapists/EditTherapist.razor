@@ -1,0 +1,99 @@
+@page "/therapist/{id:guid}"
+@rendermode InteractiveServer
+
+@inject IChangeTherapistInfoHandler Handler
+@inject ITherapistQueries TherapistQueries
+@inject IClinicQueries ClinicQueries
+@inject ICertificationTypeQueries CertificationTypeQueries
+@inject NavigationManager NavigationManager
+
+<PageTitle>Ændre Behandler</PageTitle>
+
+<ErrorComponent ErrorMessage="@_error" />
+
+<TherapistFormComponent AllClinics="@AllClinics"
+                        AllCertifications="@AllCertifications"
+                        Model="@_model"
+                        SubmitText="Ok"
+                        TherapistCallback="@Update" />
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string? _error;
+    private TherapistInputModel _model = new();
+    private TherapistDTO? TherapistDTO = null;
+
+    private IReadOnlyList<ClinicDTO> AllClinics = [];
+    private IReadOnlyList<CertificationTypeDTO> AllCertifications = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            AllCertifications = CertificationTypeQueries.GetAll();
+            AllClinics = await ClinicQueries.GetAllAsync();
+
+            if (_model != null)
+            {
+                TherapistDTO ??= await TherapistQueries.GetByIdAsync(Id);
+
+                if (TherapistDTO != null)
+                {
+                    _model.Id = TherapistDTO.Id;
+                    _model.AuthorizationNumber = TherapistDTO.AuthorizationNumber;
+                    _model.Name = TherapistDTO.Name;
+                    _model.HourlyRate = TherapistDTO.HourlyRate;
+                    _model.Street = TherapistDTO.Street;
+                    _model.PostalCode = TherapistDTO.PostalCode;
+                    _model.City = TherapistDTO.City;
+                    _model.EmailAddress = TherapistDTO.Email;
+                    _model.PhoneNumber = TherapistDTO.PhoneNumber;
+                    _model.AssociatedClinics = TherapistDTO.AssociatedClinics.ToList();
+                    _model.Certifications = TherapistDTO.CertificationTypes.ToList();
+                }
+                else
+                {
+                    _error = "Therapist not found";
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+
+    private async Task Update()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                var command = new ChangeTherapistInfoCommand(
+                    _model.Id,
+                    _model.Name,
+                    _model.HourlyRate,
+                    _model.Street,
+                    _model.PostalCode,
+                    _model.City,
+                    _model.EmailAddress,
+                    _model.PhoneNumber,
+                    _model.AssociatedClinics,
+                    _model.Certifications);
+
+                await Handler.Handle(command);
+                NavigationManager.NavigateTo("/therapists");
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+}

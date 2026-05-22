@@ -1,0 +1,29 @@
+﻿<tr>
+    <td>@Therapist.Name</td>
+    <td>@Therapist.Street, @Therapist.PostalCode @Therapist.City</td>
+    <td>@Therapist.PhoneNumber</td>
+    <td>@Therapist.Email</td>
+    <td>
+        @foreach (var certification in Therapist.CertificationTypes)
+        {
+            <p>@certification</p>
+        }
+    </td>
+    <td>
+        @foreach (var clinic in AssociatedClinics)
+        {
+            <p>@clinic.Name</p>
+        }
+    </td>
+    <td><a href="/therapist/@Therapist.Id" class="btn btn-primary">Ændre</a></td>
+</tr>
+
+@code {
+    [Parameter, EditorRequired]
+    public TherapistDTO Therapist { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ClinicDTO> AllClinics { get; set; }
+
+    private IReadOnlyList<ClinicDTO> AssociatedClinics => AllClinics.Where(c => Therapist.AssociatedClinics.Contains(c.Id)).ToList();
+}
