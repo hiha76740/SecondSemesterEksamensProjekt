@@ -17,7 +17,13 @@
 
 <a href="/booking/create" class="btn btn-primary">Opret Booking</a>
 
-<BookingTableComponent AllBookings="@BookingList"
+<br />
+<br />
+<button type="button" class="btn btn-primary" @onclick="@PreviousDay">Forrige</button>
+&ensp;
+<button type="button" class="btn btn-primary" @onclick="@NextDay">Næste</button>
+
+<BookingTableComponent AllBookings="@FilteredList"
                        AllTherapists="@AllTherapists"
                        AllTreatments="@AllTreatments"
                        AllParticipants="@AllCustomers"
@@ -36,6 +42,8 @@
     private IReadOnlyList<TreatmentDTO> AllTreatments { get; set; } = [];
     private IReadOnlyList<CustomerDTO> AllCustomers { get; set; } = [];
 
+    private DateTime _day = DateTime.Today;
+    private IReadOnlyList<BookingDTO> FilteredList => BookingList.Where(b => b.From.Date == _day.Date).ToList();
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,5 +65,16 @@
         {
             _loading = false;
         }
+    }
+
+    private void NextDay()
+    {
+        _day = _day.AddDays(1);
+    }
+
+    private void PreviousDay()
+    {
+
+        _day = _day.AddDays(-1);
     }
 }
