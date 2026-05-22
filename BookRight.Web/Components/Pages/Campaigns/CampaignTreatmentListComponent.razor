@@ -1,0 +1,42 @@
+﻿<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">@HeaderText</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (TreatmentList != null)
+        {
+            @foreach (var treatment in TreatmentList)
+            {
+                <tr>
+                    <td>@treatment.Name</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="@(() => { HandleCallback(treatment); StateHasChanged(); })">
+                            @ButtonText
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<TreatmentDTO> TreatmentList { get; set; }
+
+    [Parameter]
+    public string HeaderText { get; set; } = "Treatment";
+
+    [Parameter]
+    public string ButtonText { get; set; } = "Button";
+
+    [Parameter, EditorRequired]
+    public EventCallback<TreatmentDTO> Callback { get; set; }
+
+    private void HandleCallback(TreatmentDTO treatment)
+    {
+        Callback.InvokeAsync(treatment);
+    }
+}
