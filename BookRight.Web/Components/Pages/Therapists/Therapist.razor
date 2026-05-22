@@ -1,55 +1,49 @@
-@page "/therapists"
+@page "/Therapists"
 @attribute [StreamRendering]
+@rendermode InteractiveServer
 
 @inject ITherapistQueries TherapistQueries
+@inject IClinicQueries ClinicQueries
 
+<PageTitle>@_element</PageTitle>
 
-<PageTitle>Behandlere</PageTitle>
+<h2>@_element</h2>
 
-<h2>Behandlere</h2>
+<SearchComponent Element="@_element" SearchCallback="Search"></SearchComponent>
+<br />
 
 <ErrorComponent ErrorMessage="@_error" />
+<LoadingComponent Loading="@_loading" Element="@_element" />
 
-<LoadingComponent
-    Loading="@_loading"
-    Element="Therapist" />
+<a href="/therapist/create" class="btn btn-primary">Opret Behandler</a>
 
-<br />
-
-<a href="/therapist/create"
-   class="btn btn-primary">
-
-    Opret Behandler
-
-</a>
-
-<br />
-<br />
-
-<section class="flex-container">
-
-    <TherapistOverviewComponent
-        Therapists="TherapistList ?? []"
-        Caption="Alle Behandlere" />
-
-</section>
+<TherapistTableComponent Therapists="@TherapistList" Caption="Alle Behandlere" AllClinics="@AllClinics" />
 
 @code {
-
-    private bool _loading = true;
-
+    private bool _loading;
     private string? _error;
+    private string? _element = "Behandlere";
 
-    [PersistentState]
-    public IReadOnlyList<TherapistDTO>?
-        TherapistList { get; set; }
+    private IReadOnlyList<TherapistDTO> TherapistList = [];
+    private IReadOnlyList<ClinicDTO> AllClinics = [];
 
-    protected override async Task OnInitializedAsync()
+    private async Task Search(string filter)
     {
+        TherapistList = [];
+        _loading = true;
+
         try
         {
-            TherapistList ??=
-                await TherapistQueries.GetAllAsync();
+            AllClinics = await ClinicQueries.GetAllAsync();
+
+            if (string.IsNullOrWhiteSpace(filter) == false)
+            {
+                TherapistList = await TherapistQueries.SearchTherapistAsync(filter);
+            }
+            else
+            {
+                TherapistList = await TherapistQueries.GetAllAsync();
+            }
         }
         catch (Exception ex)
         {
