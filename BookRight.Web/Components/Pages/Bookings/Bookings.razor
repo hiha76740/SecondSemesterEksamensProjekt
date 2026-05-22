@@ -15,22 +15,24 @@
 <ErrorComponent ErrorMessage="@_error" />
 <LoadingComponent Loading="@_loading" Element="@_element" />
 
-<a href="/booking/create" class="btn btn-primary">Opret Booking</a>
+<section>
+    <a href="/booking/create" class="btn btn-primary">Opret Booking</a>
 
-<br />
-<br />
-<button type="button" class="btn btn-primary" @onclick="@PreviousDay">Forrige</button>
-&ensp;
-<button type="button" class="btn btn-primary" @onclick="@NextDay">Næste</button>
+    <br />
+    <br />
+    <article>
+        <button type="button" class="btn btn-primary" @onclick="@PreviousDay">Forrige</button>
+        &ensp;
+        <button type="button" class="btn btn-primary" @onclick="@NextDay">Næste</button>
+    </article>
+    <BookingTableComponent AllBookings="@FilteredList"
+                           AllTherapists="@AllTherapists"
+                           AllTreatments="@AllTreatments"
+                           AllParticipants="@AllCustomers"
+                           Caption="Alle Bookinger" />
 
-<BookingTableComponent AllBookings="@FilteredList"
-                       AllTherapists="@AllTherapists"
-                       AllTreatments="@AllTreatments"
-                       AllParticipants="@AllCustomers"
-                       Caption="Alle Bookinger" />
 
-
-
+</section>
 
 @code {
     private string? _element = "Bookinger";
