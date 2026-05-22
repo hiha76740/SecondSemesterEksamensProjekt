@@ -1,0 +1,116 @@
+﻿<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <section class="item-main">
+        <h4>@Model.Name</h4>
+
+        <h4>Generelt</h4>
+        <article class="grid-container-1-item">
+            <label for="Name">Navn</label>
+            <InputText @bind-Value="Model.Name" class="form-control" id="FirstName"></InputText>
+        </article>
+
+        <br />
+        <br />
+        <h4>Adresse Oplysninger</h4>
+        <article class="grid-container">
+            <label for="Street">Adresse</label>
+            <InputText @bind-Value="Model.Street" class="form-control" id="Street"></InputText>
+            <br />
+            <label for="PostalCode">Postnr.</label>
+            <InputText @bind-Value="Model.PostalCode" class="form-control" id="PostalCode"></InputText>
+            <br />
+            <label for="City">By</label>
+            <InputText @bind-Value="Model.City" class="form-control" id="City"></InputText>
+        </article>
+        <br />
+        <br />
+        <h4>Kontakt Oplysninger</h4>
+        <article class="grid-container">
+            <label for="PhoneNumber">Telefon nr.</label>
+            <InputText @bind-Value="Model.PhoneNumber" class="form-control" id="PhoneNumber"></InputText>
+            <br />
+            <label for="Email">Email</label>
+            <InputText @bind-Value="Model.EmailAddress" class="form-control" id="Email"></InputText>
+        </article>
+
+        <article>
+            <TherapistClinicListComponent ClinicList="@AssociatedClinics"
+                                          Callback="@RemoveAssociatedClinic"
+                                          ButtonText="Fjern"
+                                          HeaderText="Tilknyttede klinikker" />
+
+            <TherapistClinicListComponent ClinicList="@AvailableClinics"
+                                          Callback="@AssociateClinic"
+                                          ButtonText="Tilknyt"
+                                          HeaderText="Tilgængelige klinkker" />
+        </article>
+
+        <article>
+            <TherapistCertificationListComponent CertificationList="@AssociatedCertifications"
+                                                 Callback="@RemoveAssociatedClinic"
+                                                 ButtonText="Fjern"
+                                                 HeaderText="Tilknyttede certifikatter" />
+
+            <TherapistCertificationListComponent CertificationList="@AvailableCertifications"
+                                                 Callback="@AssignCertification"
+                                                 ButtonText="Tilføj"
+                                                 HeaderText="Tilgængelige certifikatter" />
+        </article>
+    </section>
+    <br />
+    <button class="btn btn-primary" type="submit">@SubmitText</button>
+    &nbsp;
+    <a href="/therapists" class="btn btn-secondary">Annuller</a>
+</EditForm>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ClinicDTO> AllClinics { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CertificationTypeDTO> AllCertifications { get; set; }
+
+    [Parameter, EditorRequired]
+    public TherapistInputModel Model { get; set; } = default!;
+
+    [Parameter]
+    public string SubmitText { get; set; } = "Save";
+
+    [Parameter]
+    public EventCallback<TherapistInputModel> TherapistCallback { get; set; }
+
+
+    private IEnumerable<ClinicDTO> AvailableClinics => AllClinics.Where(t => Model.AssociatedClinics.Contains(t.Id) == false).OrderBy(c => c.Name);
+    private IEnumerable<ClinicDTO> AssociatedClinics => AllClinics.Where(t => Model.AssociatedClinics.Contains(t.Id) == true).OrderBy(c => c.Name);
+
+    private IEnumerable<CertificationTypeDTO> AvailableCertifications => AllCertifications.Where(c => Model.Certifications.Contains(c.CertificationType) == false).OrderBy(c => c.CertificationType);
+    private IEnumerable<CertificationTypeDTO> AssociatedCertifications => AllCertifications.Where(c => Model.Certifications.Contains(c.CertificationType) == true).OrderBy(c => c.CertificationType);
+
+    private void HandleSubmit()
+    {
+        TherapistCallback.InvokeAsync(Model);
+    }
+
+    private void AssociateClinic(ClinicDTO clinic)
+    {
+        Model.AssociatedClinics.Add(clinic.Id);
+    }
+
+    private void RemoveAssociatedClinic(ClinicDTO clinic)
+    {
+        Model.AssociatedClinics.Remove(clinic.Id);
+    }
+
+    private void AssignCertification(CertificationTypeDTO certification)
+    {
+        Model.Certifications.Add(certification.CertificationType);
+    }
+
+    private void RemoveAssociatedClinic(CertificationTypeDTO certification)
+    {
+        Model.Certifications.Remove(certification.CertificationType);
+    }
+}
