@@ -4,24 +4,24 @@
 
 @inject ICustomerQueries CustomerQueries
 
-<PageTitle>@_targetElement</PageTitle>
+<PageTitle>@_element</PageTitle>
 
-<h2>@_targetElement</h2>
+<h2>@_element</h2>
 
 <ErrorComponent ErrorMessage="@_error"></ErrorComponent>
 <br />
 
-<SearchComponent Element="@_targetElement" SearchCallback="Search"></SearchComponent>
+<SearchComponent Element="@_element" SearchCallback="Search"></SearchComponent>
 <br />
 
-<LoadingComponent Loading="@_loading" Element="Kunder"></LoadingComponent>
+<LoadingComponent Loading="@_loading" Element="@_element"></LoadingComponent>
 
 <CustomerTableComponent Customers="@CustomerList" Caption="Alle kunder"></CustomerTableComponent>
 
 @code {
     private bool _loading;
     private string? _error;
-    private string _targetElement = "Kunder";
+    private string _element = "Kunder";
 
     private IReadOnlyList<CustomerDTO> CustomerList = [];
 
