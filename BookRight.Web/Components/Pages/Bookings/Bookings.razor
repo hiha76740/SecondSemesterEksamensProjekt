@@ -1,0 +1,61 @@
+﻿@page "/Bookings"
+@using BookRight.Web.Components.Controls.Bookings
+
+@attribute [StreamRendering]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IBookingQueries BookingQueries
+@inject ITherapistQueries TherapistQueries
+@inject ITreatmentQueries TreatmentQueries
+@inject ICustomerQueries CustomerQueries
+
+<PageTitle>@_element</PageTitle>
+<h2>@_element</h2>
+
+<ErrorComponent ErrorMessage="@_error" />
+<LoadingComponent Loading="@_loading" Element="@_element" />
+
+<a href="/booking/create" class="btn btn-primary">Opret Booking</a>
+
+<BookingTableComponent AllBookings="@BookingList"
+                       AllTherapists="@AllTherapists"
+                       AllTreatments="@AllTreatments"
+                       AllParticipants="@AllCustomers"
+                       Caption="Alle Bookinger" />
+
+
+
+
+@code {
+    private string? _element = "Bookinger";
+    private bool _loading;
+    private string? _error;
+
+    private IReadOnlyList<BookingDTO> BookingList { get; set; } = [];
+    private IReadOnlyList<TherapistDTO> AllTherapists { get; set; } = [];
+    private IReadOnlyList<TreatmentDTO> AllTreatments { get; set; } = [];
+    private IReadOnlyList<CustomerDTO> AllCustomers { get; set; } = [];
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            BookingList = await BookingQueries.GetAllAsync();
+
+            BookingList.OrderBy(b => b.From);
+
+            AllTherapists = await TherapistQueries.GetAllAsync();
+            AllTreatments = await TreatmentQueries.GetAllAsync();
+            AllCustomers = await CustomerQueries.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}
