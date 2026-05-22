@@ -1,66 +1,99 @@
-@page "/therapist/edit/{Id:guid}"
+@page "/therapist/{id:guid}"
+@rendermode InteractiveServer
 
-<PageTitle>Rediger Behandler</PageTitle>
+@inject IChangeTherapistInfoHandler Handler
+@inject ITherapistQueries TherapistQueries
+@inject IClinicQueries ClinicQueries
+@inject ICertificationTypeQueries CertificationTypeQueries
+@inject NavigationManager NavigationManager
 
-<h2>Rediger Behandler</h2>
+<PageTitle>Ændre Behandler</PageTitle>
 
-@if (Model != null)
-{
-    <EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+<ErrorComponent ErrorMessage="@_error" />
 
-        <DataAnnotationsValidator />
-
-        <ValidationSummary />
-
-        <section class="item-main">
-
-            <h4>Generelt</h4>
-
-            <article class="grid-container">
-
-                <label for="Name">Navn</label>
-
-                <InputText @bind-Value="Model.Name"
-                           class="form-control"
-                           id="Name">
-                </InputText>
-
-                <label for="HourlyRate">
-                    Timepris
-                </label>
-
-                <InputNumber @bind-Value="Model.HourlyRate"
-                             class="form-control"
-                             id="HourlyRate">
-                </InputNumber>
-
-            </article>
-
-        </section>
-
-        <br />
-
-        <button class="btn btn-primary" type="submit">
-            Gem Ændringer
-        </button>
-
-    </EditForm>
-}
+<TherapistFormComponent AllClinics="@AllClinics"
+                        AllCertifications="@AllCertifications"
+                        Model="@_model"
+                        SubmitText="Ok"
+                        TherapistCallback="@Update" />
 
 @code {
-
     [Parameter]
     public Guid Id { get; set; }
 
-    private TherapistInputModel? Model;
+    private string? _error;
+    private TherapistInputModel _model = new();
+    private TherapistDTO? TherapistDTO = null;
 
-    protected override void OnInitialized()
+    private IReadOnlyList<ClinicDTO> AllClinics = [];
+    private IReadOnlyList<CertificationTypeDTO> AllCertifications = [];
+
+    protected override async Task OnParametersSetAsync()
     {
-        Model = new();
+        try
+        {
+            AllCertifications = CertificationTypeQueries.GetAll();
+            AllClinics = await ClinicQueries.GetAllAsync();
+
+            if (_model != null)
+            {
+                TherapistDTO ??= await TherapistQueries.GetByIdAsync(Id);
+
+                if (TherapistDTO != null)
+                {
+                    _model.Id = TherapistDTO.Id;
+                    _model.AuthorizationNumber = TherapistDTO.AuthorizationNumber;
+                    _model.Name = TherapistDTO.Name;
+                    _model.HourlyRate = TherapistDTO.HourlyRate;
+                    _model.Street = TherapistDTO.Street;
+                    _model.PostalCode = TherapistDTO.PostalCode;
+                    _model.City = TherapistDTO.City;
+                    _model.EmailAddress = TherapistDTO.Email;
+                    _model.PhoneNumber = TherapistDTO.PhoneNumber;
+                    _model.AssociatedClinics = TherapistDTO.AssociatedClinics.ToList();
+                    _model.Certifications = TherapistDTO.CertificationTypes.ToList();
+                }
+                else
+                {
+                    _error = "Therapist not found";
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
     }
 
-    private void HandleSubmit()
+    private async Task Update()
     {
+        try
+        {
+            if (_model != null)
+            {
+                var command = new ChangeTherapistInfoCommand(
+                    _model.Id,
+                    _model.Name,
+                    _model.HourlyRate,
+                    _model.Street,
+                    _model.PostalCode,
+                    _model.City,
+                    _model.EmailAddress,
+                    _model.PhoneNumber,
+                    _model.AssociatedClinics,
+                    _model.Certifications);
 
+                await Handler.Handle(command);
+                NavigationManager.NavigateTo("/therapists");
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
     }
 }
