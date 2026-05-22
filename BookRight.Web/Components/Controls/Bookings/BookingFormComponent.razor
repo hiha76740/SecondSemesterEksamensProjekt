@@ -1,0 +1,252 @@
+﻿<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <section class="item-main">
+        <p>@Model.Status</p>
+
+        <article class="grid-container">
+            <label for="Clinic">Vælg Klinik</label>
+            <InputSelect id="Clinic" @bind-Value="Model.ClinicId" class="form-control">
+
+                <option value=""></option>
+                @if (AllClinics != null)
+                {
+                    @foreach (var clinic in AllClinics)
+                    {
+                        <option value="@clinic.Id">@clinic.Name</option>
+                    }
+                }
+            </InputSelect>
+
+            <label for="Treatment">Vælg Behandling</label>
+            <InputSelect id="Treatment" @bind-Value="Model.TreatmentId" class="form-control">
+
+                <option value=""></option>
+                @if (AllTreatments != null)
+                {
+                    @foreach (var treatment in AllTreatments)
+                    {
+                        <option value="@treatment.Id">@treatment.Name</option>
+                    }
+                }
+            </InputSelect>
+        </article>
+    </section>
+    <br />
+    <section class="item-main">
+        @if (Model.ClinicId != Guid.Empty && Model.TreatmentId != Guid.Empty)
+        {
+            <article class="grid-container">
+
+                <label for="Therapist">Vælg behandler</label>
+                <InputSelect id="Clinic" @bind-Value="@_therapist" class="form-control">
+
+                    <option value=""></option>
+                    @if (AllTherapists != null)
+                    {
+                        @foreach (var therapist in FilteredTherapists)
+                        {
+                            <option value="@therapist.Id">@therapist.Name</option>
+                        }
+                    }
+                </InputSelect>
+            </article>
+            <br />
+            <article>
+                <p>Viser tider for @_day.DayOfWeek @_day</p>
+                <button type="button" class="btn btn-primary" @onclick="@PreviousDay">Forrige</button>
+                <button type="button" class="btn btn-primary" @onclick="@NextDay">Næste</button>
+                <br />
+                <br />
+                <label for="availableTime">Vælg ledig tider</label>
+
+                <InputSelect id="availableTime" @bind-Value="@_time" class="form-control">
+
+                    @if (_therapist == null)
+                    {
+                        CalculateTimeSlots();
+
+                        @foreach (var timeSlot in AvailableTimes)
+                        {
+                            <option value="@timeSlot">@timeSlot.TimeOfDay</option>
+                        }
+                    }
+                    else
+                    {
+                        CalculateTimeSlots();
+
+                        @foreach (var timeSlot in AvailableTimes)
+                        {
+                            <option value="@timeSlot">@timeSlot.TimeOfDay</option>
+                        }
+                    }
+                </InputSelect>
+            </article>
+
+            <br />
+            @if (SelectedTreatment.MaxParticipants == 1)
+            {
+                <SearchComponent Element="Kunde via telefon nr." SearchCallback="@PhoneNumberCallback"></SearchComponent>
+
+                if (Customer != null)
+                {
+                    <section>
+                        <p>Kunde: @Customer.FirstName @Customer.LastName</p>
+                        <p>Normal pris: @SelectedTreatment.Price</p>
+
+                        @if (Price != null)
+                        {
+                            <p>Discount type brugt: @Price.DiscountType</p>
+                            <p>Endelig pris: @Price.FinalPrice</p>
+                        }
+
+                        <button type="button" class="btn btn-primary" @onclick="@HandlePriceCalculator">Beregn pris</button>
+                    </section>
+                }
+            }
+            <br />
+            <button type="submit" class="btn btn-primary">@SubmitText</button>
+            <a href="/bookings" class="btn btn-secondary">Annuller</a>
+
+            
+        }
+    </section>
+</EditForm>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public BookingInputModel Model { get; set; } = default!;
+
+    [Parameter]
+    public string? SubmitText { get; set; } = "Save";
+
+    [Parameter, EditorRequired]
+    public CustomerDTO Customer { get; set; }
+
+    [Parameter, EditorRequired]
+    public PriceCalculatorDTO Price { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TherapistDTO> AllTherapists { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TreatmentDTO> AllTreatments { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ClinicDTO> AllClinics { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<BookingDTO> AllBookings { get; set; }
+
+    [Parameter]
+    public EventCallback<BookingInputModel> BookingCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<string> PhoneNumberCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<PriceCalculatorCommand> PriceCalculatorCallback { get; set; }
+
+    private Guid? _therapist;
+    private DateTime _time;
+    private List<DateTime> AvailableTimes = [];
+    private DateOnly _day = DateOnly.FromDateTime(DateTime.Today);
+    private TreatmentDTO SelectedTreatment => AllTreatments.Where(t => t.Id == Model.TreatmentId).First();
+    private IReadOnlyList<TherapistDTO> FilteredTherapists => AllTherapists
+    .Where(
+        t =>
+        t.AssociatedClinics.Contains(Model.ClinicId) &&
+        t.CertificationTypes.Contains(SelectedTreatment.CertificationRequired))
+        .ToList();
+
+
+    private void HandleSubmit()
+    {
+        if (_therapist != null)
+            Model.TherapistId = _therapist.Value;
+
+        if (SelectedTreatment.MaxParticipants == 1)
+        {
+            Model.DiscountTypeUsed = Price.DiscountType;
+            Model.ParticipantLimit = SelectedTreatment.MaxParticipants;
+            Model.Price = Price.FinalPrice;
+            Model.Participants.Add(Customer.Id);
+        }
+
+        Model.Start = _time;
+        Model.End = _time.AddMinutes(SelectedTreatment.Duration.TotalMinutes);
+
+        BookingCallback.InvokeAsync(Model);
+    }
+
+    private void HandleCustomerSearch(string phoneNumber)
+    {
+        PhoneNumberCallback.InvokeAsync(phoneNumber);
+    }
+
+    private void HandlePriceCalculator()
+    {
+        var command = new PriceCalculatorCommand(Customer.Id, Model.TreatmentId, _time);
+        PriceCalculatorCallback.InvokeAsync(command);
+    }
+
+    private void NextDay()
+    {
+        _day = _day.AddDays(1);
+    }
+
+    private void PreviousDay()
+    {
+
+        _day = _day.AddDays(-1);
+    }
+
+    private void CalculateTimeSlots()
+    {
+        var possibleTimeSlots = new List<DateTime>();
+
+        var selectedClinic = AllClinics.Where(c => c.Id == Model.ClinicId).First();
+
+        var openingHour = selectedClinic.OpeningHours.Where(oh => oh.WeekDay == _day.DayOfWeek.ToString()).First();
+
+
+
+        if (openingHour.OpeningTime != null && openingHour.ClosingTime != null)
+        {
+            var current = openingHour.OpeningTime;
+
+            while (current.Value.Add(SelectedTreatment.Duration) <= openingHour.ClosingTime.Value)
+            {
+                possibleTimeSlots.Add(_day.ToDateTime(current.Value));
+                current = current.Value.AddMinutes(15);
+            }
+        }
+
+        if (_therapist == null)
+        {
+            AvailableTimes = possibleTimeSlots
+            .Where(start =>
+            {
+                var end = start.Add(SelectedTreatment.Duration);
+
+                return AllBookings.Any(b => start < b.To && end > b.From) == false;
+            })
+            .ToList();
+        }
+        else
+        {
+            AvailableTimes = possibleTimeSlots
+            .Where(start =>
+            {
+                var end = start.Add(SelectedTreatment.Duration);
+
+                return
+                AllBookings.Any(b => start < b.To && end > b.From) == false &&
+                AllBookings.Where(b => b.TherapistId == _therapist.Value).Any((b => start < b.To && end > b.From)) == false;
+            })
+            .ToList();
+        }
+    }
+}
