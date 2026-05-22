@@ -1,0 +1,37 @@
+.item-main {
+    padding: 1rem;
+    border-radius: 12px;
+    background-color: white;
+    border: 1px solid #dcdcdc;
+}
+
+.grid-container {
+    display: grid;
+    gap: 1rem;
+}
+
+.form-control {
+    width: 100%;
+}
+
+button {
+    margin-right: 0.5rem;
+}
+
+h4 {
+    margin-bottom: 1rem;
+}
+
+.table {
+    background-color: white;
+}
+
+th {
+    font-weight: bold;
+}
+
+.item {
+    padding: 0.5rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
