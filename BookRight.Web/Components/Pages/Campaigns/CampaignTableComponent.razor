@@ -1,0 +1,47 @@
+﻿@if (Campaigns.Count == 0)
+{
+    <p>(ingen)</p>
+}
+else
+{
+    <section>
+        <table class="table table-striped">
+            <caption>@Caption</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Navn</th>
+                    <th scope="col">Rabat Procent</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">Slut</th>
+                    <th scope="col">Tilknyttet behandlinger</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var campaign in Campaigns)
+                {
+                    <CampaignComponent Campaign="@campaign" SetInActiveCallback="@HandleSetInActiveCallback" AllTreatments="@AllTreatments" />
+                }
+            </tbody>
+        </table>
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CampaignDTO> Campaigns { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TreatmentDTO> AllTreatments { get; set; }
+
+    [Parameter]
+    public string Caption { get; set; } = "Campaigns";
+
+    [Parameter, EditorRequired]
+    public EventCallback<Guid> SetInActiveCallback { get; set; }
+
+    private void HandleSetInActiveCallback(Guid id)
+    {
+        SetInActiveCallback.InvokeAsync(id);
+    }
+}
