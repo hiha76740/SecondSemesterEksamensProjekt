@@ -1,0 +1,134 @@
+﻿@page "/booking/create"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IBookingQueries BookingQueries
+@inject ITherapistQueries TherapistQueries
+@inject ITreatmentQueries TreatmentQueries
+@inject ICustomerQueries CustomerQueries
+@inject IClinicQueries ClinicQueries
+@inject IPriceCalculatorService PriceCalculator
+@inject ICreateBookingHandler Handler
+@inject NavigationManager NavigationManager
+
+<PageTitle>@_element</PageTitle>
+<h3>@_element</h3>
+<br />
+
+<ErrorComponent ErrorMessage="@_error" />
+
+<BookingFormComponent Model="@_model"
+                      Customer="@Customer"
+                      AllTherapists="@AllTherapists"
+                      AllTreatments="@AllTreatments"
+                      AllClinics="@AllClinics"
+                      AllBookings="@AllBookings"
+                      Price="@Price"
+                      PhoneNumberCallback="@SearchCustomer"
+                      PriceCalculatorCallback="@CalculatePrice"
+                      SubmitText="Opret"
+                      BookingCallback="@Create"/>
+
+@code {
+    private string? _element = "Opret Booking";
+    private string? _error;
+
+    private BookingInputModel _model = new();
+
+    private IReadOnlyList<TherapistDTO> AllTherapists = [];
+    private IReadOnlyList<TreatmentDTO> AllTreatments = [];
+    private IReadOnlyList<ClinicDTO> AllClinics = [];
+    private IReadOnlyList<BookingDTO> AllBookings = [];
+    private PriceCalculatorDTO? Price;
+    private CustomerDTO? Customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            AllTherapists = await TherapistQueries.GetAllAsync();
+            AllTreatments = await TreatmentQueries.GetAllAsync();
+            AllClinics = await ClinicQueries.GetAllAsync();
+            AllBookings = await BookingQueries.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+
+    }
+
+    private async Task SearchCustomer(string phoneNumber)
+    {
+        try
+        {
+            Customer = null;
+            Customer ??= await CustomerQueries.GetByPhoneNumberAsync(phoneNumber);
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+
+    }
+
+    private async Task CalculatePrice(PriceCalculatorCommand command)
+    {
+        try
+        {
+            Price = await PriceCalculator.CalculatePrice(command);
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+
+
+    }
+
+    private async Task Create(BookingInputModel model)
+    {
+
+        try
+        {
+            CreateBookingCommand? command = null;
+
+            if (model.ParticipantLimit == 1)
+            {
+                command = new CreateBookingCommand(
+                    model.TreatmentId,
+                    model.TherapistId,
+                    model.ClinicId,
+                    model.Start,
+                    model.End,
+                    model.DiscountTypeUsed,
+                    model.Participants.First()
+                );
+            }
+            else
+            {
+                command = new CreateBookingCommand(
+                    model.TreatmentId,
+                    model.TherapistId,
+                    model.ClinicId,
+                    model.Start,
+                    model.End,
+                    model.DiscountTypeUsed
+                );
+            }
+
+            await Handler.Handle(command);
+            NavigationManager.NavigateTo("/bookings");
+        }
+        catch (Exception ex) 
+        {
+
+            _error = ex.Message;
+        }
+        
+
+        
+    }
+}
