@@ -15,9 +15,10 @@ public class BookingRepository(BookRightDbContext db) : IBookingRepository
 
     async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByCustomerIdAsync(Guid customerId)
     {
-        return await db.Bookings
-            .Where(b => b.Participants.Contains(customerId))
-            .ToListAsync();
+        var bookings = await db.Bookings.ToListAsync();
+
+
+        return bookings.Where(b => b.Participants.Contains(customerId)).ToList();
     }
 
     async Task<IReadOnlyList<Booking>> IBookingRepository.GetBookingsByTherapistIdAsync(Guid therapistId)
