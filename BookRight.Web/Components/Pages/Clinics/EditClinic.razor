@@ -1,8 +1,8 @@
-﻿@page "/Clinic/{id:guid}"
+﻿@page "/clinic/{id:guid}"
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@inject IClinicQueries Queries
-@inject IChangeClinicInfoHandler Handler
+@inject IClinicQueries ClinicQueries
+@inject IChangeClinicInfoHandler ChangeInfoHandler
 @inject NavigationManager NavigationManager
 
 <PageTitle>Ændre Klinik</PageTitle>
@@ -29,7 +29,7 @@
         {
             if (_model != null)
             {
-                ClinicDTO ??= await Queries.GetByIdAsync(Id);
+                ClinicDTO ??= await ClinicQueries.GetByIdAsync(Id);
 
                 if (ClinicDTO != null)
                 {
@@ -92,7 +92,7 @@
                     model.TreatmentRoomLimit,
                     openingHourList);
 
-                await Handler.Handle(command);
+                await ChangeInfoHandler.Handle(command);
                 NavigationManager.NavigateTo("/clinics");
 
             }
