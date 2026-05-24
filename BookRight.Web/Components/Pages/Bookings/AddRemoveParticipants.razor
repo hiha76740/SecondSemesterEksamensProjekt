@@ -1,0 +1,52 @@
+﻿@page "/booking/{id:guid}/participants"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IBookingQueries BookingQueries
+@inject IAddParticipantHandler AddHandler
+@inject IRemoveParticipantHandler RemoveHandler
+
+<PageTitle >Tilføj / Fjern deltager</PageTitle>
+
+<ErrorComponent ErrorMessage="@_error"></ErrorComponent>
+
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string? _error;
+    private BookingInputModel? _model = new();
+    private BookingDTO? BookingDTO = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                BookingDTO ??= await BookingQueries.GetByIdAsync(Id);
+
+                if (BookingDTO != null)
+                {
+                    _model.Id = BookingDTO.BookingId;
+                    _model.Status = BookingDTO.Status;
+                    _model.Participants = BookingDTO.Participants.ToList();
+                    _model.DiscountTypeUsed = BookingDTO.DiscountTypeUsed;
+                    _model.Start = BookingDTO.From;
+                    _model.End = BookingDTO.To;
+                    _model.TreatmentId = BookingDTO.TreatmentId;
+                    _model.ClinicId = BookingDTO.ClinicId;
+                    _model.Price = BookingDTO.Price;
+                    _model.ParticipantLimit = BookingDTO.ParticipantLimit;
+                }
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+}
