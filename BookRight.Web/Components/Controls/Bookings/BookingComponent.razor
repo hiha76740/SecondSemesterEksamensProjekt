@@ -3,6 +3,15 @@
     <td>@Therapist.Name</td>
     <td><BookingParticipantListComponent BookingParticipants="@Booking.Participants" AllCustomers="@AllCustomers"/></td>
     <td>@Treatment.Name</td>
+
+    @if (Treatment.MaxParticipants != 1)
+    {
+        <td><a href=" /booking/@Booking.BookingId/participants" class="btn btn-primary">Tilføj / Fjern deltager</a></td>
+    }
+    else
+    {
+        <td></td>
+    }
 </tr>
 
 @code {
