@@ -1,0 +1,25 @@
+﻿<article class="grid-container">
+    @foreach (var participant in Participants)
+    {
+        <p>@participant.FirstName @participant.LastName</p>
+        <button type="button" class="btn btn-primary" @onclick="@(() => { HandleRemoveCallback(participant.Id); })">Fjern</button>
+    }
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public BookingInputModel Model { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CustomerDTO> AllCustomers { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<Guid> RemoveCallback { get; set; }
+
+    private IEnumerable<CustomerDTO> Participants => AllCustomers.Where(c => Model.Participants.Contains(c.Id)).OrderBy(c => c.FirstName);
+
+    private void HandleRemoveCallback(Guid Id)
+    {
+        RemoveCallback.InvokeAsync(Id);
+    }
+}
