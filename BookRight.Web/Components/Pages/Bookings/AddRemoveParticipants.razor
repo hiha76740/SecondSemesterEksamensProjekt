@@ -2,12 +2,41 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject IBookingQueries BookingQueries
+@inject ICustomerQueries CustomerQueries
 @inject IAddParticipantHandler AddHandler
 @inject IRemoveParticipantHandler RemoveHandler
 
-<PageTitle >Tilføj / Fjern deltager</PageTitle>
+<PageTitle>Tilføj / Fjern deltager</PageTitle>
 
-<ErrorComponent ErrorMessage="@_error"></ErrorComponent>
+<ErrorComponent ErrorMessage="@_error" />
+@if (BookingDTO != null &&
+BookingDTO.ParticipantLimit > BookingDTO.Participants.Count)
+{
+    <SearchComponent Element="telefon nr." SearchCallback="@Search" />
+    <br />
+
+    @if (CustomerDTO != null)
+    {
+        <section>
+            <article class="grid-container-1-item">
+                <p>@CustomerDTO.FirstName @CustomerDTO.LastName</p>
+                <button type="button" class="btn btn-primary" @onclick="@Add">Tilføj</button>
+            </article>
+
+        
+        </section>
+    }
+}
+
+
+<br />
+
+@if (_model != null && AllCustomers != null)
+{
+    <section>
+        <BookingFormParticipantListComponent Model="_model" AllCustomers="AllCustomers" RemoveCallback="@Remove"></BookingFormParticipantListComponent>
+    </section>
+}
 
 
 @code {
@@ -17,6 +46,8 @@
     private string? _error;
     private BookingInputModel? _model = new();
     private BookingDTO? BookingDTO = null;
+    private IReadOnlyList<CustomerDTO>? AllCustomers = null;
+    private CustomerDTO? CustomerDTO = null;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -24,6 +55,8 @@
         {
             if (_model != null)
             {
+                AllCustomers = await CustomerQueries.GetAllAsync();
+
                 BookingDTO ??= await BookingQueries.GetByIdAsync(Id);
 
                 if (BookingDTO != null)
@@ -48,5 +81,24 @@
 
             _error = ex.Message;
         }
+    }
+
+    private async Task Search(string phoneNumber)
+    {
+        CustomerDTO ??= await CustomerQueries.GetByPhoneNumberAsync(phoneNumber);
+    }
+
+    private async Task Add()
+    {
+        var command = new AddParticipantCommand(BookingDTO!.BookingId, CustomerDTO!.Id);
+
+        await AddHandler.Handle(command);
+    }
+
+    private async Task Remove(Guid id)
+    {
+        var command = new RemoveParticipantCommand(BookingDTO!.BookingId, id);
+
+        await RemoveHandler.Handle(command);
     }
 }
