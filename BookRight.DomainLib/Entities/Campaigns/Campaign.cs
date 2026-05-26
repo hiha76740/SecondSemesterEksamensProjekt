@@ -16,7 +16,10 @@ public class Campaign : AggregateRoot
     public string Name { get; init; } = null!;
     public decimal DiscountPercentage { get; init; }
     public CampaignPeriod CampaignPeriod { get; init; } = null!;
-    public IReadOnlyList<Guid> AssignedTreatments { get; init; } = null!;
+    private readonly List<Guid> _assignedTreatments = [];
+    public IReadOnlyList<Guid> AssignedTreatments => _assignedTreatments.AsReadOnly();
+    
+
     public CampaignStatus Status { get; private set; }
 
     /// <summary>
@@ -72,8 +75,12 @@ public class Campaign : AggregateRoot
         Name = name;
         DiscountPercentage = discountPercentage;
         CampaignPeriod = campaignPeriod;
-        AssignedTreatments = assignedTreatments;
         Status = CampaignStatus.Active;
+
+        foreach (var treatment in assignedTreatments)
+        {
+            _assignedTreatments.Add(treatment);
+        }
     }
 
     private Campaign() { }
