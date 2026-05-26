@@ -22,7 +22,6 @@ public class Therapist : AggregateRoot
 
     private Therapist(string authorizationNumber, string name, decimal hourlyRate, Address address, Email email, PhoneNumber phoneNumber, List<Guid> associatedClinics, List<CertificationTypes>? certifications)
     {
-        // Pre-condition
         if (associatedClinics.Count == 0)
             throw new DomainException("Therapist must be associated to atleast 1 clinic");
 
@@ -30,17 +29,13 @@ public class Therapist : AggregateRoot
             throw new DomainException("Therapist must have an authorization number");
 
         EnsureValidName(name);
-
         EnsureValidHourlyRate(hourlyRate);
 
 
-        // Action
         Id = Guid.NewGuid();
-
         AuthorizationNumber = authorizationNumber;
         Name = name;
         HourlyRate = hourlyRate;
-
         Address = address;
         Email = email;
         PhoneNumber = phoneNumber;
@@ -65,15 +60,10 @@ public class Therapist : AggregateRoot
 
     public void ChangeName(string newName)
     {
-        // Pre-condition
         EnsureValidName(newName);
-
 
         if (Name == newName)
             throw new DomainException("New name cannot be the same as current name");
-
-
-        // Action
 
         Name = newName;
     }
@@ -81,15 +71,10 @@ public class Therapist : AggregateRoot
 
     public void ChangeHourlyRate(decimal newHourlyRate)
     {
-        // Pre-condition
-
         EnsureValidHourlyRate(newHourlyRate);
 
         if (HourlyRate == newHourlyRate)
             throw new DomainException("New hourly rate cannot be the same as current hourly rate");
-
-
-        // Action
 
         HourlyRate = newHourlyRate;
     }
@@ -97,13 +82,8 @@ public class Therapist : AggregateRoot
 
     public void ChangeAddress(Address newAddress)
     {
-        // Pre-condition
-
         if (Address == newAddress)
             throw new DomainException("New address cannot be the same as current address");
-
-
-        // Action
 
         Address = newAddress;
     }
@@ -111,13 +91,8 @@ public class Therapist : AggregateRoot
 
     public void ChangeEmail(Email newEmail)
     {
-        // Pre-condition
-
         if (Email == newEmail)
             throw new DomainException("New email cannot be the same as current email");
-
-
-        // Action
 
         Email = newEmail;
     }
@@ -125,13 +100,8 @@ public class Therapist : AggregateRoot
 
     public void ChangePhoneNumber(PhoneNumber newPhoneNumber)
     {
-        // Pre-condition
-
         if (PhoneNumber == newPhoneNumber)
             throw new DomainException("New phonenumber cannot be the same as current phonenumber");
-
-
-        // Action
 
         PhoneNumber = newPhoneNumber;
     }
@@ -139,13 +109,8 @@ public class Therapist : AggregateRoot
 
     public void AddCertificationType(CertificationTypes certificationType)
     {
-        // Pre-condition
-
         if (_certificationTypes.Contains(certificationType) == true)
             throw new DomainException("Therapist already has this certification type");
-
-
-        // Action
 
         _certificationTypes.Add(certificationType);
     }
@@ -153,13 +118,8 @@ public class Therapist : AggregateRoot
 
     public void RemoveCertificationType(CertificationTypes certificationType)
     {
-        // Pre-condition
-
         if (_certificationTypes.Contains(certificationType) == false)
             throw new DomainException("Therapist does not have this certification type");
-
-
-        // Action
 
         _certificationTypes.Remove(certificationType);
     }
@@ -196,7 +156,6 @@ public class Therapist : AggregateRoot
     }
 
 
-    // EF Constructor
     private Therapist() { }
 
 }
