@@ -11,16 +11,17 @@
 <ErrorComponent ErrorMessage="@_error"></ErrorComponent>
 <br />
 
+
 <SearchComponent Element="@_element" SearchCallback="Search"></SearchComponent>
+<br />
+
+<a href="/customer/create" class="btn btn-primary">Opret Kunde</a>
+<br />
 <br />
 
 <LoadingComponent Loading="@_loading" Element="@_element"></LoadingComponent>
 
 <CustomerTableComponent Customers="@CustomerList" Caption="Alle kunder"></CustomerTableComponent>
-
-<a href="/customer/create" class="btn btn-primary">Opret Kunde</a>
-<br />
-<br />
 
 @code {
     private bool _loading;
