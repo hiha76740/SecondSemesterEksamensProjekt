@@ -101,7 +101,12 @@ public class Customer : AggregateRoot
         FirstName = newFirstName;
     }
 
-
+    /// <summary>
+    /// Updates the last name to the specified value.
+    /// </summary>
+    /// <remarks>Validation is performed by EnsureValidLastName.</remarks>
+    /// <param name="newLastname">The new last name. Must be valid and different from the current last name.</param>
+    /// <exception cref="DomainException">Thrown if newLastname is invalid or is the same as the current last name.</exception>
     public void ChangeLastName(string newLastname)
     {
         EnsureValidLastName(newLastname);
@@ -112,7 +117,11 @@ public class Customer : AggregateRoot
         LastName = newLastname;
     }
 
-
+    /// <summary>
+    /// Updates the current address to the specified new address.
+    /// </summary>
+    /// <param name="newAddress">The new address to assign.</param>
+    /// <exception cref="DomainException">Thrown when the provided new address is equal to the current address.</exception>
     public void ChangeAddress(Address newAddress)
     {
         if (Address == newAddress)
@@ -121,7 +130,11 @@ public class Customer : AggregateRoot
         Address = newAddress;
     }
 
-
+    /// <summary>
+    /// Updates the entity's Email property to the specified value.
+    /// </summary>
+    /// <param name="newEmail">Email value to assign to the entity.</param>
+    /// <exception cref="DomainException">Thrown when the provided email is equal to the current email.</exception>
     public void ChangeEmail(Email newEmail)
     {
         if (Email == newEmail)
@@ -130,7 +143,11 @@ public class Customer : AggregateRoot
         Email = newEmail;
     }
 
-
+    /// <summary>
+    /// Sets the current PhoneNumber to the specified PhoneNumber.
+    /// </summary>
+    /// <param name="newPhoneNumber">The new PhoneNumber to assign.</param>
+    /// <exception cref="DomainException">Thrown when newPhoneNumber is the same as the current PhoneNumber.</exception>
     public void ChangePhoneNumber(PhoneNumber newPhoneNumber)
     {
         if (PhoneNumber == newPhoneNumber)
@@ -139,11 +156,21 @@ public class Customer : AggregateRoot
         PhoneNumber = newPhoneNumber;
     }
 
+    /// <summary>
+    /// Sets the Note property to the specified value.
+    /// </summary>
+    /// <param name="note">The value to assign to the Note property.</param>
     public void ChangeNote(string note)
     {
         Note = note;
     }
 
+    /// <summary>
+    /// Sets or clears the preferred therapist identifier for the entity.
+    /// </summary>
+    /// <remarks>Allows null to clear the preference; no additional validation is performed.</remarks>
+    /// <param name="newPreferredTherapistId">Identifier of the new preferred therapist, or null to clear the preference.</param>
+    /// <exception cref="DomainException">Thrown when newPreferredTherapistId has a value equal to the current PreferredTherapistId.</exception>
     public void ChangePreferredTherapist(Guid? newPreferredTherapistId)
     {
         if (newPreferredTherapistId.HasValue)
@@ -155,12 +182,23 @@ public class Customer : AggregateRoot
         PreferredTherapistId = newPreferredTherapistId;
     }
 
+    /// <summary>
+    /// Ensures the first name is not null, empty, or consists only of white-space characters.
+    /// </summary>
+    /// <param name="firstName">First name to validate.</param>
+    /// <exception cref="DomainException">Thrown when firstName is null, empty, or consists only of white-space characters.</exception>
     private static void EnsureValidFirstName(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             throw new DomainException("Customer must have a firstname");
     }
 
+    /// <summary>
+    /// Validates that the customer's last name is not null, empty, or consists only of white-space characters; throws
+    /// DomainException if invalid.
+    /// </summary>
+    /// <param name="lastName">The customer's last name to validate.</param>
+    /// <exception cref="DomainException">Thrown when lastName is null, empty, or consists only of white-space characters.</exception>
     private static void EnsureValidLastName(string lastName)
     {
         if (string.IsNullOrWhiteSpace(lastName))
