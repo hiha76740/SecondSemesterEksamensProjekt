@@ -9,8 +9,8 @@ public record CampaignPeriod
 
     public CampaignPeriod(DateOnly from, DateOnly to)
     {
-        if (from >= to)
-            throw new DomainException("End can not be before or Equal to start");
+        if (from > to)
+            throw new DomainException("End can not be before start");
 
         To = to;
         From = from;
