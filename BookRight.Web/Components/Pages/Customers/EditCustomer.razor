@@ -1,0 +1,95 @@
+﻿@page "/customer/{Id:guid}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ITherapistQueries TherapistQueries
+@inject ICustomerQueries CustomerQueries
+@inject IChangeCustomerInfoHandler ChangeHandler
+@inject NavigationManager NavigationManager
+
+<PageTitle>Ændre Kunde</PageTitle>
+
+<h3>Ændre Kunde</h3>
+<br />
+<br />
+
+<ErrorComponent ErrorMessage="@_error" />
+
+<CustomerFormComponent Model="@_model" AllTherapists="@_allTherapists" SubmitText="Ok" CustomerCallback="@Update" />
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private string? _error;
+
+    private CustomerInputModel _model = new();
+    private CustomerDTO? CustomerDTO = null;
+
+    private IReadOnlyList<TherapistDTO>? _allTherapists = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            _allTherapists ??= await TherapistQueries.GetAllAsync();
+
+            if (_model != null)
+            {
+                CustomerDTO ??= await CustomerQueries.GetByIdAsync(Id);
+
+                if(CustomerDTO != null)
+                {
+                    _model.Id = CustomerDTO.Id;
+                    _model.FirstName = CustomerDTO.FirstName;
+                    _model.LastName = CustomerDTO.LastName;
+                    _model.BirthDate = CustomerDTO.BirthDate;
+                    _model.Note = CustomerDTO.Note;
+                    _model.Street = CustomerDTO.Street;
+                    _model.PostalCode = CustomerDTO.PostalCode;
+                    _model.City = CustomerDTO.City;
+                    _model.EmailAddress = CustomerDTO.EmailAddress;
+                    _model.PhoneNumber = CustomerDTO.PhoneNumber;
+                    _model.PreferredTherapist = CustomerDTO.PreferredTherapistId;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+
+    private async Task Update()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                var command = new ChangeCustomerInfoCommand(
+                    _model.Id,
+                    _model.FirstName,
+                    _model.LastName,
+                    _model.BirthDate,
+                    _model.Note,
+                    _model.Street,
+                    _model.PostalCode,
+                    _model.City,
+                    _model.EmailAddress,
+                    _model.PhoneNumber,
+                    _model.PreferredTherapist
+                );
+
+                await ChangeHandler.Handle(command);
+                NavigationManager.NavigateTo("/customers");
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+
+    }
+
+}
