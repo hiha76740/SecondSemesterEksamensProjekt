@@ -3,12 +3,16 @@
     <ValidationSummary />
 
     <section class="item-main">
-        <h4>@Model.Name</h4>
-
         <h4>Generelt</h4>
-        <article class="grid-container-1-item">
+        <article class="grid-container">
+            <label for="AuthorizationNumber">Autorisationsnummer</label>
+            <InputText @bind-Value="Model.AuthorizationNumber" class="form-control" id="AuthorizationNumber"></InputText>
+            <br />
             <label for="Name">Navn</label>
             <InputText @bind-Value="Model.Name" class="form-control" id="FirstName"></InputText>
+            <br />
+            <label for="HourlyRate">Timeløn</label>
+            <InputNumber @bind-Value="Model.HourlyRate" class="form-control" id="HourlyRate"></InputNumber>
         </article>
 
         <br />
