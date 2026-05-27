@@ -1,4 +1,5 @@
 ﻿using BookRight.DomainLib.Enums;
+using BookRight.DomainLib.Exceptions;
 
 namespace BookRight.DomainLib.Entities.Clinics;
 
@@ -60,6 +61,9 @@ public class OpeningHour: Entity
         }
         else
         {
+            if (openingTime == null || closingTime == null)
+                throw new DomainException("Opening time and closing time must have a value when not closed");
+
             OpeningTime = openingTime;
             ClosingTime = closingTime;
             IsClosed = isClosed;
