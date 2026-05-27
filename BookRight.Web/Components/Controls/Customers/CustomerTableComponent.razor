@@ -20,13 +20,7 @@ else
             <tbody>
                 @foreach (var customer in Customers)
                 {
-                    <tr>
-                        <td>@customer.FirstName</td>
-                        <td>@customer.LastName</td>
-                        <td>@customer.PhoneNumber</td>
-                        <td>@customer.EmailAddress</td>
-                        <td><a href="/customers/@customer.Id" class="btn btn-primary">Ændre</a></td>
-                    </tr>
+                    <CustomerComponent Customer="customer" />
                 }
             </tbody>
         </table>
