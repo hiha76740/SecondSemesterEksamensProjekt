@@ -18,7 +18,8 @@
     private string? _error;
 
     private CustomerInputModel _model = new();
-    private IReadOnlyList<TherapistDTO>? _allTherapists;
+
+    private IReadOnlyList<TherapistDTO>? _allTherapists = null;
 
     protected override async Task OnInitializedAsync()
     {
