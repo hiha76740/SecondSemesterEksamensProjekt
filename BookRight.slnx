@@ -2,6 +2,7 @@
   <Folder Name="/Docs/" />
   <Folder Name="/Docs/Decisions/">
     <File Path="ADR-001.md" />
+    <File Path="ADR-002.md" />
   </Folder>
   <Folder Name="/Src/">
     <Project Path="BookRight.ApplicationLib/BookRight.ApplicationLib.csproj" />
