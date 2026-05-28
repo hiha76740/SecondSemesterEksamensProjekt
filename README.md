@@ -2,7 +2,7 @@
 
 1. Udpak BookRight.Zip
 
-2. Åben SSMS og execute query fra filen BookRightDB_With_Test_Data_SQL
+2. Åben SSMS og execute query fra filen BookRightDB_With_Test_Data.SQL
 
 3. Åben BookRight.slnx
 
