@@ -1,8 +1,14 @@
 ﻿using BookRight.DomainLib.Enums;
-using System.Collections.Immutable;
 
 namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
+/// <summary>
+/// Calculates a discounted price using the best matching active campaign for the booking date and selected treatments.
+/// </summary>
+/// <remarks>Selects campaigns whose CampaignPeriod contains the booking date and that target any of the provided
+/// treatments, chooses the campaign with the highest DiscountPercentage, computes the discounted price as NormalPrice *
+/// (1 - DiscountPercentage / 100), and returns a PriceCalculatorResult containing the original price, the computed
+/// price, the Campaign discount type, and whether a campaign was applied.</remarks>
 public class CampaignDiscountStrategy : IDiscountStrategy
 {
     public DiscountTypes DiscountTypes => DiscountTypes.Campaign;

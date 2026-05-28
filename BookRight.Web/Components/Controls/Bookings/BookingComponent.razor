@@ -1,0 +1,37 @@
+﻿<tr>
+    <td>@Booking.From - @Booking.To</td>
+    <td>@Therapist.Name</td>
+    <td><BookingParticipantListComponent BookingParticipants="@Booking.Participants" AllCustomers="@AllCustomers"/></td>
+    <td>@Treatment.Name</td>
+
+    @if (Treatment.MaxParticipants != 1)
+    {
+        <td><a href=" /booking/@Booking.BookingId/participants" class="btn btn-primary">Tilføj / Fjern deltager</a></td>
+    }
+    else
+    {
+        <td></td>
+    }
+</tr>
+
+@code {
+
+    private TherapistDTO Therapist => AllTherapist.Where(t => Booking.TherapistId == t.Id).First();
+    private TreatmentDTO Treatment => AllTreatments.Where(t => Booking.TreatmentId == t.Id).First();
+
+    [Parameter, EditorRequired]
+    public BookingDTO Booking { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TherapistDTO> AllTherapist { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TreatmentDTO> AllTreatments { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CustomerDTO> AllCustomers { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<Guid> SetArrivedCallback { get; set; }
+
+}

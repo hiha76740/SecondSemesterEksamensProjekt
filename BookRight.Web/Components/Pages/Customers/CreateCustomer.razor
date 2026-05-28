@@ -1,0 +1,60 @@
+﻿@page "/customer/create"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ITherapistQueries TherapistQueries
+@inject ICreateCustomerHandler CreateHandler
+@inject NavigationManager NavigationManager
+
+<PageTitle>Opret Kunde</PageTitle>
+
+<h3>Opret Kunde</h3>
+<br />
+<br />
+
+<ErrorComponent ErrorMessage="@_error" />
+
+<CustomerFormComponent Model="@_model" AllTherapists="@_allTherapists" SubmitText="Opret" CustomerCallback="@Create" />
+@code {
+    private string? _error;
+
+    private CustomerInputModel _model = new();
+
+    private IReadOnlyList<TherapistDTO>? _allTherapists = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _allTherapists ??= await TherapistQueries.GetAllAsync();
+    }
+
+    private async Task Create()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                var command = new CreateCustomerCommand(
+                    _model.FirstName,
+                    _model.LastName,
+                    _model.BirthDate,
+                    _model.Note,
+                    _model.Street,
+                    _model.PostalCode,
+                    _model.City,
+                    _model.EmailAddress,
+                    _model.PhoneNumber,
+                    _model.PreferredTherapist
+                );
+
+                await CreateHandler.Handle(command);
+                NavigationManager.NavigateTo("/customers");
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+
+    }
+
+
+}

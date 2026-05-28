@@ -5,17 +5,15 @@ using BookRight.DomainLib.ValueObjects;
 namespace BookRight.DomainLib.Entities.Bookings;
 
 /// <summary>
-/// Represents a scheduled treatment booking for a customer at a clinic, including details such as time slot, treatment,
-/// therapist, and status.
+/// Aggregate root representing a scheduled booking for a treatment at a clinic, including time slot, assigned
+/// therapist, participants, price, discount, and lifecycle status.
 /// </summary>
-/// <remarks>A Booking is the aggregate root for managing the lifecycle of a treatment appointment, including
-/// creation, modification, cancellation, and completion. Bookings enforce business rules such as preventing overlapping
-/// appointments for the same customer, therapist, or clinic. All referenced entities are identified by their unique IDs
-/// rather than object references. Thread safety is not guaranteed; concurrent modifications should be managed
-/// externally.</remarks>
+/// <remarks>Enforces domain invariants such as non-negative price, minimum participant limit, and that
+/// single-person bookings require a customer. Prevents modifications when the booking status is Cancelled or Completed.
+/// References other aggregates by identifier only and exposes operations to change time, assignment, manage
+/// participants, and transition lifecycle state; domain rule violations result in DomainException.</remarks>
 public class Booking : AggregateRoot
 {
-    // Other Aggregate Roots are referenced by ID - not object references.
     public Guid TreatmentId { get; private set; }
     public Guid TherapistId { get; private set; }
     public Guid ClinicId { get; private set; }
@@ -33,22 +31,22 @@ public class Booking : AggregateRoot
     public IReadOnlyList<Guid> Participants => _participants.AsReadOnly();
 
 
-    /// <summary>
-    /// Creates a new booking for the specified time slot, customer, treatment, therapist, and clinic, ensuring there
-    /// are no overlapping bookings.
-    /// </summary>
-    /// <remarks>If the new booking overlaps with any existing booking for the customer or therapist, an
-    /// exception is thrown. Ensure that the provided collections contain all relevant bookings to avoid
-    /// conflicts.</remarks>
-    /// <param name="timeSlot">The time slot for the booking. Specifies the start and end time of the appointment.</param>
-    /// <param name="customerId">The unique identifier of the customer for whom the booking is created.</param>
-    /// <param name="treatmentId">The unique identifier of the treatment to be performed during the booking.</param>
-    /// <param name="therapistId">The unique identifier of the therapist assigned to the booking.</param>
-    /// <param name="clinicId">The unique identifier of the clinic where the booking will take place.</param>
-    /// <param name="price">The price to be charged for the booking. Must be a non-negative value.</param>
-    /// <param name="existingCustomerBookings">A collection of the customer's existing bookings. Used to check for overlapping appointments.</param>
-    /// <param name="existingTherapistBookings">A collection of the therapist's existing bookings. Used to check for overlapping appointments.</param>
-    /// <returns>A new Booking instance representing the scheduled appointment.</returns>
+   /// <summary>
+   /// Creates a Booking with the specified time slot, treatment, therapist, clinic, price, participant limit, discount
+   /// type, and optional customer.
+   /// </summary>
+   /// <remarks>If customerId is provided and participantLimit equals 1, the customer is automatically added as
+   /// the booking's initial participant.</remarks>
+   /// <param name="timeSlot">The scheduled time slot for the booking.</param>
+   /// <param name="treatmentId">The identifier of the treatment.</param>
+   /// <param name="therapistId">The identifier of the therapist.</param>
+   /// <param name="clinicId">The identifier of the clinic.</param>
+   /// <param name="price">The price charged for the booking.</param>
+   /// <param name="participantLimit">The maximum number of participants; must be greater than or equal to 1.</param>
+   /// <param name="discountTypeUsed">The discount type applied to the booking.</param>
+   /// <param name="customerId">Optional identifier of the customer to add as the initial participant for single-person bookings.</param>
+   /// <returns>The created Booking.</returns>
+   /// <exception cref="DomainException">Thrown when participantLimit is less than 1, or when participantLimit equals 1 and customerId is null.</exception>
     public static Booking Create(
         TimeSlot timeSlot,
         Guid treatmentId,
@@ -75,7 +73,12 @@ public class Booking : AggregateRoot
         return booking;
     }
 
-
+    /// <summary>
+    /// Update the Time property to the specified TimeSlot after validating that the change is allowed.
+    /// </summary>
+    /// <remarks>Calls EnsureCanBeChanged before updating; an exception is thrown if the instance cannot be
+    /// modified.</remarks>
+    /// <param name="newTimeSlot">The TimeSlot to assign.</param>
     public void ChangeTime(TimeSlot newTimeSlot)
     {
         EnsureCanBeChanged();
@@ -84,10 +87,10 @@ public class Booking : AggregateRoot
     }
 
     /// <summary>
-    /// Changes the current treatment to the specified treatment identifier.
+    /// Changes the entity's treatment to the specified identifier.
     /// </summary>
-    /// <param name="newTreatmentId">The unique identifier of the new treatment to assign. Must not be equal to the current treatment identifier.</param>
-    /// <exception cref="DomainException">Thrown if the specified treatment identifier is the same as the current treatment identifier.</exception>
+    /// <param name="newTreatmentId">Identifier of the treatment to apply.</param>
+    /// <exception cref="DomainException">Thrown if the specified newTreatmentId is equal to the current TreatmentId.</exception>
     public void ChangeTreatment(Guid newTreatmentId)
     {
         EnsureCanBeChanged();
@@ -99,14 +102,12 @@ public class Booking : AggregateRoot
     }
 
     /// <summary>
-    /// Changes the assigned therapist for this booking to the specified therapist.
+    /// Updates the entity's TherapistId to a new therapist after validating that the entity can be changed and that the
+    /// new therapist differs from the current one.
     /// </summary>
-    /// <param name="newTherapistId">The unique identifier of the new therapist to assign to this booking. Must not be the same as the current
-    /// therapist.</param>
-    /// <param name="existsForNewTherapist">A collection of existing bookings for the new therapist. Used to ensure there are no scheduling conflicts with
-    /// the new assignment.</param>
-    /// <exception cref="DomainException">Thrown if the new therapist is the same as the current therapist, or if the change would result in overlapping
-    /// bookings.</exception>
+    /// <param name="newTherapistId">The identifier of the therapist to assign.</param>
+    /// <exception cref="DomainException">Thrown when the entity cannot be changed or when the supplied therapist identifier is the same as the current
+    /// TherapistId.</exception>
     public void ChangeTherapist(Guid newTherapistId)
     {
         EnsureCanBeChanged();
@@ -117,11 +118,12 @@ public class Booking : AggregateRoot
         TherapistId = newTherapistId;
     }
 
-    /// <summary>
-    /// Changes the associated clinic to the specified clinic identifier.
-    /// </summary>
-    /// <param name="newClinicId">The unique identifier of the new clinic to associate with. Must not be equal to the current clinic identifier.</param>
-    /// <exception cref="DomainException">Thrown if the specified clinic identifier is the same as the current clinic identifier.</exception>
+  /// <summary>
+  /// Changes the associated clinic to the specified clinic identifier.
+  /// </summary>
+  /// <remarks>Validates that the entity can be changed before assigning the new ClinicId.</remarks>
+  /// <param name="newClinicId">The identifier of the clinic to associate with the entity.</param>
+  /// <exception cref="DomainException">Thrown when the specified clinic identifier equals the current clinic identifier.</exception>
     public void ChangeClinic(Guid newClinicId)
     {
         EnsureCanBeChanged();
@@ -133,10 +135,10 @@ public class Booking : AggregateRoot
     }
 
     /// <summary>
-    /// Cancels the booking and updates its status to indicate it is no longer active.
+    /// Marks the booking as cancelled.
     /// </summary>
-    /// <remarks>After calling this method, the booking cannot be modified further. If the booking is already
-    /// cancelled or cannot be changed, an exception may be thrown.</remarks>
+    /// <remarks>Validates that the booking can be changed by calling EnsureCanBeChanged, then sets Status to
+    /// BookingStatus.Cancelled. Throws InvalidOperationException if the booking cannot be changed.</remarks>
     public void Cancel()
     {
         EnsureCanBeChanged();
@@ -144,11 +146,11 @@ public class Booking : AggregateRoot
         Status = BookingStatus.Cancelled;
     }
 
-    /// <summary>
-    /// Marks the booking as completed, updating its status accordingly.
-    /// </summary>
-    /// <remarks>This method can only be called when the booking is in a state that allows changes. An
-    /// exception is thrown if the booking cannot be modified.</remarks>
+  /// <summary>
+  /// Marks the booking as completed after validating that it can be changed.
+  /// </summary>
+  /// <remarks>Calls EnsureCanBeChanged, then sets the Status property to BookingStatus.Completed. Throws
+  /// InvalidOperationException if the booking cannot be changed.</remarks>
     public void Complete()
     {
         EnsureCanBeChanged();
@@ -157,10 +159,10 @@ public class Booking : AggregateRoot
     }
 
     /// <summary>
-    /// Marks the booking as a no-show, updating its status accordingly.
+    /// Marks the booking as a no-show.
     /// </summary>
-    /// <remarks>Call this method when a booked guest fails to appear. The booking status will be set to
-    /// indicate a no-show. This operation may not be reversible depending on the booking workflow.</remarks>
+    /// <remarks>Calls EnsureCanBeChanged to validate the booking can be modified before setting Status to
+    /// BookingStatus.NoShow. May throw if the booking cannot be changed.</remarks>
     public void NoShow()
     {
         EnsureCanBeChanged();
@@ -168,11 +170,11 @@ public class Booking : AggregateRoot
         Status = BookingStatus.NoShow;
     }
 
-    /// <summary>
-    /// Marks the booking as having arrived by updating its status to Arrived.
-    /// </summary>
-    /// <remarks>Call this method when the associated entity has reached its destination or check-in point.
-    /// This method may throw an exception if the booking cannot be changed in its current state.</remarks>
+  /// <summary>
+  /// Marks the booking as arrived.
+  /// </summary>
+  /// <remarks>Validates that the booking can be changed before setting the Status property to
+  /// BookingStatus.Arrived; EnsureCanBeChanged is invoked and may throw if modification is not allowed.</remarks>
     public void Arrived()
     {
         EnsureCanBeChanged();
@@ -180,6 +182,12 @@ public class Booking : AggregateRoot
         Status = BookingStatus.Arrived;
     }
 
+    /// <summary>
+    /// Adds the specified customer to the booking's participants.
+    /// </summary>
+    /// <remarks>Requires the booking to be active.</remarks>
+    /// <param name="customerId">The identifier of the customer to add.</param>
+    /// <exception cref="DomainException">The booking has reached its participant limit, or the customer is already a participant.</exception>
     public void AddParticipant(Guid customerId)
     {
         EnsureIsActive();
@@ -193,6 +201,13 @@ public class Booking : AggregateRoot
         _participants.Add(customerId);
     }
 
+    /// <summary>
+    /// Removes a participant from the booking.
+    /// </summary>
+    /// <remarks>If the last participant is removed and ParticipantLimit equals 1, the booking's status is set
+    /// to Cancelled.</remarks>
+    /// <param name="customerId">The identifier of the customer to remove.</param>
+    /// <exception cref="DomainException">Thrown when the specified customer is not registered to this booking.</exception>
     public void RemoveParticipant(Guid customerId)
     {
         EnsureIsActive();
@@ -206,17 +221,18 @@ public class Booking : AggregateRoot
             Status = BookingStatus.Cancelled;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the Booking class with the specified time slot, customer, treatment, therapist,
-    /// clinic, and price.
-    /// </summary>
-    /// <param name="timeSlot">The time slot for the booking.</param>
-    /// <param name="customerId">The unique identifier of the customer making the booking.</param>
-    /// <param name="treatmentId">The unique identifier of the treatment to be booked.</param>
-    /// <param name="therapistId">The unique identifier of the therapist assigned to the booking.</param>
-    /// <param name="clinicId">The unique identifier of the clinic where the booking takes place.</param>
-    /// <param name="price">The price of the booking. Must be zero or positive.</param>
-    /// <exception cref="DomainException">Thrown if price is negative.</exception>
+   /// <summary>
+   /// Initializes a new Booking with the specified time slot, treatment, therapist, clinic, price, participant limit,
+   /// and discount; generates a new Id and sets Status to Created.
+   /// </summary>
+   /// <param name="timeSlot">Time slot for the booking.</param>
+   /// <param name="treatmentId">Identifier of the treatment associated with the booking.</param>
+   /// <param name="therapistId">Identifier of the therapist assigned to the booking.</param>
+   /// <param name="clinicId">Identifier of the clinic where the booking takes place.</param>
+   /// <param name="price">Price charged for the booking; must be non-negative.</param>
+   /// <param name="participantLimit">Maximum number of participants allowed for the booking.</param>
+   /// <param name="discountTypeUsed">Type of discount applied to the booking.</param>
+   /// <exception cref="DomainException">Thrown when the provided price is negative.</exception>
     private Booking(TimeSlot timeSlot, Guid treatmentId, Guid therapistId, Guid clinicId, decimal price, int participantLimit, DiscountTypes discountTypeUsed)
     {
         if (price < 0)
@@ -233,7 +249,11 @@ public class Booking : AggregateRoot
         Status = BookingStatus.Created;
     }
 
-
+    /// <summary>
+    /// Ensures the booking is active.
+    /// </summary>
+    /// <remarks>Serves as a guard before performing operations that require an active booking.</remarks>
+    /// <exception cref="DomainException">Thrown when the booking is no longer active.</exception>
     private void EnsureIsActive()
     {
         if (IsActive == false)
@@ -241,12 +261,10 @@ public class Booking : AggregateRoot
     }
 
 
-    /// <summary>
-    /// Ensures that the booking can be changed by validating its current status.
-    /// </summary>
-    /// <remarks>This method should be called before performing any operation that modifies the booking. It
-    /// prevents changes to bookings that are no longer eligible for modification.</remarks>
-    /// <exception cref="DomainException">Thrown if the booking status is either Cancelled or Completed.</exception>
+   /// <summary>
+   /// Ensures the booking can be changed.
+   /// </summary>
+   /// <exception cref="DomainException">Thrown when Status is BookingStatus.Cancelled or BookingStatus.Completed.</exception>
     private void EnsureCanBeChanged()
     {
         if (Status == BookingStatus.Cancelled)
@@ -256,6 +274,5 @@ public class Booking : AggregateRoot
             throw new DomainException("Completed booking cannot be changed.");
     }
 
-    // Parameterløs constructor til EF Core
     private Booking() { }
 }

@@ -6,7 +6,7 @@ public record ChangeCustomerInfoCommand(
     Guid CustomerId,
     string FirstName,
     string LastName,
-    DateTime BirthDate,
+    DateOnly BirthDate,
     string Note,
     string Street,
     string PostalCode,

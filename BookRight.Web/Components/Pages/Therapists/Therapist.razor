@@ -1,0 +1,57 @@
+@page "/Therapists"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+@inject ITherapistQueries TherapistQueries
+@inject IClinicQueries ClinicQueries
+
+<PageTitle>@_element</PageTitle>
+
+<h2>@_element</h2>
+
+<SearchComponent Element="@_element" SearchCallback="Search"></SearchComponent>
+<br />
+
+<ErrorComponent ErrorMessage="@_error" />
+<LoadingComponent Loading="@_loading" Element="@_element" />
+
+<a href="/therapist/create" class="btn btn-primary">Opret Behandler</a>
+
+<TherapistTableComponent Therapists="@TherapistList" Caption="Alle Behandlere" AllClinics="@AllClinics" />
+
+@code {
+    private bool _loading;
+    private string? _error;
+    private string? _element = "Behandlere";
+
+    private IReadOnlyList<TherapistDTO> TherapistList = [];
+    private IReadOnlyList<ClinicDTO> AllClinics = [];
+
+    private async Task Search(string filter)
+    {
+        TherapistList = [];
+        _loading = true;
+
+        try
+        {
+            AllClinics = await ClinicQueries.GetAllAsync();
+
+            if (string.IsNullOrWhiteSpace(filter) == false)
+            {
+                TherapistList = await TherapistQueries.SearchTherapistAsync(filter);
+            }
+            else
+            {
+                TherapistList = await TherapistQueries.GetAllAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

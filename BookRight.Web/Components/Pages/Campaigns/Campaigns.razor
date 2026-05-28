@@ -1,0 +1,73 @@
+﻿@page "/Campaigns"
+
+@attribute [StreamRendering]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ICampaignQueries CampaignQueries
+@inject ISetCampaignInActiveHandler InActiveHandler
+@inject ITreatmentQueries TreatmentQueries
+
+<PageTitle>@_element</PageTitle>
+
+<h2>@_element</h2>
+
+<ErrorComponent ErrorMessage="@_error" />
+<LoadingComponent Loading="@_loading" Element="@_element"/>
+
+<CampaignTableComponent Campaigns="CampaignList ?? []" Caption="Alle Kampagner" SetInActiveCallback="@SetInactive" AllTreatments="@AllTreatments"/>
+
+<a href="/campaign/create" class="btn btn-primary">Opret Kampagne</a>
+
+@code {
+    private string? _element = "Kampagner";
+    private bool _loading;
+    private string? _error;
+
+    private IReadOnlyList<TreatmentDTO> AllTreatments = [];
+    public IReadOnlyList<CampaignDTO> CampaignList { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await GetAllCampaigns();
+            AllTreatments = await TreatmentQueries.GetAllAsync();
+
+            CampaignList.OrderByDescending(c => c.CampaignStart);
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+
+    }
+
+    private async Task SetInactive(Guid Id)
+    {
+        try
+        {
+            var command = new SetCampaignInActiveCommand(Id);
+
+            await InActiveHandler.Handle(command);
+
+            await GetAllCampaigns();
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+
+        
+    }
+
+    private async Task GetAllCampaigns()
+    {
+        CampaignList = await CampaignQueries.GetAllAsync();
+    }
+}

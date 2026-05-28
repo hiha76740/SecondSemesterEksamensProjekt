@@ -13,7 +13,16 @@ namespace BookRight.DomainLib.Services;
 /// available treatment rooms.</remarks>
 public sealed class BookingCapacityService : IBookingCapacityService
 {
-
+    /// <summary>
+    /// Returns true when the clinic has available treatment-room capacity for a booking at the specified time slot.
+    /// </summary>
+    /// <remarks>Overlap is determined by Booking.Time.OverlapsWith. Callers should consider concurrency and
+    /// external validation when creating bookings.</remarks>
+    /// <param name="clinic">Clinic whose TreatmentRoomLimit is used to determine available capacity.</param>
+    /// <param name="existingBookings">Enumerable of existing bookings used to count those that overlap the specified time slot.</param>
+    /// <param name="timeSlot">Time slot for the requested booking.</param>
+    /// <returns>True if the number of bookings overlapping the time slot is less than clinic.TreatmentRoomLimit; otherwise
+    /// false.</returns>
     bool IBookingCapacityService.CanCreateBooking(
         Clinic clinic,
         IEnumerable<Booking> existingBookings,

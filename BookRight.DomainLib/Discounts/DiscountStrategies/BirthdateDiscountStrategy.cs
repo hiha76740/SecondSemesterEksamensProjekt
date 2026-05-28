@@ -2,6 +2,12 @@
 
 namespace BookRight.DomainLib.Discounts.DiscountStrategies;
 
+/// <summary>
+/// Applies a birthday-month discount when the booking month matches the customer’s birth month and the annual usage
+/// limit has not been exceeded.
+/// </summary>
+/// <remarks>Uses a fixed 25% discount and allows one use per year by default. Implements IDiscountStrategy and
+/// returns DiscountTypes.BirthdayMonth in the PriceCalculatorResult.</remarks>
 public class BirthDateDiscountStrategy : IDiscountStrategy
 {
     private readonly decimal _discountPercentage;

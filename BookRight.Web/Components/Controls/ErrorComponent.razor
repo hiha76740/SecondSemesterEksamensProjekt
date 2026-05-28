@@ -1,0 +1,9 @@
+﻿@if (ErrorMessage != null)
+{
+    <p class="text-danger">@ErrorMessage</p>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public string ErrorMessage { get; set; }
+}

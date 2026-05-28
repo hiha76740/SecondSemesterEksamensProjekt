@@ -1,0 +1,16 @@
+﻿<article>
+    @foreach (var participant in Participants)
+    {
+        <p>@participant.FirstName @participant.LastName</p>
+    }
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<Guid> BookingParticipants { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CustomerDTO> AllCustomers { get; set; }
+
+    private IEnumerable<CustomerDTO> Participants => AllCustomers.Where(c => BookingParticipants.Contains(c.Id)).OrderBy(c => c.FirstName);
+}

@@ -1,0 +1,40 @@
+﻿@if (Therapists.Count == 0)
+{
+    <p>(ingen)</p>
+}
+else
+{
+    <section>
+        <table class="table table-striped">
+            <caption>@Caption</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Navn</th>
+                    <th scope="col">Addresse</th>
+                    <th scope="col">Telefon nr.</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Certificeringer</th>
+                    <th scope="col">Tilknyttede Klinikker</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var therapist in Therapists)
+                {
+                    <TherapistComponent Therapist="@therapist" AllClinics="@AllClinics" />
+                }
+            </tbody>
+        </table>
+    </section>
+}
+
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TherapistDTO> Therapists { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ClinicDTO> AllClinics { get; set; }
+
+    [Parameter]
+    public string Caption { get; set; } = "Therapists";
+}

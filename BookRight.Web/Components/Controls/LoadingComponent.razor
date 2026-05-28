@@ -1,0 +1,13 @@
+﻿@if (Loading == true)
+{
+    <p>Indlæser @Element....</p>
+}
+
+
+@code {
+
+    [Parameter, EditorRequired]
+    public bool Loading { get; set; }
+    [Parameter, EditorRequired]
+    public string Element { get; set; }
+}

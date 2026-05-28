@@ -1,0 +1,71 @@
+﻿@page "/campaign/copy/{id:guid}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ICampaignQueries CampaignQueries
+@inject ITreatmentQueries TreatmentQueries
+@inject ICreateCampaignHandler CreateHandler
+@inject NavigationManager NavigationManager
+
+<PageTitle>Kopier Kampagne</PageTitle>
+
+<ErrorComponent ErrorMessage="@_error"></ErrorComponent>
+<CampaignFormComponent Model="@_model" AllTreatments="@AllTreatments" SubmitText="Opret"></CampaignFormComponent>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string? _error;
+    private CampaignInputModel _model = new();
+    private CampaignDTO? campaignDTO = null;
+    private IReadOnlyList<TreatmentDTO> AllTreatments = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                campaignDTO ??= await CampaignQueries.GetByIdAsync(Id);
+                AllTreatments = await TreatmentQueries.GetAllAsync();
+
+                if (campaignDTO != null)
+                {
+                    _model.DiscountProcentage = campaignDTO.DiscountPercentage;
+                    _model.CampaignStart = campaignDTO.CampaignStart;
+                    _model.CampaignEnd = campaignDTO.CampaignEnd;
+                    _model.AssignedTreatments = campaignDTO.AssignedTreatments.ToList();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+    }
+
+    private async Task Create()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                var command = new CreateCampaignCommand(
+                    _model.Name,
+                    _model.DiscountProcentage,
+                    _model.CampaignStart,
+                    _model.CampaignEnd,
+                    _model.AssignedTreatments
+                );
+
+                await CreateHandler.Handle(command);
+                NavigationManager.NavigateTo("/campaigns");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+    }
+}

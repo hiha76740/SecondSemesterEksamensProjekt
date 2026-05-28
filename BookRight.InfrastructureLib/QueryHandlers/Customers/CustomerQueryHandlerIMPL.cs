@@ -69,4 +69,24 @@ public class CustomerQueryHandlerIMPL(BookRightDbContext db) : ICustomerQueries
                c.PreferredTherapistId))
            .ToListAsync();
     }
+
+    async Task<CustomerDTO?> ICustomerQueries.GetByPhoneNumberAsync(string phoneNumber)
+    {
+        return await db.Customers
+         .AsNoTracking()
+         .Where(c => c.PhoneNumber.Number == phoneNumber)
+         .Select(c => new CustomerDTO(
+             c.Id,
+             c.FirstName,
+             c.LastName,
+             c.BirthDate,
+             c.Note,
+             c.Address.Street,
+             c.Address.PostalCode,
+             c.Address.City,
+             c.Email.EmailAddress,
+             c.PhoneNumber.Number,
+             c.PreferredTherapistId))
+         .FirstOrDefaultAsync();
+    }
 }

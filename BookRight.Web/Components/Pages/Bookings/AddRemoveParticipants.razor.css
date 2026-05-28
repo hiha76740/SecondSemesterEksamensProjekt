@@ -1,0 +1,10 @@
+﻿body {
+}
+
+.grid-container-1-item {
+    display: grid;
+    grid-template-columns: 200px 100px;
+    grid-template-rows: 1fr;
+    gap: 1em;
+    justify-items: flex-start;
+}

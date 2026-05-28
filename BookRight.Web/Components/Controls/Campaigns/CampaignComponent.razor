@@ -1,0 +1,37 @@
+﻿<tr>
+    <td>@Campaign.Name</td>
+    <td>@Campaign.DiscountPercentage</td>
+    <td>@Campaign.CampaignStart</td>
+    <td>@Campaign.CampaignEnd</td>
+    <td><AssociatedTreatmentListComponent AssociatedTreatmentsId="@Campaign.AssignedTreatments" AllTreatments="@AllTreatments" /></td>
+    <td>@Campaign.Status</td>
+    <td>
+        <a href="/campaign/copy/@Campaign.Id" class="btn btn-primary">Kopiere</a>
+        &nbsp
+
+        @if (Campaign.Status == "Active")
+        {
+            <button class="btn btn-primary" type="button" @onclick="@HandleSetInActiveCallback">Sæt Inaktiv</button>
+        }
+    </td>
+
+</tr>
+
+@code {
+    [Parameter, EditorRequired]
+    public CampaignDTO Campaign { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<Guid> SetInActiveCallback { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TreatmentDTO> AllTreatments { get; set; }
+
+    [Parameter]
+    public EventCallback<CampaignDTO> CopyCallback { get; set; }
+
+    private void HandleSetInActiveCallback()
+    {
+        SetInActiveCallback.InvokeAsync(Campaign.Id);
+    }
+}

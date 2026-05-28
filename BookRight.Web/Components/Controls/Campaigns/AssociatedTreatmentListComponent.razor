@@ -1,0 +1,16 @@
+﻿<article>
+    @foreach (var treatment in AssociatedTreatments)
+    {
+        <p>@treatment.Name</p>
+    }
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<Guid> AssociatedTreatmentsId { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TreatmentDTO> AllTreatments { get; set; }
+
+    private IEnumerable<TreatmentDTO> AssociatedTreatments => AllTreatments.Where(at => AssociatedTreatmentsId.Contains(at.Id)).OrderBy(at => at.Name);
+}

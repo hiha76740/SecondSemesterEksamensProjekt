@@ -1,0 +1,72 @@
+﻿<EditForm Model="Model" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <section class="item-main">
+        <article class="grid-container">
+            <label for="Name">Navn</label>
+            <InputText @bind-Value="Model.Name" class="form-control" id="Name"></InputText>
+            <br />
+
+            <label for="DiscountProcentage">Rabat procent</label>
+            <InputNumber @bind-Value="Model.DiscountProcentage" class="form-control" id="DiscountProcentage"></InputNumber>
+            <br />
+
+            <label for="CampaignStart">Startdato</label>
+            <InputDate @bind-Value="Model.CampaignStart" class="form-control" id="CampaignStart"></InputDate>
+            <br />
+
+            <label for="CampaignEnd">Slutdato</label>
+            <InputDate @bind-Value="Model.CampaignEnd" class="form-control" id="CampaignEnd"></InputDate>
+        </article>
+
+        <article>
+            <CampaignTreatmentListComponent TreatmentList="@AssociatedTreatments"
+                                            ButtonText="Fjern"
+                                            HeaderText="Tilknyttede behandlinger"
+                                            Callback="@RemoveAssociatedTreatment" />
+
+            <CampaignTreatmentListComponent TreatmentList="@AvailableTreatments"
+                                            ButtonText="Tilknyt"
+                                            HeaderText="Tilgængelig behandlinger"
+                                            Callback="@AssociateTreatment" />
+        </article>
+
+    </section>
+    <button class="btn btn-primary" type="submit">@SubmitText</button>
+    &nbsp;
+    <a href="/campaigns" class="btn btn-secondary">Annuller</a>
+</EditForm>
+
+@code {
+    [Parameter, EditorRequired]
+    public CampaignInputModel Model { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TreatmentDTO> AllTreatments { get; set; }
+
+    private IEnumerable<TreatmentDTO> AvailableTreatments => AllTreatments.Where(t => Model.AssignedTreatments.Contains(t.Id) == false).OrderBy(t => t.Name);
+
+    private IEnumerable<TreatmentDTO> AssociatedTreatments => AllTreatments.Where(t => Model.AssignedTreatments.Contains(t.Id) == true).OrderBy(t => t.Name);
+
+    [Parameter]
+    public string SubmitText { get; set; } = "Save";
+
+    [Parameter]
+    public EventCallback<CampaignInputModel> CampaignCallback { get; set; }
+
+    private void HandleSubmit()
+    {
+        CampaignCallback.InvokeAsync(Model);
+    }
+
+    private void AssociateTreatment(TreatmentDTO treatment)
+    {
+        Model.AssignedTreatments.Add(treatment.Id);
+    }
+
+    private void RemoveAssociatedTreatment(TreatmentDTO treatment)
+    {
+        Model.AssignedTreatments.Remove(treatment.Id);
+    }
+}

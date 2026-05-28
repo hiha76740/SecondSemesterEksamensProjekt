@@ -43,7 +43,7 @@ public class ChangeCustomerInfoHandlerTests
             customerId,
             firstName ?? "Torben",
             lastName ?? "Svendsen",
-            new DateTime(1956, 7, 16),
+            new DateOnly(1956, 7, 16),
             note ?? "Gets easily confused",
             street ?? "Niels Bohrs Gade 43",
             postalCode ?? "6534",

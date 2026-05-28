@@ -1,0 +1,22 @@
+﻿body {
+}
+
+.item-main {
+    justify-items: flex-start;
+}
+
+.grid-container-1-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 1em;
+    justify-items: flex-start;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 1em;
+    justify-items: flex-start;
+}

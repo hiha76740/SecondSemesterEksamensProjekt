@@ -1,0 +1,58 @@
+﻿@page "/customers"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [StreamRendering]
+
+@inject ICustomerQueries CustomerQueries
+
+<PageTitle>@_element</PageTitle>
+
+<h2>@_element</h2>
+
+<ErrorComponent ErrorMessage="@_error"></ErrorComponent>
+<br />
+
+
+<SearchComponent Element="@_element" SearchCallback="Search"></SearchComponent>
+<br />
+
+<a href="/customer/create" class="btn btn-primary">Opret Kunde</a>
+<br />
+<br />
+
+<LoadingComponent Loading="@_loading" Element="@_element"></LoadingComponent>
+
+<CustomerTableComponent Customers="@CustomerList" Caption="Alle kunder"></CustomerTableComponent>
+
+@code {
+    private bool _loading;
+    private string? _error;
+    private string _element = "Kunder";
+
+    private IReadOnlyList<CustomerDTO> CustomerList = [];
+
+    private async Task Search(string filter)
+    {
+        _loading = true;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(filter) == false)
+            {
+                CustomerList = await CustomerQueries.SearchCustomerAsync(filter);
+            }
+
+            else
+            {
+                CustomerList = await CustomerQueries.GetAllAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

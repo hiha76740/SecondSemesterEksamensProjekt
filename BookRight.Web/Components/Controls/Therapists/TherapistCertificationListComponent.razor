@@ -1,0 +1,42 @@
+﻿<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">@HeaderText</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (CertificationList != null)
+        {
+            @foreach (var certification in CertificationList)
+            {
+                <tr>
+                    <td>@certification.CertificationType</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="@(() => { HandleCallback(certification); StateHasChanged(); })">
+                            @ButtonText
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<CertificationTypeDTO> CertificationList { get; set; }
+
+    [Parameter]
+    public string HeaderText { get; set; } = "Certification";
+
+    [Parameter]
+    public string ButtonText { get; set; } = "Button";
+
+    [Parameter, EditorRequired]
+    public EventCallback<CertificationTypeDTO> Callback { get; set; }
+
+    private void HandleCallback(CertificationTypeDTO certification)
+    {
+        Callback.InvokeAsync(certification);
+    }
+}

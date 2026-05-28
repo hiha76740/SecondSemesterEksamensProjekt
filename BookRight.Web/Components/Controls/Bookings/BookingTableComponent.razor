@@ -1,0 +1,54 @@
+﻿@if (AllBookings.Count == 0)
+{
+    <p>(ingen)</p>
+}
+else
+{
+    <section>
+        <table class="table table-striped">
+            <caption>@Caption</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Tidspunkt</th>
+                    <th scope="col">Behandler</th>
+                    <th scope="col">Deltagere</th>
+                    <th scope="col">Behandlingstype</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in AllBookings)
+                {
+                    <BookingComponent Booking="@booking"
+                                      AllTherapist="@AllTherapists"
+                                      AllTreatments="@AllTreatments"
+                                      AllCustomers="@AllParticipants"
+                                      SetArrivedCallback="@HandleSetArrivedCallback" />
+                }
+            </tbody>
+        </table>
+    </section>
+}
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<BookingDTO> AllBookings { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TherapistDTO> AllTherapists { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TreatmentDTO> AllTreatments { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CustomerDTO> AllParticipants { get; set; }
+
+
+    [Parameter]
+    public string Caption { get; set; } = "Bookings";
+
+    public EventCallback<Guid> SetArrivedCallback { get; set; }
+
+    private void HandleSetArrivedCallback(Guid id)
+    {
+        SetArrivedCallback.InvokeAsync(id);
+    }
+}

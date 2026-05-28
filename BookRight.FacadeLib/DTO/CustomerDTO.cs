@@ -2,7 +2,7 @@
 
 public record CustomerDTO(
     Guid Id,
-    string Firstname,
+    string FirstName,
     string LastName,
     DateOnly BirthDate,
     string Note,

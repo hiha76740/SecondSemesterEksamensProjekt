@@ -1,0 +1,32 @@
+﻿<article class="item-main">
+    <h5>Åbningstider</h5>
+    <br />
+    <article class="grid-container-openinghour">
+        @foreach (var openingHour in Clinic.OpeningHours)
+        {
+            <article class="openinghour-item">
+                @openingHour.WeekDay
+                <br />
+                @if (openingHour.IsClosed == false)
+                {
+                    <p>
+                        @openingHour.OpeningTime
+                        <br />
+                        @openingHour.ClosingTime
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        Lukket
+                    </p>
+                }
+            </article>
+        }
+    </article>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public ClinicDTO Clinic { get; set; }
+}

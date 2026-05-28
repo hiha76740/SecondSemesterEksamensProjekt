@@ -1,0 +1,107 @@
+﻿@page "/clinic/{id:guid}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IClinicQueries ClinicQueries
+@inject IChangeClinicInfoHandler ChangeInfoHandler
+@inject NavigationManager NavigationManager
+
+<PageTitle>Ændre Klinik</PageTitle>
+
+
+<ErrorComponent ErrorMessage="@_error" />
+
+<ClinicFormComponent Model="_model"
+                     SubmitText="Ok"
+                     ClinicCallback="@Update" />
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string? _error;
+    private ClinicInputModel? _model = new();
+    private ClinicDTO? ClinicDTO = null;
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            if (_model != null)
+            {
+                ClinicDTO ??= await ClinicQueries.GetByIdAsync(Id);
+
+                if (ClinicDTO != null)
+                {
+                    var openingHourInput = new List<OpeningHourInputModel>();
+
+                    foreach (var oh in ClinicDTO.OpeningHours)
+                    {
+                        var model = new OpeningHourInputModel();
+
+                        model.WeekDay = oh.WeekDay;
+                        model.OpeningTime = oh.OpeningTime;
+                        model.ClosingTime = oh.ClosingTime;
+                        model.IsClosed = oh.IsClosed;
+
+                        openingHourInput.Add(model);
+                    }
+
+                    _model.Id = ClinicDTO.Id;
+                    _model.Name = ClinicDTO.Name;
+                    _model.Street = ClinicDTO.Street;
+                    _model.PostalCode = ClinicDTO.PostalCode;
+                    _model.City = ClinicDTO.City;
+                    _model.TreatmentRoomLimit = ClinicDTO.TreatmentRoomLimit;
+                    _model.OpeningHours = openingHourInput;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+    }
+
+    private async Task Update(ClinicInputModel model)
+    {
+        try
+        {
+            if (model != null)
+            {
+                var openingHourList = new List<OpeningHourDTO>();
+
+                foreach (var oh in model.OpeningHours)
+                {
+
+                    var dto = new OpeningHourDTO(
+                        oh.WeekDay,
+                        oh.OpeningTime,
+                        oh.ClosingTime,
+                        oh.IsClosed
+                    );
+
+                    openingHourList.Add(dto);
+                }
+
+                var command = new ChangeClinicInfoCommand(
+                    model.Id,
+                    model.Street,
+                    model.PostalCode,
+                    model.City,
+                    model.TreatmentRoomLimit,
+                    openingHourList);
+
+                await ChangeInfoHandler.Handle(command);
+                NavigationManager.NavigateTo("/clinics");
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+            _error = ex.Message;
+        }
+
+    }
+}

@@ -1,0 +1,12 @@
+﻿<tr>
+    <td>@Customer.FirstName</td>
+    <td>@Customer.LastName</td>
+    <td>@Customer.PhoneNumber</td>
+    <td>@Customer.EmailAddress</td>
+    <td><a href="/customer/@Customer.Id" class="btn btn-primary">Ændre</a></td>
+</tr>
+
+@code {
+    [Parameter, EditorRequired]
+    public CustomerDTO Customer { get; set; }
+}
