@@ -12,7 +12,7 @@ public class RemoveParticipantHandler(IBookingRepository bookingRepository, ICus
         var booking = await bookingRepository.GetByIdAsync(command.BookingId)
             ?? throw new NotFoundException("Booking not found");
 
-        _ = await customerRepository.GetByIdAsync(command.BookingId)
+        _ = await customerRepository.GetByIdAsync(command.CustomerId)
             ?? throw new NotFoundException("Customer not found");
 
         booking.RemoveParticipant(command.CustomerId);
